@@ -1,1 +1,10 @@
+# Virtual environment
 venv/
+# Secrets
+credentials.json
+oauth_client_secret.json
+oauth_token.json
+# Django
+db.sqlite3
+# macOS
+.DS_Store

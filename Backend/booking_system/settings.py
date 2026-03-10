@@ -116,3 +116,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Google Calendar integration settings.
+# "primary" refers to the authenticated Google account's main calendar.
+GOOGLE_CALENDAR_ID = "primary"
+# Local OAuth token file generated after the first Google authorization flow.
+GOOGLE_OAUTH_TOKEN_FILE = BASE_DIR / "oauth_token.json"
