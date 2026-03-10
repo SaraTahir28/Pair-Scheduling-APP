@@ -1,1 +1,11 @@
 venv/
+# Ignore Postman and temp files
+.postman/
+postman/
+*.postman_collection.json
+*.postman_environment.json
+
+# Ignore Python/Django temp files
+__pycache__/
+*.pyc
+*.sqlite3
