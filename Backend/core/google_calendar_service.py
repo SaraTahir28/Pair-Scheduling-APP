@@ -5,6 +5,7 @@ from django.conf import settings
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
+import logging
 
 """
 Google Calendar integration service.
@@ -51,12 +52,30 @@ def _get_user_credentials():
 
     return credentials
 
+logger = logging.getLogger(__name__)
 
 def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
     credentials = _get_user_credentials()
 
     service = build("calendar", "v3", credentials=credentials)
-
+    """
+    log entry before event creation
+    extra is a dictionary that attaches structured metadata(data about data) to log entries making it cleaner, useful
+    easier to debug, search and prodcution ready.
+    we use logging in backend instead of print because print only works in terminal 
+    logging works with Djnagos logging system, log files, error tracking systems etc and it also
+    leps us to categorise messages
+    """
+   
+    logger.info(
+        "Creating Google Calendar event",
+        extra={
+            "start_time": start_time,
+            "end_time": end_time,
+            "trainee_email": trainee_email,
+            "volunteer_email": volunteer_email,
+        },
+    )
     event = {
         "summary": "Pair Scheduling Session",
         "description": "1:1 session between trainee and volunteer",
@@ -80,7 +99,7 @@ def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
             }
         },
     }
-
+    
     created_event = (
         service.events()
         .insert(
@@ -89,7 +108,17 @@ def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
             conferenceDataVersion=1,
             sendUpdates="all", # send calendar invitations to all attendees
         )
+        
         .execute()
+    )
+    #log entry after event creation
+    logger.info(
+        "Google calender event created",
+        extra={
+            "event_id": created_event.get("id"),
+            "meet_link": created_event.get("hangoutLink"),
+        },
+        
     )
 
     return {

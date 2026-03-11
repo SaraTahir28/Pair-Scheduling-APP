@@ -122,3 +122,25 @@ STATIC_URL = 'static/'
 GOOGLE_CALENDAR_ID = "primary"
 # Local OAuth token file generated after the first Google authorization flow.
 GOOGLE_OAUTH_TOKEN_FILE = BASE_DIR / "oauth_token.json"
+
+
+#send logs to the console
+
+#show INFO, WARNING, ERROR, CRITICAL
+
+#include your module logs
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "": {  # root logger
+            "handlers": ["console"],
+            "level": "INFO",
+        },
+    },
+}
