@@ -7,4 +7,14 @@ oauth_token.json
 # Django
 db.sqlite3
 # macOS
+
+
+# Python cache
+__pycache__/
+**/__pycache__/
+*.pyc
+
+# OS/editor files
 .DS_Store
+.vscode/
+.idea/

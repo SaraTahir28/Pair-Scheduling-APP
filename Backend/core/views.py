@@ -1,3 +1,5 @@
+
+# Not used in this view, but commonly imported for rendering HTML templates.
 from django.shortcuts import render
 
 import json
