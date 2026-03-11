@@ -1,4 +1,14 @@
+# Virtual environment
 venv/
+# Secrets
+credentials.json
+oauth_client_secret.json
+oauth_token.json
+# Django
+db.sqlite3
+# macOS
+
+
 # Python cache
 __pycache__/
 **/__pycache__/
