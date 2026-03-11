@@ -52,12 +52,30 @@ def _get_user_credentials():
 
     return credentials
 
+"""
+    Function get_calendar_service return a Google Calendar API client.
+
+    This client  stored in a variable named `service` in create_google_meeting acts as our
+    connection to Google Calendar. It provides the methods we use to create,
+    update, delete, and list events through calls like:
+        service.events().insert(...)
+        service.events().update(...)
+        service.events().delete(...)
+    In short, this function centralizes the setup of the Calendar client so it
+    can be reused across different Google Calendar operations.
+    """
+def get_calendar_service(credentials):
+    
+    return build("calendar", "v3", credentials=credentials)
+
+
 logger = logging.getLogger(__name__)
 
 def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
     credentials = _get_user_credentials()
 
-    service = build("calendar", "v3", credentials=credentials)
+    service = get_calendar_service(credentials)
+    
     """
     log entry before event creation
     extra is a dictionary that attaches structured metadata(data about data) to log entries making it cleaner, useful
