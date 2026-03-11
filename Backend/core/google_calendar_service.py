@@ -124,4 +124,6 @@ def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
     return {
         "event_id": created_event.get("id"),
         "meet_link": created_event.get("hangoutLink"),
+        "start": created_event.get("start"),
+        "end": created_event.get("end"),
     }
