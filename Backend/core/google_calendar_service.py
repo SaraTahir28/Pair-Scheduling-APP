@@ -6,6 +6,27 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 
+"""
+Google Calendar integration service.
+
+This module acts as the backend integration layer between the Django application
+and the Google Calendar API. It is responsible for:
+
+1. Loading OAuth credentials from the token file
+2. Refreshing expired access tokens and persisting the updated token
+3. Building an authenticated Google Calendar API client
+4. Constructing the event payload (summary, attendees, times, Meet config)
+5. Creating a calendar event on the configured Google Calendar
+6. Automatically generating a Google Meet link via conferenceData
+7. Returning the created event's ID and Meet URL to the caller
+
+This service is intentionally isolated from Django views so that:
+- business logic remains testable,
+- Google API interactions stay encapsulated,
+- and the view layer only handles request/response concerns.
+"""
+
+
 # Full calendar scope is required to create events with attendees
 # and attach Google Meet conference data.
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
