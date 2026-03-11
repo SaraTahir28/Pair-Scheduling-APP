@@ -1,11 +1,10 @@
 venv/
-# Ignore Postman and temp files
-.postman/
-postman/
-*.postman_collection.json
-*.postman_environment.json
-
-# Ignore Python/Django temp files
+# Python cache
 __pycache__/
+**/__pycache__/
 *.pyc
-*.sqlite3
+
+# OS/editor files
+.DS_Store
+.vscode/
+.idea/
