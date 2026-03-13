@@ -3,13 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <title>Booking System Demo</title>
+  
 </head>
+
 <body>
-  <h1>Google Calendar Demo</h1>
+  <div class="container">
+    <h1>Google Calendar Demo</h1>
 
-  <button onclick="createMeeting()">Create Meeting</button>
+    <form id="booking_form">
+      <label for="trainee_email">Trainee Email</label>
+      <input type="email" name="trainee_email" required />
 
-  <pre id="output"></pre>
+      <label for="volunteer_email">Volunteer Email</label>
+      <input type="email" name="volunteer_email" required />
+
+      <label for="start_time">Start Time</label>
+      <input type="datetime-local" name="start_time" required />
+
+      <label for="end_time">End Time</label>
+      <input type="datetime-local" name="end_time" required />
+
+      <input type="submit" value="Create Meeting" />
+    </form>
+
+    <pre id="output"></pre>
+  </div>
 
   <script src="script.js"></script>
 </body>
