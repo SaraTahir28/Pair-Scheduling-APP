@@ -5,7 +5,7 @@ React + Vite: Vite instead of create-react-app
 difference: create-react-app vs vite - main file will be main.jsx instead of index.js and as it is faster build time
 .jsx for components
 
-Tailwind CSS v3: Used with @apply directive in CSS to keep HTML clean.
+Tailwind CSS v3: Used with @apply directive in CSS to keep HßTML clean.
 Utility classes instead of pre-built components like bootstrap to have more control over the design.
 
 Atomic Design: Atoms (UI components) → Molecules (Groups) → Organisms (Sections) → Pages.
@@ -46,7 +46,28 @@ index.css: All custom styles are defined here using the @apply directive
 CSS variables in index.css mapped to tailwind.config.js
 tailwind cheatsheet here https://tailwindcss.504b.cc/
 
-4
+4 React info
+Breakdown of how it works between components:
+App.jsx keeps the logic, controls the data and can change the state.
+when state changes, react re-rednders the UI.
+
+example on Calendar component and App
+useState() hook is in App.jsx
+const [userClickedOnDate, setUserClickedOnDate] = useState(null);
+
+state is passed to Calendar component as props when App renders
+<Calendar
+	userClickedOnDateFromApp={userClickedOnDate}
+	setUserClickedOnDateFromApp={setUserClickedOnDate}
+/>
+then in Calendar component
+const Calendar = ({
+userClickedOnDateFromApp,
+setUserClickedOnDateFromApp,
+}) => { passed in a props
+react sees change in state and re renders
+
+5
 In progress:
 UI is currently using hardcoded placeholders, my next task is to finilize the date booking.
 So far completed components from screens 1 and 2.
