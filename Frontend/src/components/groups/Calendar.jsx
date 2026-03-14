@@ -47,20 +47,12 @@ const DayDot = ({
 
 // const Calendar = () => {
 // this becomes with props { userClickedOnDateFromApp, setUserClickedOnDateFromApp } because we now grab this from App to showtimes inm timeslots
-const Calendar = ({
-	userClickedOnDateFromApp,
-	setUserClickedOnDateFromApp,
-}) => {
+const Calendar = ({ selectedDate, setSelectedDate }) => {
 	const setDefaultMonthView = new Date(2026, 2, 1);
 
 	// here add state (state is month - initially march)so the UI updates automatically
 	// hook useState() returns [current value of state, function called to update state]
 
-	// const arrayWithCurrentMonthAndFunctionToChangeMonth = useState(setDefaultMonthView)
-	// const currentDate = arrayWithCurrentMonthAndFunctionToChangeState[0] //whole march obj
-	// const funcToChangeMonth = arrayWithCurrentMonthAndFunctionToChangeMonth[1] // prev next
-	// const [currentDate, funcToChangeMonth] = arrayWithCurrentMonthAndFunctionToChangeMonth;
-	//destructured shorter:
 	const [currentDate, funcToChangeMonth] = useState(setDefaultMonthView);
 
 	const month = currentDate.getMonth();
@@ -89,14 +81,17 @@ const Calendar = ({
 	//first off no date selected by user - only here because user cant click on empty square
 	// in js userClickedOnDate = i, here useState(state, func to change state)
 	// const [userClickedOnDate, setUserClickedOnDate] = useState(null);
-	// thwe above is now comig from the App so deleted from here!
+	// thwe above is now comig from the App as props
 
 	const fullDaySquares = [];
 	for (let i = 1; i <= daysInMonth; i++) {
 		//check if day is available T/F
 		const isDayAvailable = availableDates.includes(i);
-		//userClickedOnDate === i ? t/f
-		const isDaySelectedInCal = userClickedOnDateFromApp === i;
+
+		const isDaySelectedInCal =
+			selectedDate &&
+			selectedDate.getDate() === i &&
+			selectedDate.getMonth() === month;
 
 		fullDaySquares.push(
 			<div key={"day_" + i}>
@@ -108,13 +103,13 @@ const Calendar = ({
 						if (isDaySelectedInCal) {
 							//here because its not set here anymore but comes from props from App
 							// setUserClickedOnDate(null); it becomes:
-							setUserClickedOnDateFromApp(null);
+							setSelectedDate(null);
 						} else {
 							// setUserClickedOnDate(i); and this becomes new day in
 							// setUserClickedOnDateFromApp(i);  but instead of just the number i we can send the date obj for the heading of the timeslots
 							// so it becomes:
-							const fullDateObjToGiveToApp = new Date(year, month, i);
-							setUserClickedOnDateFromApp(fullDateObjToGiveToApp);
+							const fullDateObj = new Date(year, month, i);
+							setSelectedDate(fullDateObj);
 							//no need to send the app the whole obj  so
 						}
 					}}

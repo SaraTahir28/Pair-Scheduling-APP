@@ -51,6 +51,14 @@ Breakdown of how it works between components:
 App.jsx keeps the logic, controls the data and can change the state.
 when state changes, react re-rednders the UI.
 
+explanation of state
+// const arrayWithCurrentMonthAndFunctionToChangeMonth = useState(setDefaultMonthView)
+// const currentDate = arrayWithCurrentMonthAndFunctionToChangeState[0] //whole march obj
+// const funcToChangeMonth = arrayWithCurrentMonthAndFunctionToChangeMonth[1] // prev next
+// const [currentDate, funcToChangeMonth] = arrayWithCurrentMonthAndFunctionToChangeMonth;
+//destructured shorter:
+const [currentDate, funcToChangeMonth] = useState(setDefaultMonthView);
+
 example on Calendar component and App
 useState() hook is in App.jsx
 const [userClickedOnDate, setUserClickedOnDate] = useState(null);
