@@ -66,9 +66,20 @@ function App() {
 			volunteer_name: activeVolunteer.name,
 			volunteer_email: activeVolunteer.email,
 		};
-
-		console.log("obj created", bookingDetailsObj);
-		setIsBookingConfirmed(true);
+		fetch("http://localhost:8000/create-meeting/", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(bookingDetailsObj),
+		})
+			.then((response) => {
+				if (response.ok) {
+					setIsBookingConfirmed(true);
+				}
+			})
+			.catch((error) => console.log("Error:", error));
+		// console.log("obj created", bookingDetailsObj);
 	};
 
 	return (

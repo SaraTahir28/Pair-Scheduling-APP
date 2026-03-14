@@ -75,11 +75,17 @@ setUserClickedOnDateFromApp,
 }) => { passed in a props
 react sees change in state and re renders
 
-5
-In progress:
-UI is currently using hardcoded placeholders, my next task is to finilize the date booking.
-So far completed components from screens 1 and 2.
+5 Completed
+completed screens from figma
 https://www.figma.com/design/kTV3Ox7khtnHyk6TdZy6CQ/Untitled?node-id=35-1112&t=Y3qd4fIAGqwnR8ye-1
+created volunteer object for getting availability data
+Form submission now sends bookingDetailsObj to http://localhost:8000/create-meeting/ - note obj needs to be fixed with time
+Fixed layout if sections and added styling to form
+
+TO DO:
+Time Format: start_time format is not yet finalized for Google Calendar API.
+End Time: end_time logic needs to be fixed/standardized on the frontend before production.
+Volunteer Selection: Need to add a UI component to select different volunteers from the object.
 
 ---
 
