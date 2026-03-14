@@ -19,7 +19,7 @@ const monthNames = [
 ];
 const dayNames = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
-const availableDates = [23, 24, 25, 26, 29, 30];
+// const availableDates = [23, 24, 25, 26, 29, 30]; this now comes passed in to redned Calendar from App
 
 const DayDot = ({
 	children,
@@ -47,7 +47,11 @@ const DayDot = ({
 
 // const Calendar = () => {
 // this becomes with props { userClickedOnDateFromApp, setUserClickedOnDateFromApp } because we now grab this from App to showtimes inm timeslots
-const Calendar = ({ selectedDate, setSelectedDate }) => {
+const Calendar = ({
+	selectedDateProps,
+	setSelectedDateProps,
+	availableDates,
+}) => {
 	const setDefaultMonthView = new Date(2026, 2, 1);
 
 	// here add state (state is month - initially march)so the UI updates automatically
@@ -89,9 +93,9 @@ const Calendar = ({ selectedDate, setSelectedDate }) => {
 		const isDayAvailable = availableDates.includes(i);
 
 		const isDaySelectedInCal =
-			selectedDate &&
-			selectedDate.getDate() === i &&
-			selectedDate.getMonth() === month;
+			selectedDateProps &&
+			selectedDateProps.getDate() === i &&
+			selectedDateProps.getMonth() === month;
 
 		fullDaySquares.push(
 			<div key={"day_" + i}>
@@ -103,13 +107,13 @@ const Calendar = ({ selectedDate, setSelectedDate }) => {
 						if (isDaySelectedInCal) {
 							//here because its not set here anymore but comes from props from App
 							// setUserClickedOnDate(null); it becomes:
-							setSelectedDate(null);
+							setSelectedDateProps(null);
 						} else {
 							// setUserClickedOnDate(i); and this becomes new day in
 							// setUserClickedOnDateFromApp(i);  but instead of just the number i we can send the date obj for the heading of the timeslots
 							// so it becomes:
 							const fullDateObj = new Date(year, month, i);
-							setSelectedDate(fullDateObj);
+							setSelectedDateProps(fullDateObj);
 							//no need to send the app the whole obj  so
 						}
 					}}
@@ -138,7 +142,7 @@ const Calendar = ({ selectedDate, setSelectedDate }) => {
 			</div>
 			<div className="cal-day-grid">
 				{dayNames.map((day) => (
-					<div key={day} className="text-[12px] font-bold">
+					<div key={day} className="p font-bold">
 						{day}
 					</div>
 				))}

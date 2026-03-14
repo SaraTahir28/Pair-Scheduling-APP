@@ -27,26 +27,40 @@ const BookingForm = ({ whenFormSubmit }) => {
 			traineeEmail: cleanEmail,
 		});
 	};
-	return (
-		<div>
-			<form>
-				<input
-					type="text"
-					label="Name"
-					placeholder="Enter your name"
-					value={name}
-					onChange={(e) => setName(e.target.value)}
-				/>
-				<input
-					type="email"
-					label="Email"
-					placeholder="Enter your email"
-					value={email}
-					onChange={(e) => setEmail(e.target.value)}
-				/>
-				{/* onChange grabs keystroke and saves it to state */}
 
-				<ActionBtn onClick={checkInputsValid}>Book Meeting</ActionBtn>
+	{
+		/* onChange grabs keystroke and saves it to state onChange={(e) => setName(e.target.value)} */
+	}
+	return (
+		<div className="booking-form-container">
+			<h2 className="form-title">Enter your details</h2>
+			<form>
+				<div className="form-input-group">
+					<label className="form-label">Name</label>
+					<input
+						className="form-input"
+						type="text"
+						placeholder="Enter your name"
+						value={name}
+						onChange={(e) => setName(e.target.value)}
+					/>
+				</div>
+
+				<div className="form-input-group">
+					<label className="form-label">Email</label>
+					<input
+						className="form-input"
+						type="email"
+						label="Email"
+						placeholder="Enter your email"
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+					/>
+				</div>
+				<br></br>
+				<ActionBtn className="btn-schedule-event" onClick={checkInputsValid}>
+					Book Meeting
+				</ActionBtn>
 			</form>
 		</div>
 	);
