@@ -1,5 +1,6 @@
 import React from "react";
 import { Clock, Video } from "lucide-react";
+import duncanImg from "../../assets/duncan.png";
 
 const SessionDetails = ({ selectedDate }) => {
 	//here added selectedDate as props to conditionally render volunteer availability div
@@ -11,8 +12,9 @@ const SessionDetails = ({ selectedDate }) => {
 					<p className="volunteers-label">Available volunteers</p>
 
 					<div className="avatar-row">
-						<img src="../assets/duncan.png" className="avatar" />
-						<img src="../assets/duncan.png" className="avatar" />
+						<img src={duncanImg} className="avatar" />
+						<img src={duncanImg} className="avatar" />
+						<img src={duncanImg} className="avatar" />
 					</div>
 
 					<p className="volunteer-name">Duncan Parkinson</p>
