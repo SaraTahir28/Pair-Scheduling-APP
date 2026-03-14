@@ -38,7 +38,7 @@ function App() {
 		<div className="booking-box">
 			<div className="session-details-col">
 				{/* cond to show left panel only if no confirmation yet */}
-				{!isBookingConfirmed && <SessionDetails />}
+				{!isBookingConfirmed && <SessionDetails selectedDate={selectedDate} />}
 			</div>
 
 			{/* here we conditionally render groups/sections of the screen so no clutter in UI 
