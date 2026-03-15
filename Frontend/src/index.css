@@ -29,6 +29,25 @@
 		@apply mt-2 text-lg font-bold text-main;
 	}
 
+	/* action buttons and time seleciton buttons */
+	.action-btn {
+		@apply gap-4 rounded-[32px] text-base font-bold py-4 px-10 flex justify-center hover:opacity-90;
+	}
+
+	.btn-primary {
+		@apply bg-brand-primary text-white;
+	}
+	.btn-secondary {
+		@apply bg-white border border-border-color text-main hover:bg-black/5;
+	}
+	.btn-tertiary {
+		@apply bg-transparent text-muted hover:text-dark;
+	}
+	.btn-time-slot {
+		@apply w-full py-3 border border-brand-blue/60 bg-white text-main rounded-lg text-sm font-bold transition-all;
+		@apply hover:bg-brand-blue/10 hover:border-brand-blue hover:text-brand-blue;
+	}
+
 	/* TRAINEE BOOKING */
 	/* outer div */
 	.booking-box {
@@ -123,10 +142,6 @@
 	}
 
 	/* BOOKING TIME SLOT SECTION */
-	.btn-time-slot {
-		@apply w-full py-3 border border-brand-blue/60 bg-white text-main rounded-lg text-sm font-bold transition-all;
-		@apply hover:bg-brand-blue/10 hover:border-brand-blue hover:text-brand-blue;
-	}
 
 	.timeslot-group-div {
 		@apply flex flex-col gap-2;
@@ -158,8 +173,19 @@
 	.form-input {
 		@apply border border-black/10 rounded-[6px] p-4 w-[350px] outline-none transition-all mb-2;
 	}
-	.btn-schedule-event {
-		@apply bg-brand-primary text-white font-bold py-[8px] px-[16px] flex justify-center hover:opacity-90;
-	}
+
 	/* here will add confirmation styling */
+
+	/* volunteer flow */
+	.booking-card {
+		@apply bg-white rounded-2xl shadow-sm border border-border-color p-6 w-full max-w-[550px] flex gap-6;
+	}
+
+	/* this is the same as the div so */
+	.session-details-div-booking-card {
+		@apply flex flex-col gap-2;
+	}
+	.session-plus-trainee-details-div {
+		@apply flex flex-col;
+	}
 }
