@@ -84,8 +84,9 @@ Fixed layout if sections and added styling to form
 
 TO DO:
 Time Format: start_time format is not yet finalized for Google Calendar API.
-End Time: end_time logic needs to be fixed/standardized on the frontend before production.
 Volunteer Selection: Need to add a UI component to select different volunteers from the object.
+Match object sent in post to backend.
+fix col containers in App - make col containers rendered in App empty and apply the p-4 and % width in divs in components instead.
 
 ---
 

@@ -54,19 +54,25 @@ function App() {
 
 	// here we set up booking obj that will be sent to backend
 	const createBookingDetailsObj = (bookingFormData) => {
-		// TODO crete an obj note backend uses end time and different time format
+		// ---- fix to object date format to match backend
+		const formattedDate = selectedDate.toLocaleDateString("en-CA");
 
 		const bookingDetailsObj = {
 			trainee_name: bookingFormData.traineeName,
 			trainee_email: bookingFormData.traineeEmail,
-			//these 2 come are grabbed from states above
-			start_date: selectedDate,
-			start_time: selectedTime,
-			// end_time: selectedTime, //i dont have this yet anywhere - also fe uses 1 hour not fin time
+			//start_date and start_time icome from the state
+			//converted in fix ----- start
+			// start_date: selectedDate,
+			// // on fornt end I had start_date as date only but backedn uses date and time in one so below
+			// start_time: selectedTime, now below this matches backend
+			// start_date and start_time are one var
+			start_time: `${formattedDate}T${selectedTime}:00Z`,
+			//below is hardcoded as in fe it only exists as 1 hour meeting and no end_time exists
+			end_time: `${formattedDate}T23:59:00Z`,
 			volunteer_name: activeVolunteer.name,
 			volunteer_email: activeVolunteer.email,
 		};
-		fetch("http://localhost:8000/create-meeting/", {
+		fetch("http://localhost:8000/api/create-meeting/", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
