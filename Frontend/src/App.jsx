@@ -66,7 +66,7 @@ function App() {
 			volunteer_name: activeVolunteer.name,
 			volunteer_email: activeVolunteer.email,
 		};
-		fetch("http://localhost:8000/create-meeting/", {
+		fetch("http://localhost:8000/api/create-meeting/", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",

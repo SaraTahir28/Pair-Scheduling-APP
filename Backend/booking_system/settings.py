@@ -37,10 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core'
+    'core',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -122,3 +125,9 @@ STATIC_URL = 'static/'
 GOOGLE_CALENDAR_ID = "primary"
 # Local OAuth token file generated after the first Google authorization flow.
 GOOGLE_OAUTH_TOKEN_FILE = BASE_DIR / "oauth_token.json"
+#Adding cors settings
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:3000",   # if you ever use CRA
+]
