@@ -1,0 +1,165 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	/* accent, highlight */
+	--brand-primary: 57 18 255;
+	--brand-blue: 0 105 255;
+
+	/* title, body, icon */
+	--text-dark: #1a1a1a;
+	--text-main: #3a3a3c;
+	--text-muted: #737373;
+
+	/* shadows / borders */
+	--border-color: rgba(0, 0, 0, 0.1);
+}
+
+@layer components {
+	.p,
+	p,
+	label {
+		@apply font-normal text-main;
+	}
+	h1 {
+		@apply text-2xl font-bold text-dark;
+	}
+	h2 {
+		@apply mt-2 text-lg font-bold text-main;
+	}
+
+	/* TRAINEE BOOKING */
+	/* outer div */
+	.booking-box {
+		@apply m-10 bg-white rounded-2xl shadow-sm border border-border-color flex w-full max-w-[1080px] min-h-[400px] overflow-hidden;
+	}
+
+	/* main layout with all section columns*/
+	.timeslot-col {
+		@apply w-[30%] p-4;
+	}
+
+	.calendar-col {
+		@apply w-[40%] p-4;
+	}
+	.session-details-col {
+		@apply w-[30%] p-4 border-r border-black/10 flex flex-col gap-8;
+	}
+	/* SESSION SECTION left col */
+	.session-details-div {
+		@apply flex flex-col;
+	}
+	.session-details-div h1 {
+		@apply mt-3;
+	}
+	.session-icon-text-line {
+		@apply w-full flex items-center gap-2 text-muted mt-2;
+	}
+
+	.session-icon {
+		@apply w-5 h-5 text-muted;
+	}
+	/* avatar box styling */
+	.availableVolunteersDiv {
+		@apply gap-4;
+	}
+	.avatar {
+		@apply mb-2;
+	}
+	/* MIDDLE CALENDAR */
+	.calendar-col {
+		@apply flex flex-col items-center border-r border-border-color transition-all duration-300;
+	}
+
+	.cal-div {
+		@apply w-full max-w-[360px] p-2 bg-white;
+	}
+
+	.cal-heading-selectdt {
+		@apply text-lg font-bold text-dark mb-8;
+	}
+
+	.cal-buttons-and-month-div {
+		@apply flex items-center justify-center mb-8 relative;
+	}
+
+	.cal-chevron {
+		@apply w-8 h-8 rounded-full flex items-center justify-center text-muted transition-all bg-transparent;
+		@apply hover:bg-brand-blue/10 hover:text-brand-blue;
+	}
+
+	.cal-month-year-heading {
+		@apply text-[16px] text-dark;
+	}
+
+	.cal-day-grid {
+		@apply grid grid-cols-7 gap-1 mb-4 text-center;
+	}
+
+	/* DAY SELECTION SECTION */
+	.cal-day {
+		@apply w-10 h-10 mx-auto rounded-full flex items-center justify-center text-sm font-medium text-main transition-all cursor-pointer hover:bg-brand-blue/10 hover:text-brand-blue;
+	}
+
+	.cal-day-today {
+		@apply border border-brand-blue text-brand-blue font-bold;
+	}
+
+	.cal-day-selected {
+		@apply w-10 h-10 mx-auto rounded-full flex items-center justify-center text-sm font-bold text-white bg-brand-blue transition-all cursor-pointer;
+	}
+
+	.cal-day-past {
+		@apply text-muted opacity-40 cursor-default;
+	}
+
+	.cal-day-available {
+		@apply text-brand-blue bg-brand-blue/10 font-bold hover:bg-brand-blue/20;
+	}
+
+	.cal-day-unavailable {
+		@apply text-muted opacity-50 cursor-default;
+	}
+
+	/* BOOKING TIME SLOT SECTION */
+	.btn-time-slot {
+		@apply w-full py-3 border border-brand-blue/60 bg-white text-main rounded-lg text-sm font-bold transition-all;
+		@apply hover:bg-brand-blue/10 hover:border-brand-blue hover:text-brand-blue;
+	}
+
+	.timeslot-group-div {
+		@apply flex flex-col gap-2;
+	}
+
+	.timeslot-group-div p {
+		@apply mt-3;
+	}
+
+	.timeslot-date-label {
+		@apply text-muted text-sm font-normal mb-3;
+	}
+
+	.btn-confirm {
+		@apply bg-brand-primary text-white px-10 py-3 rounded-full font-bold text-sm transition-transform active:scale-95 hover:opacity-90;
+	}
+
+	/* BOOKING  FORM */
+	.booking-form-container {
+		@apply px-6 mt-2 mb-4 flex flex-col items-start w-full;
+	}
+	.form-title {
+		@apply text-lg font-bold text-dark mb-4;
+	}
+	.form-input-group {
+		@apply gap-2 flex flex-col;
+	}
+
+	.form-input {
+		@apply border border-black/10 rounded-[6px] p-4 w-[350px] outline-none transition-all mb-2;
+	}
+	.btn-schedule-event {
+		@apply bg-brand-primary text-white font-bold py-[8px] px-[16px] flex justify-center hover:opacity-90;
+	}
+	/* here will add confirmation styling */
+}
