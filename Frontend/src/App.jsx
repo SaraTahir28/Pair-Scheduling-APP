@@ -46,6 +46,18 @@ const traineeDetails = [
 		img: volunteer3Img,
 		email: "kaska@k.com",
 	},
+	{
+		id: 1,
+		name: "Sara Tahir",
+		img: volunteer3Img,
+		email: "s@email.com",
+	},
+	{
+		id: 1,
+		name: "Emiliano Uruena",
+		img: volunteer2Img,
+		email: "e@email.com",
+	},
 ];
 
 function App() {
@@ -105,6 +117,8 @@ function App() {
 
 			<div>
 				<BookingCard trainee={traineeDetails[0]} />
+				<BookingCard trainee={traineeDetails[1]} />
+				<BookingCard trainee={traineeDetails[2]} />
 			</div>
 
 			<div className="booking-box">
