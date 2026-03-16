@@ -129,7 +129,9 @@ GOOGLE_OAUTH_TOKEN_FILE = BASE_DIR / "oauth_token.json"
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "http://localhost:3000",   # if you ever use CRA
+    "http://localhost:5174",   
+    "http://127.0.0.1:5174",
+    "http://localhost:3000"   
 ]
 
 
