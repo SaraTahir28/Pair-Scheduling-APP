@@ -131,3 +131,25 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://localhost:3000",   # if you ever use CRA
 ]
+
+
+#send logs to the console
+
+#show INFO, WARNING, ERROR, CRITICAL
+
+#include your module logs
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "": {  # root logger
+            "handlers": ["console"],
+            "level": "INFO",
+        },
+    },
+}
