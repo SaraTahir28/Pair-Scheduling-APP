@@ -33,12 +33,25 @@ This service is intentionally isolated from Django views so that:
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
 def _get_service_account_credentials():
+    # Load the service account JSON key file specified in settings
     with open(settings.GOOGLE_SERVICE_ACCOUNT_FILE) as f:
         json_data = json.load(f)
-    Credentials = service_account.Credentials.from_service_account_info(json_data,
-    scopes= SCOPES
+
+    # Create a Credentials object from the service account info
+    # This represents the service account itself (robot account)
+    credentials = service_account.Credentials.from_service_account_info(
+        json_data,
+        scopes=SCOPES  # Full Calendar scope needed for events + Meet links
     )
-    return Credentials
+
+    # Use Domain-Wide Delegation to impersonate a real user
+    # The user email is set in settings
+    delegated_credentials = credentials.with_subject(
+        settings.GOOGLE_IMPERSONATED_USER_EMAIL
+    )
+
+    # Return the delegated credentials, which will be used by the Google Calendar API
+    return delegated_credentials
 
 
 
