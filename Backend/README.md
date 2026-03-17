@@ -120,10 +120,10 @@ POST /api/create-meeting/
 curl -X POST http://127.0.0.1:8000/api/create-meeting/ \
 -H "Content-Type: application/json" \
 -d '{
-  "trainee_email": "trainee@example.com",
-  "volunteer_email": "volunteer@example.com",
-  "start_time": "2026-03-10T14:00:00Z",
-  "end_time": "2026-03-10T15:00:00Z"
+  "trainee_email": "emiliano.uru.uk@gmail.com",
+  "volunteer_email": "saratahir34@gmail.com",
+  "start_time": "2026-03-17T19:00:00Z",
+  "end_time": "2026-03-17T20:00:00Z"
 }'
 
 ### Example Response

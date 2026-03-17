@@ -123,6 +123,9 @@ GOOGLE_CALENDAR_ID = "primary"
 # Local OAuth token file generated after the first Google authorization flow.
 GOOGLE_OAUTH_TOKEN_FILE = BASE_DIR / "oauth_token.json"
 
+GOOGLE_SERVICE_ACCOUNT_FILE = BASE_DIR / "service_account.json"
+
+GOOGLE_DELEGATED_USER = "pair-scheduler-dev@cyf-syllabus.iam.gserviceaccount.com"
 
 #send logs to the console
 

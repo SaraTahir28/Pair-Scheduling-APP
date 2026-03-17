@@ -4,6 +4,7 @@ venv/
 credentials.json
 oauth_client_secret.json
 oauth_token.json
+service_account.json
 # Django
 db.sqlite3
 # macOS

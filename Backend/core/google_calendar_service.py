@@ -1,9 +1,8 @@
-from pathlib import Path
+
 import uuid
 
 from django.conf import settings
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
+from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import logging
 
@@ -33,24 +32,6 @@ This service is intentionally isolated from Django views so that:
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
 
-def _get_user_credentials():
-    token_path = Path(settings.GOOGLE_OAUTH_TOKEN_FILE)
-
-    if not token_path.exists():
-        raise FileNotFoundError(
-            "OAuth token file not found. Run create_oauth_token.py first."
-        )
-
-    credentials = Credentials.from_authorized_user_file(str(token_path), SCOPES)
-
-    # If token expired, refresh automatically
-    if credentials.expired and credentials.refresh_token:
-        credentials.refresh(Request())
-
-        # Persist the refreshed token so future requests keep working
-        token_path.write_text(credentials.to_json())
-
-    return credentials
 
 """
     Function get_calendar_service return a Google Calendar API client.
@@ -64,17 +45,22 @@ def _get_user_credentials():
     In short, this function centralizes the setup of the Calendar client so it
     can be reused across different Google Calendar operations.
     """
-def get_calendar_service(credentials):
-    
-    return build("calendar", "v3", credentials=credentials)
+def get_calendar_service():
+   credentials = service_account.Credentials.from_service_account_file(
+       settings.GOOGLE_SERVICE_ACCOUNT_FILE,
+       scopes=SCOPES,
+   ).with_subject(settings.GOOGLE_DELEGATED_USER)
+
+
+   return build("calendar", "v3", credentials=credentials)
 
 
 logger = logging.getLogger(__name__)
 
 def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
-    credentials = _get_user_credentials()
+   
 
-    service = get_calendar_service(credentials)
+    service = get_calendar_service()
     
     """
     log entry before event creation
