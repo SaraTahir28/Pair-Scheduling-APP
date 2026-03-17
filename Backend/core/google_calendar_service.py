@@ -102,11 +102,14 @@ def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
             {"email": trainee_email},
             {"email": volunteer_email},
         ],
+
         "conferenceData": {
             "createRequest": {
                  #requestId must be unique for each conference creation request
                 "requestId": str(uuid.uuid4()),
-                "conferenceSolutionKey": {"type": "hangoutsMeet"},
+                "conferenceSolution":{  #conference data is processed correctly now. The issue was that they key was a nested object.
+                    "key": {"type": "hangoutsMeet"}
+                },
             }
         },
     }
