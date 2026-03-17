@@ -24,7 +24,8 @@ source venv/bin/activate
 ## 4. Install dependencies
 
 ```
-pip install django
+pip install -r requirements.txt
+
 ```
 
 ---
