@@ -45,6 +45,25 @@ function App() {
 				(session) => session.id !== idToDelete
 			);
 		setAllBookedSessionsForAllUsers(varPassToUpdateStateBookedSessions);
+
+		const objectToSendToBackendToDelete = {
+			session_id: idToDelete,
+		};
+
+		// add delete route
+		fetch("http://localhost:8000/api/confirm-address-delete-booking/", {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(objectToSendToBackendToDelete),
+		})
+			.then((response) => {
+				if (response.ok) {
+					console.log("session removed from db");
+				}
+			})
+			.catch((error) => console.log("Error:", error));
 	};
 
 	//check all sessions from active vol and find id and match to traineeDetails by id
@@ -96,7 +115,6 @@ function App() {
 				}
 			})
 			.catch((error) => console.log("Error:", error));
-		// console.log("obj created", bookingDetailsObj);
 	};
 
 	return (
