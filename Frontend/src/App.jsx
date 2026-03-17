@@ -20,25 +20,51 @@ function App() {
 	const [isBookingConfirmed, setIsBookingConfirmed] = useState(false);
 
 	//here we select state of activeVolunteer that will be passed to session details volunteers div
-	//for now Duncan is hardcoded
-	const [activeVolunteer, setActiveVolunteer] = useState(volunteersDetails[0]);
+	//for now Duncan is an active volunteer
+	// const [activeVolunteer, setActiveVolunteer] = useState(volunteersDetails[0]);
+	const [activeVolunteer, setActiveVolunteer] = useState(
+		volunteersDetails.find((volunteer) => volunteer.id === 1)
+	);
+
 	const [allBookedSessionsForAllUsers, setAllBookedSessionsForAllUsers] =
 		useState(bookedSessions);
 
-	//function for deleting booked session that is sent as props to BookingCard.jsx for delete btn
-	const deleteBookedSession = (sessionId) => {
-		const confirmDel = "Are you sure you want to cancel this session?";
-		const bookedSessionsAfterDeletion = bookings.filter(
-			(session) => session.sessionId !== sessionId
-		);
-		console.log(confirmDel);
-		setBookings(bookedSessionsAfterDeletion);
-		setIsUserClickingDelete(false);
+	// grab all sessions for active user
+	const activeVolunteerSessions = allBookedSessionsForAllUsers.filter(
+		(session) => session.volunteerId === activeVolunteer.id
+	);
+	//set up where all active sessions will go on cards
+	const renderedSessions = [];
+
+	//function for deleting booked session sent as props to BookingCard.jsx, runs when delete is confirmed
+	// for the id we want to delete grab all other ids and pass to update state
+	//setup before used below in render
+	const deleteBookedSession = (idToDelete) => {
+		const varPassToUpdateStateBookedSessions =
+			allBookedSessionsForAllUsers.filter(
+				(session) => session.id !== idToDelete
+			);
+		setAllBookedSessionsForAllUsers(varPassToUpdateStateBookedSessions);
 	};
+
+	//check all sessions from active vol and find id and match to traineeDetails by id
+	activeVolunteerSessions.forEach((session) => {
+		traineeDetails.forEach((trainee) => {
+			if (trainee.id === session.traineeId) {
+				renderedSessions.push(
+					<BookingCard
+						key={session.id}
+						trainee={trainee}
+						session={session}
+						deleteBookedSession={deleteBookedSession}
+					/>
+				);
+			}
+		});
+	});
 
 	// here we set up booking obj that will be sent to backend
 	const createBookingDetailsObj = (bookingFormData) => {
-		// ---- fix to object date format to match backend
 		const formattedDate = selectedDate.toLocaleDateString("en-CA");
 
 		const bookingDetailsObj = {
@@ -77,9 +103,10 @@ function App() {
 			{/* for now all booking cards from the active volunteer are rendered here  */}
 
 			<div>
-				<BookingCard trainee={traineeDetails[0]} />
+				{/* <BookingCard trainee={traineeDetails[0]} />
 				<BookingCard trainee={traineeDetails[1]} />
-				<BookingCard trainee={traineeDetails[2]} />
+				<BookingCard trainee={traineeDetails[2]} /> */}
+				{renderedSessions}
 			</div>
 
 			<div className="booking-box">

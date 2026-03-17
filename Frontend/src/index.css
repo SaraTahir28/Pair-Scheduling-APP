@@ -44,10 +44,9 @@
 		@apply bg-transparent text-muted hover:text-brand-blue;
 	}
 	.btn-destructive {
-		@apply  bg-white border border-red-600 text-main hover:bg-black/5 hover:text-main;
+		@apply bg-white border border-red-600 text-main hover:bg-black/5 hover:text-main;
 	}
 
-	}
 	.btn-time-slot {
 		@apply w-full py-3 border border-brand-blue/60 bg-white text-main rounded-lg text-sm font-bold transition-all;
 		@apply hover:bg-brand-blue/10 hover:border-brand-blue hover:text-brand-blue;
