@@ -4,6 +4,8 @@ venv/
 credentials.json
 oauth_client_secret.json
 oauth_token.json
+#Adding secrets folder to gitignore. This will have our service account credentials.
+secrets/*.json   
 # Django
 db.sqlite3
 # macOS
