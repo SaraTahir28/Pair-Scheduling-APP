@@ -144,3 +144,5 @@ LOGGING = {
         },
     },
 }
+#Adding this ID as are service account user which will act as a bot to generate emails for us.
+GOOGLE_IMPERSONATED_USER_EMAIL = "automated@codeyourfuture.io"
