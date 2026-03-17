@@ -125,7 +125,7 @@ GOOGLE_OAUTH_TOKEN_FILE = BASE_DIR / "oauth_token.json"
 
 GOOGLE_SERVICE_ACCOUNT_FILE = BASE_DIR / "service_account.json"
 
-GOOGLE_DELEGATED_USER = "pair-scheduler-dev@cyf-syllabus.iam.gserviceaccount.com"
+GOOGLE_DELEGATED_USER = "automated@codeyourfuture.io"
 
 #send logs to the console
 

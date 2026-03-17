@@ -60,19 +60,19 @@ def get_calendar_service():
     Returns:
         service (Resource): Google Calendar API client
     """
-   credentials = service_account.Credentials.from_service_account_file(
+    credentials = service_account.Credentials.from_service_account_file(
        settings.GOOGLE_SERVICE_ACCOUNT_FILE,
        scopes=SCOPES,
-   ).with_subject(settings.GOOGLE_DELEGATED_USER)
+    ).with_subject(settings.GOOGLE_DELEGATED_USER)
 
 
-   return build("calendar", "v3", credentials=credentials)
+    return build("calendar", "v3", credentials=credentials)
 
 
 logger = logging.getLogger(__name__)
 
 def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
-   """
+    """
     Creates a Google Calendar event with a Google Meet link.
 
     Args:
