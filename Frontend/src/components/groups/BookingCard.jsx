@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Clock, Video } from "lucide-react";
 import { ActionBtn } from "../elements/Button";
 
-const BookingCard = ({ trainee, deleteBookedSession }) => {
+const BookingCard = ({ trainee, session, deleteBookedSession }) => {
 	const [isUserClickingDelete, setIsUserClickingDelete] = useState(false);
 
 	//ask for a confirmation if clicked on delete

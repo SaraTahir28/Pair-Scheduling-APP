@@ -1,5 +1,5 @@
 //mock relational
-const bookedSessions = [
+export const bookedSessions = [
 	{
 		id: "s101",
 		volunteerId: 1,
@@ -25,4 +25,3 @@ const bookedSessions = [
 		meetLink: "https://meet.google.com/",
 	},
 ];
-export default bookedSessions;

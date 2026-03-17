@@ -2,7 +2,7 @@ import duncanImg from "../assets/duncan.png";
 import volunteer2Img from "../assets/volunteer2.png";
 import volunteer3Img from "../assets/volunteer3.png";
 
-const volunteersDetails = [
+export const volunteersDetails = [
 	{
 		id: 1,
 		name: "Duncan Parkinson",
@@ -29,7 +29,7 @@ const volunteersDetails = [
 	},
 ];
 
-const traineeDetails = [
+export const traineeDetails = [
 	{
 		id: 1,
 		name: "Kaska Kazimierczuk",
