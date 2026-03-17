@@ -3,62 +3,10 @@ import SessionDetails from "./components/groups/SessionDetails";
 import Calendar from "./components/groups/Calendar";
 import TimeSlotGroup from "./components/groups/TimeSlotGroup";
 import BookingForm from "./components/groups/BookingForm";
-import duncanImg from "./assets/duncan.png";
-import volunteer2Img from "./assets/volunteer2.png";
-import volunteer3Img from "./assets/volunteer3.png";
+import { volunteersDetails, traineeDetails } from "./data/UserData";
 
+import { bookedSessions } from "./data/BookedSessions";
 import BookingCard from "./components/groups/BookingCard";
-
-//volunteers data object is here for now,
-// initially available dates was hardcoded inside Calendar, now it is a part of volunteers object below
-// but the active volunteer is still hardcoded to Duncan
-const volunteersDetails = [
-	{
-		id: 1,
-		name: "Duncan Parkinson",
-		img: duncanImg,
-		email: "duncan@duncan.com",
-		availableDates: [17, 18, 19, 24, 25, 26, 31],
-		availableTimes: ["15:00", "15:30", "16:00", "16:30", "17:00"],
-	},
-	{
-		id: 2,
-		name: "Test Volunteer",
-		img: volunteer2Img,
-		email: "vol2@vol.com",
-		availableDates: [23, 24, 27],
-		availableTimes: ["14:00", "16:45", "16:30"],
-	},
-	{
-		id: 3,
-		name: "Another Volunteer",
-		img: volunteer3Img,
-		email: "vol3@vol.com",
-		availableDates: [24, 25, 28, 30],
-		availableTimes: ["10:00", "18:30"],
-	},
-];
-
-const traineeDetails = [
-	{
-		id: 1,
-		name: "Kaska Kazimierczuk",
-		img: volunteer3Img,
-		email: "kaska@k.com",
-	},
-	{
-		id: 1,
-		name: "Sara Tahir",
-		img: volunteer3Img,
-		email: "s@email.com",
-	},
-	{
-		id: 1,
-		name: "Emiliano Uruena",
-		img: volunteer2Img,
-		email: "e@email.com",
-	},
-];
 
 function App() {
 	//App holds state and sends as props to children as props, children change state and rerender is triggered
@@ -74,6 +22,19 @@ function App() {
 	//here we select state of activeVolunteer that will be passed to session details volunteers div
 	//for now Duncan is hardcoded
 	const [activeVolunteer, setActiveVolunteer] = useState(volunteersDetails[0]);
+	const [allBookedSessionsForAllUsers, setAllBookedSessionsForAllUsers] =
+		useState(bookedSessions);
+
+	//function for deleting booked session that is sent as props to BookingCard.jsx for delete btn
+	const deleteBookedSession = (sessionId) => {
+		const confirmDel = "Are you sure you want to cancel this session?";
+		const bookedSessionsAfterDeletion = bookings.filter(
+			(session) => session.sessionId !== sessionId
+		);
+		console.log(confirmDel);
+		setBookings(bookedSessionsAfterDeletion);
+		setIsUserClickingDelete(false);
+	};
 
 	// here we set up booking obj that will be sent to backend
 	const createBookingDetailsObj = (bookingFormData) => {
@@ -113,7 +74,7 @@ function App() {
 
 	return (
 		<>
-			{/* for now the booking card from the volunteer flow is rendered here  */}
+			{/* for now all booking cards from the active volunteer are rendered here  */}
 
 			<div>
 				<BookingCard trainee={traineeDetails[0]} />

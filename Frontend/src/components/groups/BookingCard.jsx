@@ -1,8 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { Clock, Video } from "lucide-react";
 import { ActionBtn } from "../elements/Button";
-// here i will pass the hardcoded array of trainees from app for now
-const BookingCard = ({ trainee }) => {
+
+const BookingCard = ({ trainee, deleteBookedSession }) => {
+	const [isUserClickingDelete, setIsUserClickingDelete] = useState(false);
+
+	//ask for a confirmation if clicked on delete
+	if (isUserClickingDelete) {
+		return (
+			<div className="confirm-delete-div">
+				<p>Do you want to delete this session?</p>
+				<ActionBtn
+					additionalBtnClass="btn-destructive"
+					onClick={deleteBookedSession}
+				>
+					Yes
+				</ActionBtn>
+				<ActionBtn
+					additionalBtnClass="btn-secondary"
+					onClick={() => setIsUserClickingDelete(false)}
+				>
+					Cancel
+				</ActionBtn>
+			</div>
+		);
+	}
+	//if not clicked delete render the div with booked session
 	return (
 		<div className="booking-card-div">
 			<div className="booking-card">
@@ -38,14 +61,14 @@ const BookingCard = ({ trainee }) => {
 				<div className="booking-card-btns">
 					<ActionBtn
 						additionalBtnClass="btn-secondary"
-						onClick={() => console.log("Edit btn")}
+						onClick={() => console.log("Edit btn clicked")}
 					>
 						Make changes
 					</ActionBtn>
 
 					<ActionBtn
 						additionalBtnClass="btn-tertiary"
-						onClick={() => console.log("Delete btn")}
+						onClick={() => setIsUserClickingDelete(true)}
 					>
 						Delete
 					</ActionBtn>
