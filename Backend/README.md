@@ -73,11 +73,10 @@ If everything is set up correctly, Django’s default welcome page will appear.
 
 # Google Calendar Credentials
 
-The Google Calendar integration uses a dedicated cyf service account
+The Google Calendar integration uses a dedicated cyf service account with a user acount
 
 The required  credentials have already been generated for this project.
 
----
 
 ## Install Required Dependencies 
 
@@ -89,8 +88,7 @@ pip install google-api-python-client google-auth
 ### Security Note
 
 The following folder contain sensitive credentials and must **not** be committed to the repository:
- secrets
-
+ secrets folder
 
 Make sure the folder are included in `.gitignore`.
 ---
@@ -106,8 +104,8 @@ POST /api/create-meeting/
 curl -X POST http://127.0.0.1:8000/api/create-meeting/ \
 -H "Content-Type: application/json" \
 -d '{
-  "trainee_email": "daniel@codeyourfuture.io",
-  "volunteer_email": "automated@codeyourfuture.io",
+  "trainee_email": "trainee@example.com",
+  "volunteer_email": "volunteer@example.com",
   "start_time": "2026-03-10T14:00:00Z",
   "end_time": "2026-03-10T15:00:00Z"
 }'
