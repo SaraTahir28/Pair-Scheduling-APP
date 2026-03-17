@@ -9,43 +9,57 @@ import logging
 """
 Google Calendar integration service.
 
-This module acts as the backend integration layer between the Django application
-and the Google Calendar API. It is responsible for:
+This module is responsible for handling all interactions with the Google Calendar API.
+It acts as a dedicated service layer, separating external API logic from Django views.
 
-1. Loading OAuth credentials from the token file
-2. Refreshing expired access tokens and persisting the updated token
-3. Building an authenticated Google Calendar API client
-4. Constructing the event payload (summary, attendees, times, Meet config)
-5. Creating a calendar event on the configured Google Calendar
-6. Automatically generating a Google Meet link via conferenceData
-7. Returning the created event's ID and Meet URL to the caller
+Key responsibilities:
 
-This service is intentionally isolated from Django views so that:
-- business logic remains testable,
-- Google API interactions stay encapsulated,
-- and the view layer only handles request/response concerns.
+1. Load service account credentials from a secure JSON file
+2. Use domain-wide delegation to impersonate a real Workspace user
+3. Build an authenticated Google Calendar API client
+4. Construct event payloads (title, time, attendees, Meet link)
+5. Create calendar events via the Google Calendar API
+6. Generate Google Meet links automatically
+7. Return structured event data to the calling view
+
+IMPORTANT:
+
+- Service accounts cannot send invitations or manage attendees on their own.
+- Domain-wide delegation allows the service account to act on behalf of a real user.
+- The delegated user becomes the "owner" of the calendar event.
+
+This design keeps:
+- business logic testable
+- external integrations isolated
+- views focused only on request/response handling
 """
 
 
-# Full calendar scope is required to create events with attendees
-# and attach Google Meet conference data.
+# Full calendar scope required to:
+# - create events
+# - add attendees
+# - generate Google Meet links
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
 
 
-"""
-    Function get_calendar_service return a Google Calendar API client.
-
-    This client  stored in a variable named `service` in create_google_meeting acts as our
-    connection to Google Calendar. It provides the methods we use to create,
-    update, delete, and list events through calls like:
-        service.events().insert(...)
-        service.events().update(...)
-        service.events().delete(...)
-    In short, this function centralizes the setup of the Calendar client so it
-    can be reused across different Google Calendar operations.
-    """
 def get_calendar_service():
+    """
+    Creates and returns an authenticated Google Calendar API client.
+
+    Steps:
+    1. Load service account credentials from file
+    2. Apply domain-wide delegation using a real Workspace user
+    3. Build the Google Calendar API service client
+
+    The delegated user (GOOGLE_DELEGATED_USER) is critical because:
+    - events must belong to a real user
+    - invitations must be sent from a real user
+    - Meet links are owned by that user
+
+    Returns:
+        service (Resource): Google Calendar API client
+    """
    credentials = service_account.Credentials.from_service_account_file(
        settings.GOOGLE_SERVICE_ACCOUNT_FILE,
        scopes=SCOPES,
@@ -58,19 +72,36 @@ def get_calendar_service():
 logger = logging.getLogger(__name__)
 
 def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
-   
+   """
+    Creates a Google Calendar event with a Google Meet link.
+
+    Args:
+        start_time (str): ISO 8601 datetime (UTC)
+        end_time (str): ISO 8601 datetime (UTC)
+        trainee_email (str): trainee email address
+        volunteer_email (str): volunteer email address
+
+    Returns:
+        dict: {
+            event_id,
+            meet_link,
+            start,
+            end
+        }
+
+    Process:
+    1. Build the Google Calendar service client
+    2. Log event creation request (for debugging and observability)
+    3. Construct event payload
+    4. Send request to Google Calendar API
+    5. Log response
+    6. Return relevant event data
+    """
 
     service = get_calendar_service()
     
-    """
-    log entry before event creation
-    extra is a dictionary that attaches structured metadata(data about data) to log entries making it cleaner, useful
-    easier to debug, search and prodcution ready.
-    we use logging in backend instead of print because print only works in terminal 
-    logging works with Djnagos logging system, log files, error tracking systems etc and it also
-    leps us to categorise messages
-    """
-   
+    # Log before creating event (useful for debugging and tracing requests)
+    # "extra" adds structured metadata to logs (better for production logging systems)
     logger.info(
         "Creating Google Calendar event",
         extra={
@@ -80,6 +111,7 @@ def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
             "volunteer_email": volunteer_email,
         },
     )
+    # Event payload sent to Google Calendar API
     event = {
         "summary": "Pair Scheduling Session",
         "description": "1:1 session between trainee and volunteer",
@@ -117,7 +149,7 @@ def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
     )
     #log entry after event creation
     logger.info(
-        "Google calender event created",
+        "Google calendar event created",
         extra={
             "event_id": created_event.get("id"),
             "meet_link": created_event.get("hangoutLink"),
