@@ -41,13 +41,15 @@ const BookingCard = ({ trainee, deleteBookedSession }) => {
 					<div className="session-details-div-booking-card">
 						<div className="session-icon-text-line">
 							<Clock className="session-icon" />
-							<p>15:00 - 16:00</p>
+							<p>
+								{session.date} at {session.time}
+							</p>
 						</div>
 
 						<div className="session-icon-text-line">
 							<Video className="session-icon" />
 							<a
-								href="https://google.com"
+								href={session.meetLink}
 								target="_blank"
 								rel="noopener noreferrer"
 								className="video-link"

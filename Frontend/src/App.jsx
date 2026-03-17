@@ -56,7 +56,8 @@ function App() {
 						key={session.id}
 						trainee={trainee}
 						session={session}
-						deleteBookedSession={deleteBookedSession}
+						// deleteBookedSession={deleteBookedSession}
+						deleteBookedSession={() => deleteBookedSession(session.id)}
 					/>
 				);
 			}
