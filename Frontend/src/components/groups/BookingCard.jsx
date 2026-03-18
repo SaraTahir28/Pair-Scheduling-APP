@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { Clock, Video } from "lucide-react";
 import { ActionBtn } from "../elements/Button";
 
-const BookingCard = ({ trainee, session, deleteBookedSession }) => {
+const BookingCard = ({
+	trainee,
+	session,
+	deleteBookedSession,
+	editBookedSession,
+}) => {
 	const [isUserClickingDelete, setIsUserClickingDelete] = useState(false);
 
 	//ask for a confirmation if clicked on delete
@@ -63,9 +68,9 @@ const BookingCard = ({ trainee, session, deleteBookedSession }) => {
 				<div className="booking-card-btns">
 					<ActionBtn
 						additionalBtnClass="btn-secondary"
-						onClick={() => console.log("Edit btn clicked")}
+						onClick={() => editBookedSession(session)}
 					>
-						Make changes
+						Edit
 					</ActionBtn>
 
 					<ActionBtn
