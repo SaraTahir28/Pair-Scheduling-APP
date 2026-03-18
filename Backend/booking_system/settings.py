@@ -29,17 +29,42 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+#Adding authentication app to settings
 
 INSTALLED_APPS = [
+    # -------------------------------
+    # Default Django apps
+    # -------------------------------
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core',
-    'corsheaders'
+
+    # -------------------------------
+    # Your project apps
+    # -------------------------------
+    'core',       # app for project calendar logic
+    'corsheaders',# Handles Cross-Origin Resource Sharing (CORS)
+    'auth_app',   # Custom authentication app
+
+    # -------------------------------
+    # Django Allauth / Social Login apps
+    # -------------------------------
+    'django.contrib.sites',                    # Required by allauth (site framework)
+    'allauth',                                 # Core allauth app
+    'allauth.account',                         # Handles login, signup, email verification
+    'allauth.socialaccount',                   # Enables social login functionality
+    'allauth.socialaccount.providers.google', # Google OAuth provider
 ]
+
+# -------------------------------
+# Site framework setting (required by django-allauth)
+# -------------------------------
+# This tells Django which Site object to use (from the Sites framework)
+SITE_ID = 1
+
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -155,3 +180,11 @@ LOGGING = {
         },
     },
 }
+
+# -------------------------------
+# Authentication backends (required by allauth)
+# -------------------------------
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',       # Default Django authentication
+    'allauth.account.auth_backends.AuthenticationBackend', # Needed for allauth(Google to work)
+]
