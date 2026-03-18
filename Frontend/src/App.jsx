@@ -4,7 +4,6 @@ import Calendar from "./components/groups/Calendar";
 import TimeSlotGroup from "./components/groups/TimeSlotGroup";
 import BookingForm from "./components/groups/BookingForm";
 import { volunteersDetails, traineeDetails } from "./data/UserData";
-import { ActionBtn } from "./components/elements/Button";
 import { bookedSessions } from "./data/BookedSessions";
 import BookingCard from "./components/groups/BookingCard";
 
@@ -21,7 +20,6 @@ function App() {
 
 	//here we select state of activeVolunteer that will be passed to session details volunteers div
 	//for now Duncan is an active volunteer
-	// const [activeVolunteer, setActiveVolunteer] = useState(volunteersDetails[0]);
 	const [activeVolunteer, setActiveVolunteer] = useState(
 		volunteersDetails.find((volunteer) => volunteer.id === 1)
 	);
@@ -33,38 +31,23 @@ function App() {
 	const activeVolunteerSessions = allBookedSessionsForAllUsers.filter(
 		(session) => session.volunteerId === activeVolunteer.id
 	);
-	//set up where all active sessions will go on cards
+	//set up where all booked sessions will go on cards
 	const renderedSessions = [];
 
-	//editing booked session volunteer for now is linked to the BookingCard
-	const [sessionToEdit, setSessionToEdit] = useState(null);
-	const handleSessionEdit = (session) => {
-		setSessionToEdit(session);
-	};
-
 	//for now this is for volunteer only bc trainee will have limitations of times and will see rerender of cal + times
-	const saveEditedSession = (e) => {
-		e.preventDefault();
-
-		const formData = new FormData(e.target);
-		const newDate = formData.get("new_date");
-		const newTime = formData.get("new_time");
-
+	const saveEditedSession = (updatedSessionFromCard) => {
 		const updatedSessions = allBookedSessionsForAllUsers.map((session) => {
-			if (session.id === sessionToEdit.id) {
-				return { ...sessionToEdit, date: newDate, time: newTime };
+			if (session.id === updatedSessionFromCard.id) {
+				return updatedSessionFromCard;
 			}
 			return session;
 		});
 		// rerender
 		setAllBookedSessionsForAllUsers(updatedSessions);
-		//set state so closes
-		setSessionToEdit(null);
 	};
 
 	//function for deleting booked session sent as props to BookingCard.jsx, runs when delete is confirmed
-	// for the id we want to delete grab all other ids and pass to update state
-	//setup before used below in render
+	// for the id we want to delete - grab all other ids and pass to update state
 	const deleteBookedSession = (idToDelete) => {
 		const varPassToUpdateStateBookedSessions =
 			allBookedSessionsForAllUsers.filter(
@@ -77,19 +60,19 @@ function App() {
 		};
 
 		// add delete route
-		fetch("http://localhost:8000/api/confirm-address-delete-booking/", {
-			method: "DELETE",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(objectToSendToBackendToDelete),
-		})
-			.then((response) => {
-				if (response.ok) {
-					console.log("session removed from db");
-				}
-			})
-			.catch((error) => console.log("Error:", error));
+		// 	fetch("http://localhost:8000/api/confirm-address-delete-booking/", {
+		// 		method: "DELETE",
+		// 		headers: {
+		// 			"Content-Type": "application/json",
+		// 		},
+		// 		body: JSON.stringify(objectToSendToBackendToDelete),
+		// 	})
+		// 		.then((response) => {
+		// 			if (response.ok) {
+		// 				console.log("session removed from db");
+		// 			}
+		// 		})
+		// 		.catch((error) => console.log("Error:", error));
 	};
 
 	//check all sessions from active vol and find id and match to traineeDetails by id
@@ -101,9 +84,8 @@ function App() {
 						key={session.id}
 						trainee={trainee}
 						session={session}
-						// deleteBookedSession={deleteBookedSession}
 						deleteBookedSession={() => deleteBookedSession(session.id)}
-						editBookedSession={handleSessionEdit}
+						saveEditedSession={saveEditedSession}
 					/>
 				);
 			}
@@ -147,51 +129,7 @@ function App() {
 	return (
 		<>
 			<div>
-				{/* sessionToEdit is null so normal view cond and state change cond
-				once edited set to null again to switch off*/}
-				{!sessionToEdit && (
-					<div className="all-cards-container">{renderedSessions}</div>
-				)}
-				{sessionToEdit && (
-					<div className="edit-form-placeholder">
-						<h2>Editing the session</h2>
-						<form className="edit-session-form" onSubmit={saveEditedSession}>
-							<label>
-								New Date:
-								<input
-									type="date"
-									name="new_date"
-									defaultValue={sessionToEdit.date}
-								/>
-							</label>
-							<br />
-
-							<label>
-								New Time:
-								<input
-									type="time"
-									name="new_time"
-									defaultValue={sessionToEdit.time}
-								/>
-							</label>
-
-							<br />
-
-							{/* had action button but now with form must be normal to have submit */}
-							<button type="submit" className="action-btn save-btn">
-								Save Changes
-							</button>
-
-							<ActionBtn
-								additionalBtnClass="cancel-btn"
-								onClick={() => setSessionToEdit(null)}
-							>
-								Cancel
-							</ActionBtn>
-						</form>
-						<br />
-					</div>
-				)}
+				<div className="all-cards-container">{renderedSessions}</div>
 			</div>
 
 			<div className="booking-box">

@@ -6,9 +6,25 @@ const BookingCard = ({
 	trainee,
 	session,
 	deleteBookedSession,
-	editBookedSession,
+	//fix -updated so when user clicks on edit the div does not dissapear and editing div opens
+	saveEditedSession,
 }) => {
 	const [isUserClickingDelete, setIsUserClickingDelete] = useState(false);
+	const [isEditing, setIsEditing] = useState(false);
+
+	const handleEditSubmit = (e) => {
+		e.preventDefault();
+		const formData = new FormData(e.target);
+
+		const updatedSession = {
+			...session,
+			date: formData.get("new_date"),
+			time: formData.get("new_time"),
+		};
+
+		saveEditedSession(updatedSession);
+		setIsEditing(false);
+	};
 
 	//ask for a confirmation if clicked on delete
 	if (isUserClickingDelete) {
@@ -27,6 +43,40 @@ const BookingCard = ({
 				>
 					Cancel
 				</ActionBtn>
+			</div>
+		);
+	}
+
+	//edit is moved from app
+	if (isEditing) {
+		return (
+			<div className="booking-card-div">
+				<div className="booking-card">
+					<h3>Edit Session</h3>
+					<form className="edit-session-form" onSubmit={handleEditSubmit}>
+						<label>
+							New Date:
+							<input type="date" name="new_date" defaultValue={session.date} />
+						</label>
+						<br />
+						<label>
+							New Time:
+							<input type="time" name="new_time" defaultValue={session.time} />
+						</label>
+						<br />
+						<div className="booking-card-btns">
+							<button type="submit" className="action-btn save-btn">
+								Save
+							</button>
+							<ActionBtn
+								additionalBtnClass="btn-secondary"
+								onClick={() => setIsEditing(false)}
+							>
+								Cancel
+							</ActionBtn>
+						</div>
+					</form>
+				</div>
 			</div>
 		);
 	}
@@ -68,7 +118,7 @@ const BookingCard = ({
 				<div className="booking-card-btns">
 					<ActionBtn
 						additionalBtnClass="btn-secondary"
-						onClick={() => editBookedSession(session)}
+						onClick={() => setIsEditing(true)}
 					>
 						Edit
 					</ActionBtn>
