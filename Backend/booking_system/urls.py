@@ -14,10 +14,22 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+'''
+Integrating django-allauth routes into project-level URL config
+
+1. Added `path("accounts/", include("allauth.urls"))` to expose allauth’s authentication endpoints
+2. Enables Google OAuth login flow and required callback URLs
+3. Ensures provider_login_url('google') resolves correctly in templates
+'''
+
 from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/", include("core.urls")),
+    path("accounts/", include("allauth.urls")),
+    path("", include("auth_app.urls")),  #for login
 ]
+
+
