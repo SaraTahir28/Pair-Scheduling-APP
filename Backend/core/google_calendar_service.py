@@ -2,24 +2,26 @@ from pathlib import Path
 import uuid
 
 from django.conf import settings
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 import logging
+from google.oauth2 import service_account
+import json
 
 """
 Google Calendar integration service.
 
-This module acts as the backend integration layer between the Django application
-and the Google Calendar API. It is responsible for:
+This module is responsible for handling all interactions with the Google Calendar API.
+It acts as a dedicated service layer, separating external API logic from Django views.
 
-1. Loading OAuth credentials from the token file
-2. Refreshing expired access tokens and persisting the updated token
-3. Building an authenticated Google Calendar API client
-4. Constructing the event payload (summary, attendees, times, Meet config)
-5. Creating a calendar event on the configured Google Calendar
-6. Automatically generating a Google Meet link via conferenceData
-7. Returning the created event's ID and Meet URL to the caller
+Key responsibilities:
+
+1. Load service account credentials from a secure JSON file
+2. Use domain-wide delegation to impersonate a real Workspace user
+3. Build an authenticated Google Calendar API client
+4. Construct event payloads (title, time, attendees, Meet link)
+5. Create calendar events via the Google Calendar API
+6. Generate Google Meet links automatically
+7. Return structured event data to the calling view
 
 This service is intentionally isolated from Django views so that:
 - business logic remains testable,
@@ -32,25 +34,29 @@ This service is intentionally isolated from Django views so that:
 # and attach Google Meet conference data.
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
+def _get_service_account_credentials():
+    # Load the service account JSON key file specified in settings
+    with open(settings.GOOGLE_SERVICE_ACCOUNT_FILE) as f:
+        json_data = json.load(f)
 
-def _get_user_credentials():
-    token_path = Path(settings.GOOGLE_OAUTH_TOKEN_FILE)
+    # Create a Credentials object from the service account info
+    # This represents the service account itself (robot account)
+    credentials = service_account.Credentials.from_service_account_info(
+        json_data,
+        scopes=SCOPES  # Full Calendar scope needed for events + Meet links
+    )
 
-    if not token_path.exists():
-        raise FileNotFoundError(
-            "OAuth token file not found. Run create_oauth_token.py first."
-        )
+    # Use Domain-Wide Delegation to impersonate a real user
+    # The user email is set in settings
+    delegated_credentials = credentials.with_subject(
+        settings.GOOGLE_IMPERSONATED_USER_EMAIL
+    )
 
-    credentials = Credentials.from_authorized_user_file(str(token_path), SCOPES)
+    # Return the delegated credentials, which will be used by the Google Calendar API
+    return delegated_credentials
 
-    # If token expired, refresh automatically
-    if credentials.expired and credentials.refresh_token:
-        credentials.refresh(Request())
 
-        # Persist the refreshed token so future requests keep working
-        token_path.write_text(credentials.to_json())
 
-    return credentials
 
 """
     Function get_calendar_service return a Google Calendar API client.
@@ -63,7 +69,8 @@ def _get_user_credentials():
         service.events().delete(...)
     In short, this function centralizes the setup of the Calendar client so it
     can be reused across different Google Calendar operations.
-    """
+
+ """
 def get_calendar_service(credentials):
     
     return build("calendar", "v3", credentials=credentials)
@@ -72,8 +79,7 @@ def get_calendar_service(credentials):
 logger = logging.getLogger(__name__)
 
 def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
-    credentials = _get_user_credentials()
-
+    credentials = _get_service_account_credentials()
     service = get_calendar_service(credentials)
     
     """
@@ -105,15 +111,20 @@ def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
             "dateTime": end_time,
             "timeZone": "UTC",
         },
+    
+
         "attendees": [
             {"email": trainee_email},
             {"email": volunteer_email},
         ],
+
         "conferenceData": {
             "createRequest": {
-                # requestId must be unique for each conference creation request
+                 #requestId must be unique for each conference creation request
                 "requestId": str(uuid.uuid4()),
-                "conferenceSolutionKey": {"type": "hangoutsMeet"},
+                "conferenceSolution":{  #conference data is processed correctly now. The issue was that they key was a nested object.
+                    "key": {"type": "hangoutsMeet"}
+                },
             }
         },
     }
@@ -124,7 +135,7 @@ def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
             calendarId=settings.GOOGLE_CALENDAR_ID,
             body=event,
             conferenceDataVersion=1,
-            sendUpdates="all", # send calendar invitations to all attendees
+            sendUpdates="all", # changing it to none from all to test 
         )
         
         .execute()

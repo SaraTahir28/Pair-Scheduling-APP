@@ -164,11 +164,12 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-# Google Calendar integration settings.
-# "primary" refers to the authenticated Google account's main calendar.
+# Google Calendar integration settings with cyf service account
+#"primary" means “use the service account’s main calendar”
 GOOGLE_CALENDAR_ID = "primary"
-# Local OAuth token file generated after the first Google authorization flow.
-GOOGLE_OAUTH_TOKEN_FILE = BASE_DIR / "oauth_token.json"
+GOOGLE_SERVICE_ACCOUNT_FILE = BASE_DIR / "secrets/cyf-service-account.json"
+
+
 #Adding cors settings
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
@@ -199,6 +200,8 @@ LOGGING = {
         },
     },
 }
+#Adding this ID as are service account user which will act as a bot to generate emails for us.
+GOOGLE_IMPERSONATED_USER_EMAIL = "automated@codeyourfuture.io"
 
 # -------------------------------
 # Authentication backends (required by allauth)
