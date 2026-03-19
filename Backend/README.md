@@ -24,7 +24,8 @@ source venv/bin/activate
 ## 4. Install dependencies
 
 ```
-pip install django
+pip install -r requirements.txt
+
 ```
 
 ---
@@ -72,41 +73,24 @@ If everything is set up correctly, Django’s default welcome page will appear.
 
 # Google Calendar Credentials
 
-The Google Calendar integration uses a dedicated project Google account.
+The Google Calendar integration uses a dedicated cyf service account with a user acount
 
-The required OAuth credentials have already been generated for this project.
+The required  credentials have already been generated for this project.
 
-To run the backend locally, you only need to set the following files from the team:
-
-```
-Backend/oauth_client_secret.json
-Backend/oauth_token.json
-```
-
-Place both files in the `Backend/` directory.
-
-These credentials allow the backend to create calendar events and Google Meet links using the project Google account.
-
-After placing the files, the backend will be able to create meetings automatically.
-
----
 
 ## Install Required Dependencies 
 
 Make sure the following packages are installed:
-pip install google-api-python-client google-auth google-auth-oauthlib
+pip install google-api-python-client google-auth 
 
 ---
 
 ### Security Note
 
-The following files contain sensitive credentials and must **not** be committed to the repository:
+The following folder contain sensitive credentials and must **not** be committed to the repository:
+ secrets folder
 
-oauth_client_secret.json
-oauth_token.json
-credentials.json
-
-Make sure these files are included in `.gitignore`.
+Make sure the folder are included in `.gitignore`.
 ---
 
 ## Testing the Meeting Creation Endpoint
@@ -125,7 +109,7 @@ curl -X POST http://127.0.0.1:8000/api/create-meeting/ \
   "start_time": "2026-03-10T14:00:00Z",
   "end_time": "2026-03-10T15:00:00Z"
 }'
-
+ 
 ### Example Response
 {
   "message": "Meeting created successfully.",
