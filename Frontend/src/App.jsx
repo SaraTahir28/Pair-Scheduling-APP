@@ -22,7 +22,7 @@ const router = createBrowserRouter([
 		children: [
 			// index true is root
 			{ index: true, Component: VolunteerDash },
-
+			{ path: "bookings/:id", Component: VolunteerDash },
 			{ path: "bookings/:id/edit", Component: VolunteerDash },
 		],
 	},

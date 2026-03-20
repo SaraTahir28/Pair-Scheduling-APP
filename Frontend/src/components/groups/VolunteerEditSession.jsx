@@ -30,9 +30,9 @@ const VolunteerEditSession = () => {
 
 	return (
 		<div className="booking-card-div">
+			<h2 className="bookings-heading-selectdt">Edit booked session</h2>
 			<div className="booking-card">
-				<h3>Edit your session</h3>
-				<form className="edit-session-form" onSubmit={handleEditSubmit}>
+				<form className="session-edit-div" onSubmit={handleEditSubmit}>
 					<label>
 						New Date:
 						<input type="date" name="new_date" defaultValue={session.date} />
@@ -44,7 +44,7 @@ const VolunteerEditSession = () => {
 					</label>
 					<br />
 					<div className="booking-card-btns">
-						<button type="submit" className="action-btn save-btn">
+						<button type="submit" className="action-btn btn-primary">
 							Save
 						</button>
 						<ActionBtn

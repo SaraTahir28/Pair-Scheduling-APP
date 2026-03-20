@@ -15,7 +15,7 @@ const SessionDetails = ({ activeVolunteerProps, volunteerView }) => {
 						/>
 					</div>
 					<p>
-						Logged in as <br />
+						You are logged in as <br />
 						<strong>{activeVolunteerProps.name}</strong>
 					</p>
 				</div>
