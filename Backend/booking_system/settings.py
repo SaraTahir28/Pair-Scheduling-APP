@@ -20,7 +20,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
+# Google OAuth2 credentials for manual login flow
+# These are read from the .env file to avoid exposing secrets in code
+GOOGLE_OAUTH2_CLIENT_ID = env("GOOGLE_CLIENT_ID")
+GOOGLE_OAUTH2_CLIENT_SECRET = env("GOOGLE_CLIENT_SECRET")
 
+# Base URL of the backend API
+# Used to build redirect URIs for OAuth2 login flow
+BASE_API_URL = "http://localhost:8000"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -49,20 +56,24 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # -------------------------------
-    # Your project apps
+    # Third‑party apps
     # -------------------------------
-    'core',       # app for project calendar logic
-    'corsheaders',# Handles Cross-Origin Resource Sharing (CORS)
-    'auth_app',   # Custom authentication app
+    'corsheaders',  # Handles Cross-Origin Resource Sharing (CORS)
 
     # -------------------------------
     # Django Allauth / Social Login apps
     # -------------------------------
-    'django.contrib.sites',                    # Required by allauth (site framework)
-    'allauth',                                 # Core allauth app
-    'allauth.account',                         # Handles login, signup, email verification
-    'allauth.socialaccount',                   # Enables social login functionality
-    'allauth.socialaccount.providers.google', # Google OAuth provider
+    'django.contrib.sites',                     # Required by allauth (site framework)
+    'allauth',                                  # Core allauth app
+    'allauth.account',                          # Handles login, signup, email verification
+    'allauth.socialaccount',                    # Enables social login functionality
+    'allauth.socialaccount.providers.google',   # Google OAuth provider
+
+    # -------------------------------
+    # Your project apps
+    # -------------------------------
+    'core',        # app for project calendar logic
+    'auth_app',    # Custom authentication app (must come AFTER allauth)
 ]
 
 # -------------------------------
@@ -73,23 +84,37 @@ SITE_ID = 1
 
 # to connect allauth to the values in  .env.
 SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'APP': {
-            'client_id': env('GOOGLE_CLIENT_ID'),
-            'secret': env('GOOGLE_CLIENT_SECRET'),
-            'key': ''
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+        "APP": {
+            "client_id": env("GOOGLE_CLIENT_ID"),
+            "secret": env("GOOGLE_CLIENT_SECRET"),
+            "key": ""
         }
     }
 }
+
 #After Google login => user goes to your frontend
-LOGIN_REDIRECT_URL = "http://localhost:5173/"
+LOGIN_REDIRECT_URL = "http://localhost:5173/"  #used by Django’s built‑in auth
+ACCOUNT_LOGIN_REDIRECT_URL = "http://localhost:5173/" #used by allauth (Google login)
+LOGOUT_REDIRECT_URL = "http://localhost:5173/"
+ACCOUNT_LOGOUT_REDIRECT_URL = "http://localhost:5173/"
+#This makes sure Google login actually fills the email in the user record.
+SOCIALACCOUNT_QUERY_EMAIL = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "none"  # for dev
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'allauth.account.middleware.AccountMiddleware', #adding oauth running middleware.
@@ -178,7 +203,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5174",
     "http://localhost:3000"   
 ]
-
+CORS_ALLOW_CREDENTIALS = True
 
 #send logs to the console
 
