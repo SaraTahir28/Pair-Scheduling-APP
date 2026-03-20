@@ -1,10 +1,28 @@
 import React from "react";
 import { Clock, Video } from "lucide-react";
 
-const SessionDetails = ({ activeVolunteerProps }) => {
-	// const SessionDetails = ({ selectedDateProps, activeVolunteerProps }) => {
-	//selectedDateProps for now not needed because onl;y one volunteer
-	// here added selectedDate as props to conditionally render volunteer availability div
+const SessionDetails = ({ activeVolunteerProps, volunteerView }) => {
+	if (volunteerView) {
+		return (
+			<div className="session-details-div">
+				<h1>Welcome back</h1>
+				<div className="availableVolunteersDiv">
+					<div className="avatar-row">
+						<img
+							src={activeVolunteerProps.img}
+							className="avatar"
+							alt="Profile"
+						/>
+					</div>
+					<p>
+						Logged in as <br />
+						<strong>{activeVolunteerProps.name}</strong>
+					</p>
+				</div>
+			</div>
+		);
+	}
+
 	return (
 		<>
 			<div className="session-details-div">

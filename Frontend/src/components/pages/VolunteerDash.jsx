@@ -85,7 +85,10 @@ const VolunteerDash = () => {
 	return (
 		<div className="booking-box">
 			<div className="session-details-col">
-				<SessionDetails activeVolunteerProps={activeVolunteer} />
+				<SessionDetails
+					activeVolunteerProps={activeVolunteer}
+					volunteerView={true}
+				/>
 			</div>
 			<div className="timeslots-container">
 				{id ? (
