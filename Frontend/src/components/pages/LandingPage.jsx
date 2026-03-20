@@ -8,11 +8,11 @@ const LandingPage = () => {
 			<p>I am a</p>
 
 			<div className="role-selection-btns">
-				<Link to="/traineebooking" className="action-btn">
+				<Link to="/trainee-booking" className="action-btn">
 					Trainee
 				</Link>
 
-				<Link to="/volunteerdash" className="action-btn">
+				<Link to="/volunteer-dash" className="action-btn">
 					Volunteer
 				</Link>
 			</div>

@@ -1,16 +1,36 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LandingPage from "./pages/LandingPage";
-import TraineeBookingFlow from "./pages/TraineeBookingFlow";
-import VolunteerDash from "./pages/VolunteerDash";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import LandingPage from "./components/pages/LandingPage";
+import TraineeBookingFlow from "./components/pages/TraineeBookingFlow";
+import VolunteerDash from "./components/pages/VolunteerDash";
+import VolunteerEditSession from "./components/pages/VolunteerEditSession";
+
+const router = createBrowserRouter([
+	{
+		path: "/",
+		Component: LandingPage,
+	},
+	{
+		path: "/trainee-booking",
+		children: [
+			// index true is root
+			{ index: true, Component: TraineeBookingFlow },
+			{ path: ":selectedDate", Component: TraineeBookingFlow },
+			{ path: ":selectedDate/:selectedTime", Component: TraineeBookingFlow },
+		],
+	},
+	{
+		path: "/volunteer-dash",
+		children: [
+			// index true is root
+			{ index: true, Component: VolunteerDash },
+
+			{ path: "bookings/:id/edit", Component: VolunteerDash },
+		],
+	},
+]);
 
 function App() {
-	return (
-		<BrowserRouter>
-			<Routes>
-				<Route path="/" element={<LandingPage />} />
-				<Route path="/trainee" element={<TraineeBookingFlow />} />
-				<Route path="/volunteer" element={<VolunteerDash />} />
-			</Routes>
-		</BrowserRouter>
-	);
+	return <RouterProvider router={router} />;
 }
+
+export default App;

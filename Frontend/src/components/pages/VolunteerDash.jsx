@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { volunteersDetails, traineeDetails } from "../data/UserData";
-import { bookedSessions } from "../data/BookedSessions";
-import BookingCard from "../components/groups/BookingCard";
+import { useParams } from "react-router-dom";
+import { volunteersDetails, traineeDetails } from "../../data/UserData";
+import { bookedSessions } from "../../data/BookedSessions";
+import BookingCard from "../groups/BookingCard";
+import SessionDetails from "../groups/SessionDetails";
+import VolunteerEditSession from "../pages/VolunteerEditSession";
 
 const VolunteerDash = () => {
+	const { id } = useParams();
 	//here we select state of activeVolunteer that will be passed to session details volunteers div
 	//for now Duncan is an active volunteer
 	const [activeVolunteer, setActiveVolunteer] = useState(
@@ -79,8 +83,26 @@ const VolunteerDash = () => {
 	});
 
 	return (
-		<div>
-			<div className="all-cards-container">{renderedSessions}</div>
+		<div className="booking-box">
+			<div className="session-details-col">
+				<SessionDetails activeVolunteerProps={activeVolunteer} />
+			</div>
+			<div className="timeslot-col">
+				{id ? (
+					<VolunteerEditSession />
+				) : (
+					<>
+						<h2>Upcoming sessions</h2>
+						<div className="all-cards-container">
+							{renderedSessions.length > 0 ? (
+								renderedSessions
+							) : (
+								<p>You do not have any booked sessions.</p>
+							)}
+						</div>
+					</>
+				)}
+			</div>
 		</div>
 	);
 };
