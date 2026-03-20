@@ -1,4 +1,15 @@
-from django.shortcuts import render
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
-def login_view(request):
-    return render(request, "auth_app/login.html")
+# Simple user endpoint
+@login_required
+def user_view(request):
+    """
+    Returns currently logged-in user's info.
+    If not logged in, will return 401 Unauthorized automatically.
+    """
+    return JsonResponse({
+        "id": request.user.id,
+        "email": request.user.email or "",
+        "name": request.user.get_full_name() or request.user.username,
+    })
