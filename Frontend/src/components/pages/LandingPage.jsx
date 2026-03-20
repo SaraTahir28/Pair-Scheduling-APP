@@ -3,16 +3,17 @@ import { Link } from "react-router-dom";
 
 const LandingPage = () => {
 	return (
-		<div className="landing-page">
+		<div className="landing-page text-center">
 			<h1>Welcome to the Booking App</h1>
-			<p>I am a</p>
 
+			<p>I am a</p>
+			<br />
 			<div className="role-selection-btns">
-				<Link to="/trainee-booking" className="action-btn">
+				<Link to="/trainee-booking" className="action-btn btn-time-slot">
 					Trainee
 				</Link>
-
-				<Link to="/volunteer-dash" className="action-btn">
+				<br />
+				<Link to="/volunteer-dash" className="action-btn btn-time-slot">
 					Volunteer
 				</Link>
 			</div>

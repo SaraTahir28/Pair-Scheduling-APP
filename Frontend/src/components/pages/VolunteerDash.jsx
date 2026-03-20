@@ -87,13 +87,13 @@ const VolunteerDash = () => {
 			<div className="session-details-col">
 				<SessionDetails activeVolunteerProps={activeVolunteer} />
 			</div>
-			<div className="timeslot-col">
+			<div className="timeslots-container">
 				{id ? (
 					<VolunteerEditSession />
 				) : (
 					<>
-						<h2>Upcoming sessions</h2>
 						<div className="all-cards-container">
+							<h2>Upcoming sessions</h2>
 							{renderedSessions.length > 0 ? (
 								renderedSessions
 							) : (

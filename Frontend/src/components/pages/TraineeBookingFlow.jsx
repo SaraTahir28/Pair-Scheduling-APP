@@ -120,7 +120,7 @@ const TraineeBookingFlow = () => {
 
 			{/* when user selects date and time we render booking form and hide the cal */}
 			{selectedTime && !isBookingConfirmed && (
-				<div className="timeslot-col">
+				<div className="timeslot-col trainee-timeslot-width">
 					<BookingForm whenFormSubmit={createBookingDetailsObj} />
 				</div>
 			)}

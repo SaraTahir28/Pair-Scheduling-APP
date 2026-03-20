@@ -2,7 +2,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LandingPage from "./components/pages/LandingPage";
 import TraineeBookingFlow from "./components/pages/TraineeBookingFlow";
 import VolunteerDash from "./components/pages/VolunteerDash";
-import VolunteerEditSession from "./components/pages/VolunteerEditSession";
 
 const router = createBrowserRouter([
 	{
