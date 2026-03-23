@@ -78,13 +78,6 @@ The Google Calendar integration uses a dedicated cyf service account with a user
 The required  credentials have already been generated for this project.
 
 
-## Install Required Dependencies 
-
-Make sure the following packages are installed:
-pip install google-api-python-client google-auth 
-
----
-
 ### Security Note
 
 The following folder contain sensitive credentials and must **not** be committed to the repository:
@@ -136,81 +129,79 @@ When the request succeeds, the system will:
 
 Example time format:
 2026-03-10T14:00:00Z
-## Google OAuth Login (New Feature)
 
-1. Install Backend Dependencies
-Inside the Backend/ folder, with your virtual environment activated:
+## Google OAuth Login (React + Django Sessions)
 
-Run in Terminal
 
-**pip install -r requirements.txt**
+This project uses Google OAuth2 authentication with django-allauth and Django sessions.
 
-This installs all required dependencies
+# Overview
+Authentication is handled by the Django backend
+The React frontend controls the user experience
 
-2. Environment Variables Setup
+# Backend Setup
+1. Install dependencies
 
-The backend uses a .env file to load Google OAuth credentials securely.
+Inside the Backend/ folder:
 
-Create a .env file in the root of your backend folder, The exact credentials will be shared with all trainees.
+pip install -r requirements.txt
 
-3. Login Template (Django)
-The login page uses Django template tags and must be viewed through Django, not Live Server.
+2. Environment variables
 
-Example URL:
+Create a .env file in the backend root:
 
-Code
-http://localhost:8000/accounts/login/
-Clicking “Sign in with Google” will redirect the user to Google’s OAuth screen.
+GOOGLE_CLIENT_ID=your_client_id
+GOOGLE_CLIENT_SECRET=your_client_secret
 
-4. Login Redirect
-After successful Google login, users are redirected to the vite frontend:
+⚠️ Never commit this file
 
-Code
-http://localhost:5173/
-This is configured in settings.py:
-
-python
-LOGIN_REDIRECT_URL = "http://localhost:5173/"
-
-5. Running the Backend
-From the Backend/ folder:
-
-In the terminal run: 
-
+3. Run migrations & server
 python manage.py migrate
 python manage.py runserver
+
 Backend runs at:
 
 http://localhost:8000/
+💻 Frontend Setup
 
-6. Running the Frontend
-From the Frontend/ folder:
+Inside the Frontend/ folder:
 
 npm install
 npm run dev
+
 Frontend runs at:
 
 http://localhost:5173/
+🔄 Authentication Flow
+1. User visits frontend
+http://localhost:5173/
+2. React checks session
+fetch("http://localhost:8000/auth/user/", {
+  credentials: "include",
+});
+If logged in → show app
+If not → show login screen
+3. User clicks “Continue with Google”
 
-7. End-to-End Testing Flow
+Redirect to:
+
+http://localhost:8000/accounts/google/login/
+4. OAuth flow (handled by Django)
+User logs in with Google
+Django receives callback
+User is created (if new)
+Session is created
+5. Redirect back to frontend
+http://localhost:5173/
+6. Session is active
+
+Frontend calls /auth/user/ again → user is authenticated ✅
+
+🧪 End-to-End Flow
 Start backend
-
 Start frontend
-
-Visit the Django login page:
-
-Code
-http://localhost:8000/accounts/login/
-Click Sign in with Google
-
-Complete Google login
-
-You will be redirected to the frontend homepage
-
-Authentication is now complete
-
-8. Notes for Trainees
-.env must never be committed
-Django templates must be rendered through Django, not Live Server
-Always install backend dependencies using:
-pip install -r requirements.txt
+Open http://localhost:5173/
+Click Continue with Google
+Complete login
+Redirected back to app
+Booking UI is accessible
