@@ -78,13 +78,6 @@ The Google Calendar integration uses a dedicated cyf service account with a user
 The required  credentials have already been generated for this project.
 
 
-## Install Required Dependencies 
-
-Make sure the following packages are installed:
-pip install google-api-python-client google-auth 
-
----
-
 ### Security Note
 
 The following folder contain sensitive credentials and must **not** be committed to the repository:
@@ -136,3 +129,79 @@ When the request succeeds, the system will:
 
 Example time format:
 2026-03-10T14:00:00Z
+
+## Google OAuth Login (React + Django Sessions)
+
+
+This project uses Google OAuth2 authentication with django-allauth and Django sessions.
+
+# Overview
+Authentication is handled by the Django backend
+The React frontend controls the user experience
+
+# Backend Setup
+1. Install dependencies
+
+Inside the Backend/ folder:
+
+pip install -r requirements.txt
+
+2. Environment variables
+
+Create a .env file in the backend root:
+
+GOOGLE_CLIENT_ID=your_client_id
+GOOGLE_CLIENT_SECRET=your_client_secret
+
+⚠️ Never commit this file
+
+3. Run migrations & server
+python manage.py migrate
+python manage.py runserver
+
+Backend runs at:
+
+http://localhost:8000/
+💻 Frontend Setup
+
+Inside the Frontend/ folder:
+
+npm install
+npm run dev
+
+Frontend runs at:
+
+http://localhost:5173/
+🔄 Authentication Flow
+1. User visits frontend
+http://localhost:5173/
+2. React checks session
+fetch("http://localhost:8000/auth/user/", {
+  credentials: "include",
+});
+If logged in → show app
+If not → show login screen
+3. User clicks “Continue with Google”
+
+Redirect to:
+
+http://localhost:8000/accounts/google/login/
+4. OAuth flow (handled by Django)
+User logs in with Google
+Django receives callback
+User is created (if new)
+Session is created
+5. Redirect back to frontend
+http://localhost:5173/
+6. Session is active
+
+Frontend calls /auth/user/ again → user is authenticated ✅
+
+🧪 End-to-End Flow
+Start backend
+Start frontend
+Open http://localhost:5173/
+Click Continue with Google
+Complete login
+Redirected back to app
+Booking UI is accessible
