@@ -3,33 +3,9 @@ import { Clock, Video } from "lucide-react";
 import { ActionBtn } from "../elements/Button";
 import { Link } from "react-router-dom";
 
-const BookingCard = ({
-	trainee,
-	session,
-	deleteBookedSession,
-	//fix -updated so when user clicks on edit the div does not dissapear and editing div opens
-	// saveEditedSession, - this is not needed anymore with routing
-}) => {
+const BookingCard = ({ trainee, session, deleteBookedSession }) => {
 	const [isUserClickingDelete, setIsUserClickingDelete] = useState(false);
 
-	//routing update split into url - not needed
-	// // const [isEditing, setIsEditing] = useState(false);
-
-	// const handleEditSubmit = (e) => {
-	// 	e.preventDefault();
-	// 	const formData = new FormData(e.target);
-
-	// 	const updatedSession = {
-	// 		...session,
-	// 		date: formData.get("new_date"),
-	// 		time: formData.get("new_time"),
-	// 	};
-
-	// 	saveEditedSession(updatedSession);
-	// 	setIsEditing(false);
-	// };
-
-	//ask for a confirmation if clicked on delete
 	if (isUserClickingDelete) {
 		return (
 			<div className="confirm-delete-div">
@@ -50,41 +26,6 @@ const BookingCard = ({
 		);
 	}
 
-	// routing - this is not needed
-	//edit is moved from app
-	// if (isEditing) {
-	// 	return (
-	// 		<div className="booking-card-div">
-	// 			<div className="booking-card">
-	// 				<h3>Edit Session</h3>
-	// 				<form className="edit-session-form" onSubmit={handleEditSubmit}>
-	// 					<label>
-	// 						New Date:
-	// 						<input type="date" name="new_date" defaultValue={session.date} />
-	// 					</label>
-	// 					<br />
-	// 					<label>
-	// 						New Time:
-	// 						<input type="time" name="new_time" defaultValue={session.time} />
-	// 					</label>
-	// 					<br />
-	// 					<div className="booking-card-btns">
-	// 						<button type="submit" className="action-btn save-btn">
-	// 							Save
-	// 						</button>
-	// 						<ActionBtn
-	// 							additionalBtnClass="btn-secondary"
-	// 							onClick={() => setIsEditing(false)}
-	// 						>
-	// 							Cancel
-	// 						</ActionBtn>
-	// 					</div>
-	// 				</form>
-	// 			</div>
-	// 		</div>
-	// 	);
-	// }
-	//if not clicked delete render the div with booked session
 	return (
 		<div className="booking-card-div">
 			<div className="booking-card">
