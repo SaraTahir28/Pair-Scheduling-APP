@@ -97,9 +97,12 @@ const VolunteerDash = () => {
 			<div className="bookings-col">
 				{id ? (
 					editSessionMode ? (
-						<VolunteerEditSession />
+						<VolunteerEditSession
+							sessions={allBookedSessionsForAllUsers}
+							onSave={saveEditedSession}
+						/>
 					) : (
-						<VolunteerViewSession />
+						<VolunteerViewSession sessions={allBookedSessionsForAllUsers} />
 					)
 				) : (
 					<>

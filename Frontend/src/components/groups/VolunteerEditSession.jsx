@@ -1,13 +1,14 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ActionBtn } from "../elements/Button";
-import { bookedSessions } from "../../data/BookedSessions";
+// import { bookedSessions } from "../../data/BookedSessions";
 
-const VolunteerEditSession = () => {
+const VolunteerEditSession = ({ sessions, onSave }) => {
 	const { id } = useParams();
 	const navigate = useNavigate();
 
-	const session = bookedSessions.find((s) => s.id === id);
+	// const session = bookedSessions.find((s) => s.id === id);
+	const session = sessions?.find((s) => String(s.id) === String(id));
 
 	const handleEditSubmit = (e) => {
 		e.preventDefault();
@@ -19,7 +20,7 @@ const VolunteerEditSession = () => {
 			time: formData.get("new_time"),
 		};
 
-		console.log("Saving session:", updatedSession);
+		onSave(updatedSession);
 
 		navigate("/volunteer-dash");
 	};
