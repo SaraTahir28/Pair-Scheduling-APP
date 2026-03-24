@@ -11,10 +11,23 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import environ
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+#This tells Django to read  .env file so  Google credentials become available.
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
+# Google OAuth2 credentials for manual login flow
+# These are read from the .env file to avoid exposing secrets in code
+GOOGLE_OAUTH2_CLIENT_ID = env("GOOGLE_CLIENT_ID")
+GOOGLE_OAUTH2_CLIENT_SECRET = env("GOOGLE_CLIENT_SECRET")
+
+# Base URL of the backend API
+# Used to build redirect URIs for OAuth2 login flow
+BASE_API_URL = "http://localhost:8000"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -29,23 +42,82 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+#Adding authentication app to settings
 
 INSTALLED_APPS = [
+    # -------------------------------
+    # Default Django apps
+    # -------------------------------
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core'
+
+    # -------------------------------
+    # Third‑party apps
+    # -------------------------------
+    'corsheaders',  # Handles Cross-Origin Resource Sharing (CORS)
+
+    # -------------------------------
+    # Django Allauth / Social Login apps
+    # -------------------------------
+    'django.contrib.sites',                     # Required by allauth (site framework)
+    'allauth',                                  # Core allauth app
+    'allauth.account',                          # Handles login, signup, email verification
+    'allauth.socialaccount',                    # Enables social login functionality
+    'allauth.socialaccount.providers.google',   # Google OAuth provider
+
+    # -------------------------------
+    # Your project apps
+    # -------------------------------
+    'core',        # app for project calendar logic
+    'auth_app',    # Custom authentication app (must come AFTER allauth)
 ]
 
+# -------------------------------
+# Site framework setting (required by django-allauth)
+# -------------------------------
+# This tells Django which Site object to use (from the Sites framework)
+SITE_ID = 1
+
+# to connect allauth to the values in  .env.
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+        "APP": {
+            "client_id": env("GOOGLE_CLIENT_ID"),
+            "secret": env("GOOGLE_CLIENT_SECRET"),
+            "key": ""
+        }
+    }
+}
+
+#After Google login => user goes to your frontend
+LOGIN_REDIRECT_URL = "http://localhost:5173/"  #used by Django’s built‑in auth
+ACCOUNT_LOGIN_REDIRECT_URL = "http://localhost:5173/" #used by allauth (Google login)
+LOGOUT_REDIRECT_URL = "http://localhost:5173/"
+ACCOUNT_LOGOUT_REDIRECT_URL = "http://localhost:5173/"
+#This makes sure Google login actually fills the email in the user record.
+SOCIALACCOUNT_QUERY_EMAIL = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "none"  # for dev
+
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'allauth.account.middleware.AccountMiddleware', #adding oauth running middleware.
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -79,6 +151,9 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# To stop using the default user and look at ours instead
+AUTH_USER_MODEL = "core.User"
 
 
 # Password validation
@@ -117,8 +192,49 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-# Google Calendar integration settings.
-# "primary" refers to the authenticated Google account's main calendar.
+# Google Calendar integration settings with cyf service account
+#"primary" means “use the service account’s main calendar”
 GOOGLE_CALENDAR_ID = "primary"
-# Local OAuth token file generated after the first Google authorization flow.
-GOOGLE_OAUTH_TOKEN_FILE = BASE_DIR / "oauth_token.json"
+GOOGLE_SERVICE_ACCOUNT_FILE = BASE_DIR / "secrets/cyf-service-account.json"
+
+
+#Adding cors settings
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:5174",   
+    "http://127.0.0.1:5174",
+    "http://localhost:3000"   
+]
+CORS_ALLOW_CREDENTIALS = True
+
+#send logs to the console
+
+#show INFO, WARNING, ERROR, CRITICAL
+
+#include your module logs
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "": {  # root logger
+            "handlers": ["console"],
+            "level": "INFO",
+        },
+    },
+}
+#Adding this ID as are service account user which will act as a bot to generate emails for us.
+GOOGLE_IMPERSONATED_USER_EMAIL = "automated@codeyourfuture.io"
+
+# -------------------------------
+# Authentication backends (required by allauth)
+# -------------------------------
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',       # Default Django authentication
+    'allauth.account.auth_backends.AuthenticationBackend', # Needed for allauth(Google to work)
+]
