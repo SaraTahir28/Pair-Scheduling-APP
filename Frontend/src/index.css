@@ -60,7 +60,10 @@
 
 	/* main layout with all section columns*/
 	.timeslot-col {
-		@apply w-[30%] p-4;
+		@apply w-[30%] p-8;
+	}
+	.trainee-timeslot-width {
+		@apply w-[30%];
 	}
 
 	.calendar-col {
@@ -185,7 +188,7 @@
 		@apply mx-10 my-2;
 	}
 	.booking-card {
-		@apply bg-white rounded-2xl shadow-sm border border-border-color p-6 w-full max-w-[520px] flex gap-12;
+		@apply bg-white rounded-2xl shadow-sm border border-border-color p-6 w-full flex justify-between gap-12;
 	}
 
 	.session-details-div-booking-card {
