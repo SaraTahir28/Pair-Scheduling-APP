@@ -60,18 +60,21 @@
 
 	/* main layout with all section columns*/
 	.timeslot-col {
-		@apply w-[30%] p-8;
+		@apply w-[30%] p-4;
 	}
 	.trainee-timeslot-width {
 		@apply w-[30%];
 	}
-
-	.calendar-col {
-		@apply w-[40%] p-4;
-	}
 	.session-details-col {
 		@apply w-[30%] p-4 border-r border-black/10 flex flex-col gap-8;
 	}
+	.calendar-col {
+		@apply w-[40%] p-4;
+	}
+	.bookings-col {
+		@apply w-[70%] p-4;
+	}
+
 	/* SESSION SECTION left col */
 	.session-details-div {
 		@apply flex flex-col;
@@ -185,7 +188,7 @@
 
 	/* volunteer flow */
 	.booking-card-div {
-		@apply mx-10 my-2;
+		@apply my-2;
 	}
 	.booking-card {
 		@apply bg-white rounded-2xl shadow-sm border border-border-color p-6 w-full flex justify-between gap-12;
@@ -194,10 +197,26 @@
 	.session-details-div-booking-card {
 		@apply flex flex-col;
 	}
-	.session-plus-trainee-details-div {
+	/* .session-plus-trainee-details-div {
 		@apply flex flex-col;
-	}
+	} */
 	.booking-card-btns {
 		@apply flex flex-row items-start gap-1;
+	}
+	/* bookings section */
+	.bookings-col {
+		@apply flex flex-col items-center border-border-color transition-all duration-300;
+	}
+
+	.all-cards-container {
+		@apply w-full p-2 bg-white;
+	}
+
+	.bookings-heading-selectdt {
+		@apply text-lg font-bold text-dark mb-8;
+	}
+	/* edit booking section */
+	.view-booking-details-card {
+		@apply p-2 w-full flex justify-start gap-12;
 	}
 }

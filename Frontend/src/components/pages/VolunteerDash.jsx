@@ -4,10 +4,14 @@ import { volunteersDetails, traineeDetails } from "../../data/UserData";
 import { bookedSessions } from "../../data/BookedSessions";
 import BookingCard from "../groups/BookingCard";
 import SessionDetails from "../groups/SessionDetails";
-import VolunteerEditSession from "../pages/VolunteerEditSession";
+import VolunteerEditSession from "../groups/VolunteerEditSession";
+import VolunteerViewSession from "../groups/VolunteerViewSession";
 
 const VolunteerDash = () => {
 	const { id } = useParams();
+
+	const editSessionMode = window.location.pathname.includes("edit");
+
 	//here we select state of activeVolunteer that will be passed to session details volunteers div
 	//for now Duncan is an active volunteer
 	const [activeVolunteer, setActiveVolunteer] = useState(
@@ -85,15 +89,22 @@ const VolunteerDash = () => {
 	return (
 		<div className="booking-box">
 			<div className="session-details-col">
-				<SessionDetails activeVolunteerProps={activeVolunteer} />
+				<SessionDetails
+					activeVolunteerProps={activeVolunteer}
+					volunteerView={true}
+				/>
 			</div>
-			<div className="timeslots-container">
+			<div className="bookings-col">
 				{id ? (
-					<VolunteerEditSession />
+					editSessionMode ? (
+						<VolunteerEditSession />
+					) : (
+						<VolunteerViewSession />
+					)
 				) : (
 					<>
 						<div className="all-cards-container">
-							<h2>Upcoming sessions</h2>
+							<h2 className="bookings-heading-selectdt">Upcoming sessions</h2>
 							{renderedSessions.length > 0 ? (
 								renderedSessions
 							) : (
