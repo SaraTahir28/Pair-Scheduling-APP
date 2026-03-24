@@ -1,21 +1,14 @@
 import { useEffect, useState } from "react";
 
 export default function Login() {
-  const [googleUrl, setGoogleUrl] = useState("");
-
-  useEffect(() => {
-    // Fetch the correct Google login URL from django-allauth
-    setGoogleUrl("http://localhost:8000/accounts/google/login/");
-  }, []);
+  const googleLoginUrl =
+    "http://localhost:8000/accounts/google/login/?process=login&next=http://localhost:5173/";
 
   const handleGoogleLogin = () => {
-    if (!googleUrl) {
-      console.error("Google login URL not loaded yet");
-      return;
-    }
-    // Redirect directly to Allauth Google login
-    window.location.href = googleUrl;
+    // Redirect straight to Google via Django
+    window.location.href = googleLoginUrl;
   };
+
 
    return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
