@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ActionBtn } from "../elements/Button";
 
-const VolunteerAvailabilityForm = ({ whenFormSubmit, volId }) => {
+const VolunteerAvailabilityForm = ({ whenFormSubmit, volunteerId, mode }) => {
 	// set up local state that will be passed to app
 	// like name and email
 	const [isRecurring, setIsRecurring] = useState(false);
@@ -23,17 +23,26 @@ const VolunteerAvailabilityForm = ({ whenFormSubmit, volId }) => {
 			return;
 		}
 
-		// build slotsObj
-		const today = new Date().toISOString().split("T")[0];
+		// build dates logic
+		const today = new Date();
+		const startDateStr = today.toISOString().split("T")[0];
 
+		// date + 3 months for recurring
+		const futureDate = new Date();
+		futureDate.setMonth(today.getMonth() + 3);
+		const endDateStr = isRecurring
+			? futureDate.toISOString().split("T")[0]
+			: startDateStr;
+
+		// build slotsObj
 		const slotsObj = {
-			volId: volId,
+			volunteerId: volunteerId,
 			isRecurring: isRecurring,
-			startDate: today,
-			endDate: isRecurring ? "2026-12-31" : today,
+			startDate: startDateStr,
+			endDate: endDateStr,
 			day: day,
-			start: startTime,
-			end: endTime,
+			startTime: startTime,
+			endTime: endTime,
 		};
 
 		// send it up
@@ -51,6 +60,7 @@ const VolunteerAvailabilityForm = ({ whenFormSubmit, volId }) => {
 					<label className="form-label">recurring?</label>
 					<input
 						type="checkbox"
+						disabled={mode === "view"}
 						onChange={(e) => setIsRecurring(e.target.checked)}
 					/>
 				</div>
@@ -59,12 +69,17 @@ const VolunteerAvailabilityForm = ({ whenFormSubmit, volId }) => {
 					<label className="form-label">select day</label>
 					<select
 						className="form-input"
+						disabled={mode === "view"}
 						onChange={(e) => setDay(e.target.value)}
 					>
 						<option value="">choose...</option>
 						<option value="monday">monday</option>
 						<option value="tuesday">tuesday</option>
+						<option value="wednesday">wednesday</option>
 						<option value="thursday">thursday</option>
+						<option value="friday">friday</option>
+						<option value="saturday">saturday</option>
+						<option value="sunday">sunday</option>
 					</select>
 				</div>
 
@@ -73,6 +88,7 @@ const VolunteerAvailabilityForm = ({ whenFormSubmit, volId }) => {
 					<input
 						className="form-input"
 						type="time"
+						disabled={mode === "view"}
 						onChange={(e) => setStartTime(e.target.value)}
 					/>
 				</div>
@@ -82,12 +98,15 @@ const VolunteerAvailabilityForm = ({ whenFormSubmit, volId }) => {
 					<input
 						className="form-input"
 						type="time"
+						disabled={mode === "view"}
 						onChange={(e) => setEndTime(e.target.value)}
 					/>
 				</div>
 
 				<br />
-				<ActionBtn onClick={checkInputsValid}>Submit Availability</ActionBtn>
+				{mode !== "view" && (
+					<ActionBtn onClick={checkInputsValid}>Submit Availability</ActionBtn>
+				)}
 			</form>
 		</div>
 	);
