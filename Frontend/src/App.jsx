@@ -3,39 +3,9 @@ import SessionDetails from "./components/groups/SessionDetails";
 import Calendar from "./components/groups/Calendar";
 import TimeSlotGroup from "./components/groups/TimeSlotGroup";
 import BookingForm from "./components/groups/BookingForm";
-import duncanImg from "./assets/duncan.png";
-import volunteer2Img from "./assets/volunteer2.png";
-import volunteer3Img from "./assets/volunteer3.png";
-
-//volunteers data object is here for now,
-// initially available dates was hardcoded inside Calendar, now it is a part of volunteers object below
-// but the active volunteer is still hardcoded to Duncan
-const volunteersDetails = [
-	{
-		id: 1,
-		name: "Duncan Parkinson",
-		img: duncanImg,
-		email: "duncan@duncan.com",
-		availableDates: [17, 18, 19, 24, 25, 26, 31],
-		availableTimes: ["15:00", "15:30", "16:00", "16:30", "17:00"],
-	},
-	{
-		id: 2,
-		name: "Test Volunteer",
-		img: volunteer2Img,
-		email: "vol2@vol.com",
-		availableDates: [23, 24, 27],
-		availableTimes: ["14:00", "16:45", "16:30"],
-	},
-	{
-		id: 3,
-		name: "Another Volunteer",
-		img: volunteer3Img,
-		email: "vol3@vol.com",
-		availableDates: [24, 25, 28, 30],
-		availableTimes: ["10:00", "18:30"],
-	},
-];
+import { volunteersDetails, traineeDetails } from "./data/UserData";
+import { bookedSessions } from "./data/BookedSessions";
+import BookingCard from "./components/groups/BookingCard";
 
 function App() {
 	//App holds state and sends as props to children as props, children change state and rerender is triggered
@@ -49,12 +19,81 @@ function App() {
 	const [isBookingConfirmed, setIsBookingConfirmed] = useState(false);
 
 	//here we select state of activeVolunteer that will be passed to session details volunteers div
-	//for now Duncan is hardcoded
-	const [activeVolunteer, setActiveVolunteer] = useState(volunteersDetails[0]);
+	//for now Duncan is an active volunteer
+	const [activeVolunteer, setActiveVolunteer] = useState(
+		volunteersDetails.find((volunteer) => volunteer.id === 1)
+	);
+
+	const [allBookedSessionsForAllUsers, setAllBookedSessionsForAllUsers] =
+		useState(bookedSessions);
+
+	// grab all sessions for active user
+	const activeVolunteerSessions = allBookedSessionsForAllUsers.filter(
+		(session) => session.volunteerId === activeVolunteer.id
+	);
+	//set up where all booked sessions will go on cards
+	const renderedSessions = [];
+
+	//for now this is for volunteer only bc trainee will have limitations of times and will see rerender of cal + times
+	const saveEditedSession = (updatedSessionFromCard) => {
+		const updatedSessions = allBookedSessionsForAllUsers.map((session) => {
+			if (session.id === updatedSessionFromCard.id) {
+				return updatedSessionFromCard;
+			}
+			return session;
+		});
+		// rerender
+		setAllBookedSessionsForAllUsers(updatedSessions);
+	};
+
+	//function for deleting booked session sent as props to BookingCard.jsx, runs when delete is confirmed
+	// for the id we want to delete - grab all other ids and pass to update state
+	const deleteBookedSession = (idToDelete) => {
+		const varPassToUpdateStateBookedSessions =
+			allBookedSessionsForAllUsers.filter(
+				(session) => session.id !== idToDelete
+			);
+		setAllBookedSessionsForAllUsers(varPassToUpdateStateBookedSessions);
+
+		const objectToSendToBackendToDelete = {
+			session_id: idToDelete,
+		};
+
+		// add delete route
+		// 	fetch("http://localhost:8000/api/confirm-address-delete-booking/", {
+		// 		method: "DELETE",
+		// 		headers: {
+		// 			"Content-Type": "application/json",
+		// 		},
+		// 		body: JSON.stringify(objectToSendToBackendToDelete),
+		// 	})
+		// 		.then((response) => {
+		// 			if (response.ok) {
+		// 				console.log("session removed from db");
+		// 			}
+		// 		})
+		// 		.catch((error) => console.log("Error:", error));
+	};
+
+	//check all sessions from active vol and find id and match to traineeDetails by id
+	activeVolunteerSessions.forEach((session) => {
+		traineeDetails.forEach((trainee) => {
+			if (trainee.id === session.traineeId) {
+				renderedSessions.push(
+					<BookingCard
+						key={session.id}
+						trainee={trainee}
+						session={session}
+						deleteBookedSession={() => deleteBookedSession(session.id)}
+						saveEditedSession={saveEditedSession}
+					/>
+				);
+			}
+		});
+	});
 
 	// here we set up booking obj that will be sent to backend
 	const createBookingDetailsObj = (bookingFormData) => {
-		// ---- fix to object date format to match backend
 		const formattedDate = selectedDate.toLocaleDateString("en-CA");
 
 		const bookingDetailsObj = {
@@ -85,71 +124,76 @@ function App() {
 				}
 			})
 			.catch((error) => console.log("Error:", error));
-		// console.log("obj created", bookingDetailsObj);
 	};
 
 	return (
-		<div className="booking-box">
-			<div className="session-details-col">
-				{/* cond to show left panel only if no confirmation yet */}
-				{!isBookingConfirmed && (
-					<SessionDetails
-						// here left is prop passed to component rihght data sent from app
-						selectedDateProps={selectedDate}
-						// again label for data sent = data sent
-						activeVolunteerProps={activeVolunteer}
-					/>
-				)}
+		<>
+			<div>
+				<div className="all-cards-container">{renderedSessions}</div>
 			</div>
 
-			{/* here we conditionally render groups/sections of the screen so no clutter in UI 
+			<div className="booking-box">
+				<div className="session-details-col">
+					{/* cond to show left panel only if no confirmation yet */}
+					{!isBookingConfirmed && (
+						<SessionDetails
+							// here left is prop passed to component rihght data sent from app
+							selectedDateProps={selectedDate}
+							// again label for data sent = data sent
+							activeVolunteerProps={activeVolunteer}
+						/>
+					)}
+				</div>
+
+				{/* here we conditionally render groups/sections of the screen so no clutter in UI 
 			first if not time selected we show calendar and timeslots*/}
-			{!selectedTime && (
-				// <>  this empty tag is added here because as it is not possible to generate 2 divs and our sections
-				// come in 2 separate divs so the invisible div is to not mess with the styling
-				<>
-					<div className="calendar-col">
-						{/* here we send as props to component and component changes state then react rerenders when stae is changed */}
-						<Calendar
-							//here prop name = assigned to state from const [selectedDate, setSelectedDate] = useState(null)
-							// so Calendar gets props(argument) selectedDate={null}
-							selectedDateProps={selectedDate}
-							setSelectedDateProps={setSelectedDate}
-							availableDates={activeVolunteer.availableDates}
-						/>
-					</div>
+				{!selectedTime && (
+					// <>  this empty tag is added here because as it is not possible to generate 2 divs and our sections
+					// come in 2 separate divs so the invisible div is to not mess with the styling
+					<>
+						<div className="calendar-col">
+							{/* here we send as props to component and component changes state then react rerenders when stae is changed */}
+							<Calendar
+								//here prop name = assigned to state from const [selectedDate, setSelectedDate] = useState(null)
+								// so Calendar gets props(argument) selectedDate={null}
+								selectedDateProps={selectedDate}
+								setSelectedDateProps={setSelectedDate}
+								availableDates={activeVolunteer.availableDates}
+							/>
+						</div>
+						<div className="timeslot-col">
+							<TimeSlotGroup
+								// props = state
+								selectedDateProps={selectedDate}
+								setSelectedTimeProps={setSelectedTime}
+								availableTimes={activeVolunteer.availableTimes}
+							/>
+						</div>
+					</>
+				)}
+
+				{/* when user selects date and time we render booking form and hide the cal */}
+				{selectedTime && !isBookingConfirmed && (
 					<div className="timeslot-col">
-						<TimeSlotGroup
-							// props = state
-							selectedDateProps={selectedDate}
-							setSelectedTimeProps={setSelectedTime}
-							availableTimes={activeVolunteer.availableTimes}
-						/>
+						<BookingForm whenFormSubmit={createBookingDetailsObj} />
 					</div>
-				</>
-			)}
+				)}
 
-			{/* when user selects date and time we render booking form and hide the cal */}
-			{selectedTime && !isBookingConfirmed && (
-				<div className="timeslot-col">
-					<BookingForm whenFormSubmit={createBookingDetailsObj} />
-				</div>
-			)}
-
-			{/* show confirmation when booking is made*/}
-			{isBookingConfirmed && (
-				<div className="timeslot-col">
-					<div>
-						<h2>Your session is booked</h2>
-						<p>
-							Your meeting is on {selectedDate.toLocaleDateString()} at
-							{selectedTime}.
-						</p>
-						<p>//link to google meet will be here//</p>
+				{/* show confirmation when booking is made*/}
+				{isBookingConfirmed && (
+					<div className="timeslot-col">
+						<div>
+							<h2>Your session is booked</h2>
+							<p>
+								Your meeting is on {selectedDate.toLocaleDateString()} at
+								{selectedTime}.
+							</p>
+							<p>//link to google meet will be here//</p>
+						</div>
 					</div>
-				</div>
-			)}
-		</div>
+				)}
+			</div>
+		</>
 	);
 }
 
