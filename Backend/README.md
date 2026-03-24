@@ -156,11 +156,18 @@ GOOGLE_CLIENT_SECRET=your_client_secret
 ⚠️ Never commit this file
 
 3. Run migrations & server
+**Database Migrations After Merging `main`**
+
+If you pull the `main` branch and encounter migration issues (e.g., missing tables or conflicts), reset migrations locally by deleting old migration files and the SQLite database, then recreate migrations:
+
+```bash
+rm db.sqlite3
+find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
 
 Backend runs at:
-
 http://localhost:8000/
 💻 Frontend Setup
 
@@ -172,7 +179,7 @@ npm run dev
 Frontend runs at:
 
 http://localhost:5173/
-🔄 Authentication Flow
+ Authentication Flow
 1. User visits frontend
 http://localhost:5173/
 2. React checks session
