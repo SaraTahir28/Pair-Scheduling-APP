@@ -45,8 +45,17 @@ export default function Login() {
           Continue with Google
         </button>
 
-        <p className="text-muted text-sm mt-4 text-center">
-          By continuing, you agree to our terms and privacy policy.
+        {/* Info for users without Google account */}
+        <p className="text-sm text-muted text-center mt-2">
+          You need a Google account to use this app.If you dont have a Google Account{" "}
+          <a
+            href="https://accounts.google.com/signup"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-brand-blue font-bold hover:underline"
+          >
+            Create one here
+          </a>
         </p>
       </div>
     </div>
