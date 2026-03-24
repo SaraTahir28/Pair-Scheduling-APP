@@ -155,20 +155,13 @@ GOOGLE_CLIENT_SECRET=your_client_secret
 
 ⚠️ Never commit this file
 
-3. Run migrations & server
-**Database Migrations After Merging `main`**
-
-If you pull the `main` branch and encounter migration issues (e.g., missing tables or conflicts), reset migrations locally by deleting old migration files and the SQLite database, then recreate migrations:
-
-```bash
-rm db.sqlite3
-find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
-python manage.py makemigrations
+3. Run migrations & start the server
 python manage.py migrate
 python manage.py runserver
 
-Backend runs at:
+Once the server is running, the backend will be accessible at:
 http://localhost:8000/
+
 💻 Frontend Setup
 
 Inside the Frontend/ folder:
