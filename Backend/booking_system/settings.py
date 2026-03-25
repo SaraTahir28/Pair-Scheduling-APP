@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     # -------------------------------
     'core',        # app for project calendar logic
     'auth_app',    # Custom authentication app (must come AFTER allauth)
+    "rest_framework", # Django REST Framework to interact with frontend React.
 ]
 
 # -------------------------------
