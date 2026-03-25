@@ -58,8 +58,8 @@ const BookingForm = ({ whenFormSubmit }) => {
 					/>
 				</div>
 				<br></br>
-				<ActionBtn className="btn-schedule-event" onClick={checkInputsValid}>
-					Book Meeting
+				<ActionBtn additionalBtnClass="btn-primary" onClick={checkInputsValid}>
+					Book meeting
 				</ActionBtn>
 			</form>
 		</div>

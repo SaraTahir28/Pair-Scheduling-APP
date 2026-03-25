@@ -29,6 +29,29 @@
 		@apply mt-2 text-lg font-bold text-main;
 	}
 
+	/* action buttons and time seleciton buttons */
+	.action-btn {
+		@apply gap-[10px] rounded-3xl text-base font-bold py-[8px] px-[24px] flex justify-center items-center transition-all hover:opacity-90;
+	}
+
+	.btn-primary {
+		@apply bg-brand-primary text-white;
+	}
+	.btn-secondary {
+		@apply bg-white border border-border-color text-main hover:bg-black/5 hover:text-brand-blue;
+	}
+	.btn-tertiary {
+		@apply bg-transparent text-muted hover:text-brand-blue;
+	}
+	.btn-destructive {
+		@apply bg-white border border-red-600 text-main hover:bg-black/5 hover:text-main;
+	}
+
+	.btn-time-slot {
+		@apply w-full py-3 border border-brand-blue/60 bg-white text-main rounded-lg text-sm font-bold transition-all;
+		@apply hover:bg-brand-blue/10 hover:border-brand-blue hover:text-brand-blue;
+	}
+
 	/* TRAINEE BOOKING */
 	/* outer div */
 	.booking-box {
@@ -39,13 +62,19 @@
 	.timeslot-col {
 		@apply w-[30%] p-4;
 	}
-
-	.calendar-col {
-		@apply w-[40%] p-4;
+	.trainee-timeslot-width {
+		@apply w-[30%];
 	}
 	.session-details-col {
 		@apply w-[30%] p-4 border-r border-black/10 flex flex-col gap-8;
 	}
+	.calendar-col {
+		@apply w-[40%] p-4;
+	}
+	.bookings-col {
+		@apply w-[70%] p-4;
+	}
+
 	/* SESSION SECTION left col */
 	.session-details-div {
 		@apply flex flex-col;
@@ -123,10 +152,6 @@
 	}
 
 	/* BOOKING TIME SLOT SECTION */
-	.btn-time-slot {
-		@apply w-full py-3 border border-brand-blue/60 bg-white text-main rounded-lg text-sm font-bold transition-all;
-		@apply hover:bg-brand-blue/10 hover:border-brand-blue hover:text-brand-blue;
-	}
 
 	.timeslot-group-div {
 		@apply flex flex-col gap-2;
@@ -156,10 +181,86 @@
 	}
 
 	.form-input {
-		@apply border border-black/10 rounded-[6px] p-4 w-[350px] outline-none transition-all mb-2;
+		@apply border border-black/10 rounded-[6px] p-3 w-[350px] outline-none transition-all mb-2;
 	}
-	.btn-schedule-event {
-		@apply bg-brand-primary text-white font-bold py-[8px] px-[16px] flex justify-center hover:opacity-90;
-	}
+
 	/* here will add confirmation styling */
+
+	/* volunteer flow */
+	.booking-card-div {
+		@apply my-2;
+	}
+	.booking-card {
+		@apply bg-white rounded-2xl shadow-sm border border-border-color p-6 w-full flex justify-between gap-12;
+	}
+
+	.session-details-div-booking-card {
+		@apply flex flex-col;
+	}
+	/* .session-plus-trainee-details-div {
+		@apply flex flex-col;
+	} */
+	.booking-card-btns {
+		@apply flex flex-row items-start gap-1;
+	}
+	/* bookings section */
+	.bookings-col {
+		@apply flex flex-col items-center border-border-color transition-all duration-300;
+	}
+
+	.all-cards-container {
+		@apply w-full p-2 bg-white;
+	}
+
+	.bookings-heading-selectdt {
+		@apply text-lg font-bold text-dark mb-8;
+	}
+	/* edit booking section */
+	.view-booking-details-card {
+		@apply p-2 w-full flex justify-start gap-12;
+	}
+
+	/* landing page */
+	.landing-page {
+		@apply min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6;
+	}
+
+	.role-selection-grid {
+		@apply grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-8 max-w-3xl;
+	}
+
+	.role-tile {
+		@apply flex flex-col items-center justify-start p-8 rounded-2xl border-2 border-black/10 bg-white transition-all cursor-pointer text-main;
+		@apply hover:shadow-lg hover:scale-105;
+	}
+
+	.role-tile-icon {
+		@apply w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-all;
+	}
+
+	.role-tile-trainee .role-tile-icon {
+		@apply bg-brand-blue/10 text-brand-blue;
+	}
+	.role-tile-trainee:hover {
+		@apply border-brand-blue duration-300 ease-in-out;
+	}
+
+	.role-tile-volunteer .role-tile-icon {
+		@apply bg-brand-primary/10 text-brand-primary;
+	}
+	.role-tile-volunteer:hover {
+		@apply border-brand-primary duration-300 ease-in-out;
+	}
+	.landing-title {
+		@apply text-4xl font-bold mb-4 tracking-tight;
+		@apply bg-gradient-to-r from-brand-blue to-brand-primary;
+		@apply bg-clip-text text-transparent;
+	}
+	.role-tile h3 {
+		@apply text-xl font-bold text-dark mb-2;
+	}
+
+	.role-tile p {
+		@apply text-sm text-muted text-center;
+	}
 }
