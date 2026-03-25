@@ -12,4 +12,7 @@ def user_view(request):
         "id": request.user.id,
         "email": request.user.email or "",
         "name": request.user.get_full_name() or request.user.username,
+        "role": request.user.role,
+        "status": request.user.status,
     })
+    

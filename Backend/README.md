@@ -155,13 +155,13 @@ GOOGLE_CLIENT_SECRET=your_client_secret
 
 ⚠️ Never commit this file
 
-3. Run migrations & server
+3. Run migrations & start the server
 python manage.py migrate
 python manage.py runserver
 
-Backend runs at:
-
+Once the server is running, the backend will be accessible at:
 http://localhost:8000/
+
 💻 Frontend Setup
 
 Inside the Frontend/ folder:
@@ -172,7 +172,7 @@ npm run dev
 Frontend runs at:
 
 http://localhost:5173/
-🔄 Authentication Flow
+ Authentication Flow
 1. User visits frontend
 http://localhost:5173/
 2. React checks session
