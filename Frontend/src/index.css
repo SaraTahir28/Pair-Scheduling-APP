@@ -229,7 +229,7 @@
 		@apply grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-8 max-w-3xl;
 	}
 
-	.role-tile {
+	.role-title {
 		@apply flex flex-col items-center justify-start p-8 rounded-2xl border-2 border-black/10 bg-white transition-all cursor-pointer text-main;
 		@apply hover:shadow-lg hover:scale-105;
 	}
@@ -262,5 +262,46 @@
 
 	.role-tile p {
 		@apply text-sm text-muted text-center;
+	}
+
+	/* meeting booked confirmation */
+	/* this is rendered in trainee booking */
+	.conf-page-div {
+		@apply bg-black;
+	}
+	.confirmation-container {
+		@apply flex flex-col items-center justify-center w-full h-full p-8 gap-6;
+	}
+
+	.confirmation-avatar {
+		@apply w-20 h-20 rounded-full object-cover shadow-sm mb-2;
+	}
+
+	.confirmation-header {
+		@apply flex flex-col items-center gap-2 mb-4 text-center;
+	}
+
+	.confirmation-title {
+		@apply flex items-center gap-3 text-2xl font-bold text-dark;
+	}
+
+	.confirmation-icon {
+		@apply text-brand-primary w-8 h-8;
+	}
+
+	.confirmation-subtitle {
+		@apply text-muted;
+	}
+
+	.confirmation-details-card {
+		@apply flex flex-col items-start w-full max-w-[600px] border border-black/10 rounded-lg p-8 bg-white gap-4 shadow-sm;
+	}
+
+	.confirmation-detail-row {
+		@apply flex items-center gap-4 font-medium;
+	}
+
+	.confirmation-detail-icon {
+		@apply w-5 h-5 text-muted;
 	}
 }
