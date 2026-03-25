@@ -13,7 +13,7 @@ const BookingConfirmation = ({
 			<img
 				src={volunteerProps?.img}
 				alt="Volunteer Avatar"
-				className="confirmation-avatar"
+				className="avatar"
 			/>
 
 			<div className="confirmation-header">
@@ -25,9 +25,8 @@ const BookingConfirmation = ({
 					A calendar invitation has been sent to your email address.
 				</p>
 			</div>
-
 			<div className="confirmation-details-card">
-				<h3>Your 1:1 session details</h3>
+				<h3 className="role-tile">Your 1:1 session details</h3>
 
 				<div className="confirmation-detail-row">
 					<User className="confirmation-detail-icon" />

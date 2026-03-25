@@ -267,14 +267,13 @@
 	/* meeting booked confirmation */
 	/* this is rendered in trainee booking */
 	.conf-page-div {
-		@apply bg-black;
+		@apply w-full;
+	}
+	.conf-page-div h3 {
+		@apply text-xl font-bold text-muted mb-2;
 	}
 	.confirmation-container {
 		@apply flex flex-col items-center justify-center w-full h-full p-8 gap-6;
-	}
-
-	.confirmation-avatar {
-		@apply w-20 h-20 rounded-full object-cover shadow-sm mb-2;
 	}
 
 	.confirmation-header {
