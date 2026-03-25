@@ -4,14 +4,8 @@
 // }
 
 //children is what is between <> like .textContent
-// here all action buttons have by default acton-btn class
-// with additional class passed as props when rendering
-const ActionBtn = ({ children, onClick, additionalBtnClass }) => (
-	<button
-		type="button"
-		className={`action-btn ${additionalBtnClass}`}
-		onClick={onClick}
-	>
+const ActionBtn = ({ children, onClick }) => (
+	<button type="button" className="btn-confirm" onClick={onClick}>
 		{children}
 	</button>
 );
