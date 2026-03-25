@@ -267,7 +267,7 @@
 	/* meeting booked confirmation */
 	/* this is rendered in trainee booking */
 	.conf-page-div {
-		@apply w-full;
+		@apply flex flex-col items-center justify-center w-full h-full p-12 bg-gray-50;
 	}
 	.conf-page-div h3 {
 		@apply text-xl font-bold text-muted mb-2;
