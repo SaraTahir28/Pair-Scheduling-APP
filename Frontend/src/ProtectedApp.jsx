@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"; // React hooks: useState for state, useEffect for side effects
 import App from "./App";                      // Main app component (calendar, bookings, etc.)
-import Login from "./pages/Login";            // Login page with Google sign-in button
+import Login from "./components/pages/Login";            // Login page with Google sign-in button
 
 // ProtectedApp: wraps the main App and handles authentication checks
 export default function ProtectedApp() {

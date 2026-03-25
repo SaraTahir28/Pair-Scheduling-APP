@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"; // routing for 
 
 import "./index.css";                    // global styles for the app
 import ProtectedApp from "./ProtectedApp.jsx"; // main app wrapper that handles authentication
-import Login from "./pages/Login";       // login page component
+import Login from "./components/pages/Login";       // login page component
 
 // Create a React root and render the application
 createRoot(document.getElementById("root")).render(
