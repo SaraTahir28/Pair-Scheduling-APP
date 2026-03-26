@@ -1,6 +1,9 @@
-import { useEffect, useState } from "react"; // React hooks: useState for state, useEffect for side effects
-import App from "./App"; // Main app component (calendar, bookings, etc.)
-import Login from "./components/pages/Login"; // Login page with Google sign-in button
+import { useEffect, useState } from "react"; 
+import App from "./App"; // 
+import Login from "./components/pages/Login"; 
+import { AuthProvider } from "./AuthContext";
+
+
 
 // ProtectedApp: wraps the main App and handles authentication checks
 export default function ProtectedApp() {
@@ -17,8 +20,8 @@ export default function ProtectedApp() {
 			credentials: "include", // ensures cookies (session) are sent with the request
 		})
 			.then((res) => {
-				if (res.status === 401) return null; // 401 = unauthorized, so user not logged in
-				return res.json(); // otherwise parse the JSON response
+				if (res.status === 401) return null; 
+				return res.json(); 
 			})
 			.then((data) => {
 				setUser(data); // store the user object (or null if not logged in)
@@ -26,12 +29,26 @@ export default function ProtectedApp() {
 			.catch(() => setUser(null)); // if fetch fails, treat as not logged in
 	}, []); // empty dependency array = runs only once on mount
 
+function handleLogout() {
+  fetch("http://localhost:8000/auth/logout/", {
+    method: "POST",
+    credentials: "include",
+  })
+    .then(() => setUser(null))
+    .catch(() => setUser(null));
+}
+
+
 	// While checking the session, show a loading indicator
 	if (user === undefined) return <div>Loading...</div>;
 
 	// If user is not logged in (null or missing id), show the Login page
 	if (!user || !user.id) return <Login />;
 
-	// If user is logged in, render the main App
-	return <App />;
+	
+	return (
+    <AuthProvider value={{ user, logout: handleLogout }}>
+      <App />
+    </AuthProvider>
+  );
 }
