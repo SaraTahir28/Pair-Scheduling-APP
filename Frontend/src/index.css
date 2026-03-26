@@ -19,7 +19,8 @@
 @layer components {
 	.p,
 	p,
-	label {
+	label,
+	.confirmation-container span {
 		@apply font-normal text-main;
 	}
 	h1 {
@@ -229,7 +230,7 @@
 		@apply grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-8 max-w-3xl;
 	}
 
-	.role-title {
+	.role-tile {
 		@apply flex flex-col items-center justify-start p-8 rounded-2xl border-2 border-black/10 bg-white transition-all cursor-pointer text-main;
 		@apply hover:shadow-lg hover:scale-105;
 	}
@@ -251,7 +252,7 @@
 	.role-tile-volunteer:hover {
 		@apply border-brand-primary duration-300 ease-in-out;
 	}
-	.landing-title {
+	.landing-tile {
 		@apply text-4xl font-bold mb-4 tracking-tight;
 		@apply bg-gradient-to-r from-brand-blue to-brand-primary;
 		@apply bg-clip-text text-transparent;
@@ -275,7 +276,9 @@
 	.confirmation-container {
 		@apply flex flex-col items-center justify-center w-full h-full p-8 gap-6;
 	}
-
+	.avatar-conf {
+		@apply w-24 h-24 shadow-sm;
+	}
 	.confirmation-header {
 		@apply flex flex-col items-center gap-2 mb-4 text-center;
 	}
@@ -289,9 +292,11 @@
 	}
 
 	.confirmation-subtitle {
-		@apply text-muted;
+		@apply text-main;
 	}
-
+	/* .confirmation-container span  moved to top {
+		@apply text-main;
+	} */
 	.confirmation-details-card {
 		@apply flex flex-col items-start w-full max-w-[600px] border border-black/10 rounded-lg p-8 bg-white gap-4 shadow-sm;
 	}
@@ -301,6 +306,6 @@
 	}
 
 	.confirmation-detail-icon {
-		@apply w-5 h-5 text-muted;
+		@apply w-5 h-5 text-main;
 	}
 }

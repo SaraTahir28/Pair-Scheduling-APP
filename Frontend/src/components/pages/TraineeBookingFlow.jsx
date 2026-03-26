@@ -10,10 +10,6 @@ import BookingConfirmation from "../groups/BookingConfirmation";
 const TraineeBookingFlow = () => {
 	//App holds state and sends as props to children as props, children change state and rerender is triggered
 
-	//here adding state of selected sent to Calendar and TimeSlotGroup as props
-	// const [selectedDate, setSelectedDate] = useState(null);
-	// const [selectedTime, setSelectedTime] = useState(null);
-	//this now is not a local state but from url
 	const { selectedDate, selectedTime, status } = useParams();
 	const navigate = useNavigate();
 
@@ -29,9 +25,6 @@ const TraineeBookingFlow = () => {
 		navigate(`/trainee-booking/${selectedDate}/${newTime}`);
 	};
 
-	// here after the form is submitted we will change state of this
-	//to show confirmation rendered where the booking form was
-	// const [isBookingConfirmed, setIsBookingConfirmed] = useState(false); replaced with below for routing
 	const isConfirmationPage = status === "confirmation";
 	//here we select state of activeVolunteer that will be passed to session details volunteers div
 	//for now Duncan is an active volunteer
