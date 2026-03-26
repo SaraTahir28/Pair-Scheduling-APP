@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
     """
 
     class Meta:
-        # Link serializer to the User model
+
         model = User
 
         # Fields that will be exposed in the API (GET / PATCH responses)

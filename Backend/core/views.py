@@ -65,38 +65,13 @@ def create_meeting_view(request):
         return JsonResponse({"error": str(error)}, status=500)
 
 class UserListCreateView(generics.ListCreateAPIView):
-    """
-    This view handle:
-
-    GET /api/users/
-        Returns a list of all users in the system
-        Used for debugging, admin views, or listing users
-
-    POST /api/users/
-        Creates a new user, in our project is not needed because users are created via Google Authentication
-    """
-
-    # This is the base queryset used by the view that defines which users exist for GET requests
+    
     queryset = User.objects.all().order_by("id")
 
-    # This tells Django REST framework how to convert database objects to JSON and vice versa
     serializer_class = UserSerializer
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
-    """
-    This view handles:
-
-    GET /api/users/<id>/
-        Returns a single user by ID
-
-    PATCH /api/users/<id>/
-        Partially updates a user
-        It's used to update profile fields like:
-            - role
-            - status (maybe admin only, possibly group in the future [ITP,SDC,etc])
-    """
-    # Defines which users can be retrieved/updated
+    
     queryset = User.objects.all()
 
-    # Defines how data is serialized/deserialized
     serializer_class = UserSerializer
