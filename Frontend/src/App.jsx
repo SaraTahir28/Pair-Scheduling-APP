@@ -2,11 +2,13 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LandingPage from "./components/pages/LandingPage";
 import TraineeBookingFlow from "./components/pages/TraineeBookingFlow";
 import VolunteerDash from "./components/pages/VolunteerDash";
+import NotFound from "./components/pages/NotFound";
 
 const router = createBrowserRouter([
 	{
 		path: "/",
 		Component: LandingPage,
+		errorElement: <NotFound />,
 	},
 	{
 		path: "/trainee-booking",
@@ -25,6 +27,10 @@ const router = createBrowserRouter([
 
 			{ path: "bookings/:id/edit", Component: VolunteerDash },
 		],
+	},
+	{
+		path: "*",
+		Component: NotFound,
 	},
 ]);
 
