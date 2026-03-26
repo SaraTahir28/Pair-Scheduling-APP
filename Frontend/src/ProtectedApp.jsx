@@ -30,12 +30,13 @@ export default function ProtectedApp() {
 	}, []); // empty dependency array = runs only once on mount
 
 function handleLogout() {
+  // Clear user immediately
+  setUser(null);
+
   fetch("http://localhost:8000/auth/logout/", {
     method: "POST",
     credentials: "include",
-  })
-    .then(() => setUser(null))
-    .catch(() => setUser(null));
+  }).catch(() => console.log("Failed to log out on backend"));
 }
 
 
