@@ -100,15 +100,18 @@ def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
             "volunteer_email": volunteer_email,
         },
     )
+    # DRF turns incoming timestamps into Python datetime objects.
+    # Google Calendar only accepts RFC3339 strings, so we convert before sending.
+
     event = {
         "summary": "Pair Scheduling Session",
         "description": "1:1 session between trainee and volunteer",
         "start": {
-            "dateTime": start_time,
+            "dateTime": start_time.isoformat().replace("+00:00", "Z"),
             "timeZone": "UTC",
         },
         "end": {
-            "dateTime": end_time,
+            "dateTime": end_time.isoformat().replace("+00:00", "Z"),
             "timeZone": "UTC",
         },
     
@@ -151,8 +154,8 @@ def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
     )
 
     return {
-        "event_id": created_event.get("id"),
-        "meet_link": created_event.get("hangoutLink"),
-        "start": created_event.get("start"),
-        "end": created_event.get("end"),
-    }
+    "event_id": created_event.get("id"),
+    "meet_link": created_event.get("hangoutLink"),
+    "start": str(created_event["start"].get("dateTime")),
+    "end": str(created_event["end"].get("dateTime")),
+}
