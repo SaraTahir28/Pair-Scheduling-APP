@@ -10,6 +10,10 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .google_calendar_service import create_google_meeting
 
+#Django Rest Framework and serializer for endpoints
+from rest_framework import generics
+from .models import User
+from .serializers import UserSerializer
 
 @csrf_exempt
 @require_POST
@@ -59,3 +63,15 @@ def create_meeting_view(request):
     except Exception as error:
         # return the integration error to make local debugging
         return JsonResponse({"error": str(error)}, status=500)
+
+class UserListCreateView(generics.ListCreateAPIView):
+    
+    queryset = User.objects.all().order_by("id")
+
+    serializer_class = UserSerializer
+
+class UserDetailView(generics.RetrieveUpdateAPIView):
+    
+    queryset = User.objects.all()
+
+    serializer_class = UserSerializer
