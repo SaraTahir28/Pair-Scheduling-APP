@@ -32,13 +32,15 @@ export default function ProtectedApp() {
 	const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 		function handleLogout() {
-		 setUser(null);
 		 fetch(`${API_BASE_URL}/auth/logout/`, { 
-			method: "POST",
-			credentials: "include",
-		  }).catch(() => console.log("Failed to log out on backend"));
+		   method: "POST",
+		   credentials: "include",
+		 })
+		   .then(() => setUser(null)) // only after success
+		   .catch(() => {
+			 console.log("Failed to log out on backend");
+			});
 }
-
 	// While checking the session, show a loading indicator
 	if (user === undefined) return <div>Loading...</div>;
 
