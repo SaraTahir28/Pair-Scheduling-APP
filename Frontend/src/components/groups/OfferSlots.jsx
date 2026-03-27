@@ -29,15 +29,12 @@ const VolunteerAvailabilityForm = ({ whenFormSubmit, volunteerId, mode }) => {
 			return;
 		}
 
-		// build dates logic
-		// const today = new Date().new Date().toISOString().split("T")[0]
-		// const startDateStr = today.toISOString().split("T")[0];
-		const baseDate = isRecurring
-			? new Date().toISOString().split("T")[0]
-			: specificDate;
-		const timeWithDate = `${baseDate}T${startTime}:00`;
+		// dates logic
+		const isToday = new Date().toISOString().split("T")[0];
+		const startDate = isRecurring ? isToday : specificDate;
+		const timeWithDate = `${startDate}T${startTime}:00`;
 
-		// TODO in nice to haves
+		// TODO - nice to haves
 		// for now no tim limit
 		// const futureDate = new Date();
 		// futureDate.setMonth(today.getMonth() + 3);
@@ -53,17 +50,17 @@ const VolunteerAvailabilityForm = ({ whenFormSubmit, volunteerId, mode }) => {
 			start_time: timeWithDate,
 			repeat_until: null,
 			// TODO repeat_until: isRecurring ? futureDate.toISOString() : null,
-			date: isRecurring ? null : timeWithDate,
 			// endTime: endTime, // this is for future now no end
 		};
-
+		console.log("obj for db", slotsObj);
 		whenFormSubmit(slotsObj);
 	};
 
 	return (
 		<div className="booking-form-container">
-			<h2 className="form-title">availability</h2>
-			<form>
+			<h2 className="form-title">Select your availability</h2>
+
+			<form onSubmit={checkInputsValid}>
 				<div className="form-input-group">
 					<label className="form-label">recurring weekly?</label>
 					<input
@@ -75,11 +72,12 @@ const VolunteerAvailabilityForm = ({ whenFormSubmit, volunteerId, mode }) => {
 
 				{!isRecurring && (
 					<div className="form-input-group">
-						<label className="form-label">select date</label>
+						<label className="form-label">Select date</label>
 						<input
 							className="form-input"
 							type="date"
 							disabled={mode === "view"}
+							//TODO admin view later and view selected availability
 							value={specificDate}
 							onChange={(e) => setSpecificDate(e.target.value)}
 						/>
@@ -88,7 +86,7 @@ const VolunteerAvailabilityForm = ({ whenFormSubmit, volunteerId, mode }) => {
 
 				{isRecurring && (
 					<div className="form-input-group">
-						<label className="form-label">select day</label>
+						<label className="form-label">Select day</label>
 						<select
 							className="form-input"
 							disabled={mode === "view"}
@@ -107,7 +105,7 @@ const VolunteerAvailabilityForm = ({ whenFormSubmit, volunteerId, mode }) => {
 				)}
 
 				<div className="form-input-group">
-					<label className="form-label">start time</label>
+					<label className="form-label">Time</label>
 					<input
 						className="form-input"
 						type="time"

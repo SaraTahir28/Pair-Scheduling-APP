@@ -265,38 +265,36 @@
 	}
 
 	/* offer timeslots */
-	@layer components {
-		.booking-form-container {
-			@apply p-6 rounded-2xl shadow-sm;
-		}
+	.booking-form-container {
+		@apply p-6 rounded-2xl shadow-sm;
+	}
 
-		.form-title {
-			@apply text-xl font-bold mb-6;
-		}
+	.form-title {
+		@apply text-xl font-bold mb-6;
+	}
 
-		.form-input-group {
-			@apply mb-5 flex flex-col;
-		}
+	.form-input-group {
+		@apply mb-5 flex flex-col;
+	}
 
-		.form-input-group-row {
-			@apply mb-6 flex flex-row items-center gap-3 p-3;
-		}
+	.form-input-group-row {
+		@apply mb-6 flex flex-row items-center gap-3 p-3;
+	}
 
-		.form-input-group-row:hover {
-			@apply border-text-main/60;
-		}
+	.form-input-group-row:hover {
+		@apply border-text-main/60;
+	}
 
-		.form-label {
-			@apply text-xs font-bold;
-		}
+	.form-label {
+		@apply text-xs font-bold;
+	}
 
-		.form-input {
-			@apply w-full p-3 bg-gray-50 border-border-color rounded-xl text-gray-700 focus:text-brand-primary focus:outline-none 
+	.form-input {
+		@apply w-full p-3 bg-gray-50 border-border-color rounded-xl text-gray-700 focus:text-brand-primary focus:outline-none 
            transition-all cursor-pointer;
-		}
+	}
 
-		.form-checkbox {
-			@apply w-5 h-5 rounded-md border-border-color text-brand-primary cursor-pointer;
-		}
+	.form-checkbox {
+		@apply w-5 h-5 rounded-md border-border-color text-brand-primary cursor-pointer;
 	}
 }
