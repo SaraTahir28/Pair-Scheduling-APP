@@ -29,11 +29,12 @@ export default function ProtectedApp() {
 			.catch(() => setUser(null)); // if fetch fails, treat as not logged in
 	}, []); // empty dependency array = runs only once on mount
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 function handleLogout() {
-  // Clear user immediately
   setUser(null);
 
-  fetch("http://localhost:8000/auth/logout/", {
+  fetch(`${API_BASE_URL}/auth/logout/`, { //Updated logout request to use environment-based URL
     method: "POST",
     credentials: "include",
   }).catch(() => console.log("Failed to log out on backend"));
