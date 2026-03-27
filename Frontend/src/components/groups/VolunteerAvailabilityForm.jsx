@@ -54,6 +54,9 @@ const VolunteerAvailabilityForm = ({ whenFormSubmit, volunteerId, mode }) => {
 		};
 		console.log("obj for db", slotsObj);
 		whenFormSubmit(slotsObj);
+		setDropdownSelectionDay("");
+		setStartTime("09:00");
+		setIsRecurring(false);
 	};
 
 	return (
@@ -66,6 +69,7 @@ const VolunteerAvailabilityForm = ({ whenFormSubmit, volunteerId, mode }) => {
 					<input
 						type="checkbox"
 						checked={isRecurring}
+						value={startTime}
 						onChange={(e) => setIsRecurring(e.target.checked)}
 					/>
 				</div>
@@ -115,7 +119,7 @@ const VolunteerAvailabilityForm = ({ whenFormSubmit, volunteerId, mode }) => {
 				</div>
 
 				{mode !== "view" && (
-					<ActionBtn onClick={checkInputsValid}>Submit Availability</ActionBtn>
+					<ActionBtn onClick={checkInputsValid}>Add to list</ActionBtn>
 				)}
 			</form>
 		</div>

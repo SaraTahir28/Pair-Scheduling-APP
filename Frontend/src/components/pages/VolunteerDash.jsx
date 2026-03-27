@@ -7,6 +7,9 @@ import SessionDetails from "../groups/SessionDetails";
 import VolunteerEditSession from "../groups/VolunteerEditSession";
 import VolunteerViewSession from "../groups/VolunteerViewSession";
 
+import VolunteerAvailabilityForm from "../groups/VolunteerAvailabilityForm";
+import { ActionBtn } from "../elements/Button";
+
 const VolunteerDash = () => {
 	const { id } = useParams();
 
@@ -20,6 +23,22 @@ const VolunteerDash = () => {
 
 	const [allBookedSessionsForAllUsers, setAllBookedSessionsForAllUsers] =
 		useState(bookedSessions);
+
+	//adding the step of adding slots before form is sent
+	const [hasUserSetAvailability, setHasUserSetAvailability] = useState(false);
+	const [temporaryAddedSlotsStorage, setTemporaryAddedSlotsStorage] = useState(
+		[]
+	);
+	const volunteerSubmitedFormWithSlots = (newSlotObj) => {
+		setTemporaryAddedSlotsStorage([...temporaryAddedSlotsStorage, newSlotObj]);
+	};
+
+	const sendVolunteerSlotsToDb = () => {
+		console.log("Ready to send to db", temporaryAddedSlotsStorage);
+		alert("Availability is saved.");
+
+		setHasUserSetAvailability(true);
+	};
 
 	// grab all sessions for active user
 	const activeVolunteerSessions = allBookedSessionsForAllUsers.filter(
@@ -86,6 +105,52 @@ const VolunteerDash = () => {
 		});
 	});
 
+	// onboarding - show slot selection from
+	if (!hasUserSetAvailability) {
+		return (
+			<div className="">
+				<h1 className="">Welcome {activeVolunteer.name}!</h1>
+				<p className="">
+					Let's start by selecting your availability for 1:1 sessions.
+				</p>
+
+				<VolunteerAvailabilityForm
+					volunteerId={activeVolunteer.id}
+					mode="edit"
+					whenFormSubmit={volunteerSubmitedFormWithSlots}
+				/>
+
+				{/* slots already added by the volunteer show here */}
+				{temporaryAddedSlotsStorage.length > 0 && (
+					<div>
+						<h3>Entries to save:</h3>
+
+						{/* React bierze koszyk i dla każdego wpisu rysuje zwykłego diva */}
+						{temporaryAddedSlotsStorage.map((entry, index) => (
+							<div key={index}>
+								<p>Time: {entry.start_time.split("T")[1]}</p>
+
+								{entry.regular === true ? (
+									<p>
+										<input type="checkbox" checked={true} readOnly />
+										Recurring every: {entry.weekday}
+									</p>
+								) : (
+									<p>
+										<input type="checkbox" checked={false} readOnly />
+										Specific date: {entry.start_time.split("T")[0]}
+									</p>
+								)}
+							</div>
+						))}
+
+						<ActionBtn onClick={sendVolunteerSlotsToDb}>Save All</ActionBtn>
+					</div>
+				)}
+			</div>
+		);
+	}
+	// once completed adding slots
 	return (
 		<div className="booking-box">
 			<div className="session-details-col">
