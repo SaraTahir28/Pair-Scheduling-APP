@@ -104,52 +104,11 @@ const VolunteerDash = () => {
 			}
 		});
 	});
-
-	// onboarding - show slot selection from
-	if (!hasUserSetAvailability) {
-		return (
-			<div className="">
-				<h1 className="">Welcome {activeVolunteer.name}!</h1>
-				<p className="">
-					Let's start by selecting your availability for 1:1 sessions.
-				</p>
-
-				<VolunteerAvailabilityForm
-					volunteerId={activeVolunteer.id}
-					mode="edit"
-					whenFormSubmit={volunteerSubmitedFormWithSlots}
-				/>
-
-				{/* slots already added by the volunteer show here */}
-				{temporaryAddedSlotsStorage.length > 0 && (
-					<div>
-						<h3>Entries to save:</h3>
-
-						{/* React bierze koszyk i dla każdego wpisu rysuje zwykłego diva */}
-						{temporaryAddedSlotsStorage.map((entry, index) => (
-							<div key={index}>
-								<p>Time: {entry.start_time.split("T")[1]}</p>
-
-								{entry.regular === true ? (
-									<p>
-										<input type="checkbox" checked={true} readOnly />
-										Recurring every: {entry.weekday}
-									</p>
-								) : (
-									<p>
-										<input type="checkbox" checked={false} readOnly />
-										Specific date: {entry.start_time.split("T")[0]}
-									</p>
-								)}
-							</div>
-						))}
-
-						<ActionBtn onClick={sendVolunteerSlotsToDb}>Save All</ActionBtn>
-					</div>
-				)}
-			</div>
+	const removeSlotFromTemporaryStorage = (indexToRemove) => {
+		setTemporaryAddedSlotsStorage(
+			temporaryAddedSlotsStorage.filter((_, index) => index !== indexToRemove)
 		);
-	}
+	};
 	// once completed adding slots
 	return (
 		<div className="booking-box">
@@ -160,25 +119,75 @@ const VolunteerDash = () => {
 				/>
 			</div>
 			<div className="bookings-col">
-				{id ? (
-					editSessionMode ? (
-						<VolunteerEditSession
-							sessions={allBookedSessionsForAllUsers}
-							onSave={saveEditedSession}
+				{/* onboarding if slots are not selected - form shows */}
+				{!hasUserSetAvailability && (
+					<div className="">
+						{/* <h1 className="form-title">Welcome {activeVolunteer.name}!</h1> */}
+						<p className="">
+							Let's start by selecting your availability for 1:1 sessions.
+						</p>
+
+						<VolunteerAvailabilityForm
+							volunteerId={activeVolunteer.id}
+							mode="edit"
+							whenFormSubmit={volunteerSubmitedFormWithSlots}
 						/>
-					) : (
-						<VolunteerViewSession sessions={allBookedSessionsForAllUsers} />
-					)
-				) : (
+
+						{/* slots already added by the volunteer show here */}
+						{temporaryAddedSlotsStorage.length > 0 && (
+							<div className="saved-entries-card">
+								<h3>Entries to save:</h3>
+
+								{/* React bierze koszyk i dla każdego wpisu rysuje zwykłego diva */}
+								{temporaryAddedSlotsStorage.map((entry, index) => (
+									<div key={index}>
+										<p>Time: {entry.start_time.split("T")[1]}</p>
+
+										{entry.regular === true ? (
+											<p>
+												<input type="checkbox" checked={true} readOnly />
+												Recurring every: {entry.weekday}
+											</p>
+										) : (
+											<p>
+												<input type="checkbox" checked={false} readOnly />
+												Specific date: {entry.start_time.split("T")[0]}
+											</p>
+										)}
+									</div>
+								))}
+
+								<ActionBtn onClick={sendVolunteerSlotsToDb}>Save All</ActionBtn>
+							</div>
+						)}
+					</div>
+				)}
+				{/* view after adding sessions */}
+				{hasUserSetAvailability && (
 					<>
-						<div className="all-cards-container">
-							<h2 className="bookings-heading-selectdt">Upcoming sessions</h2>
-							{renderedSessions.length > 0 ? (
-								renderedSessions
+						{id ? (
+							editSessionMode ? (
+								<VolunteerEditSession
+									sessions={allBookedSessionsForAllUsers}
+									onSave={saveEditedSession}
+								/>
 							) : (
-								<p>You do not have any booked sessions.</p>
-							)}
-						</div>
+								<VolunteerViewSession sessions={allBookedSessionsForAllUsers} />
+							)
+						) : (
+							<>
+								<div className="all-cards-container">
+									<h2 className="bookings-heading-selectdt">
+										Upcoming sessions
+									</h2>
+									{renderedSessions.length > 0 ? (
+										renderedSessions
+									) : (
+										<p>You do not have any booked sessions.</p>
+									)}
+								</div>
+							</>
+						)}
 					</>
 				)}
 			</div>

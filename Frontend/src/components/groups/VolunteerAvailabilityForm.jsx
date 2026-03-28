@@ -61,15 +61,13 @@ const VolunteerAvailabilityForm = ({ whenFormSubmit, volunteerId, mode }) => {
 
 	return (
 		<div className="booking-form-container">
-			<h2 className="form-title">Select your availability</h2>
-
 			<form onSubmit={checkInputsValid}>
+				<h2 className="form-title">Select your availability</h2>
 				<div className="form-input-group">
 					<label className="form-label">recurring weekly?</label>
 					<input
 						type="checkbox"
 						checked={isRecurring}
-						value={startTime}
 						onChange={(e) => setIsRecurring(e.target.checked)}
 					/>
 				</div>
@@ -94,7 +92,7 @@ const VolunteerAvailabilityForm = ({ whenFormSubmit, volunteerId, mode }) => {
 						<select
 							className="form-input"
 							disabled={mode === "view"}
-							onChange={(e) => setDropdownSelectionDay(e.target.value)} // NAPRAWIONE: było setDay
+							onChange={(e) => setDropdownSelectionDay(e.target.value)}
 						>
 							<option value="">Select...</option>
 							<option value="monday">Monday</option>
@@ -114,6 +112,7 @@ const VolunteerAvailabilityForm = ({ whenFormSubmit, volunteerId, mode }) => {
 						className="form-input"
 						type="time"
 						disabled={mode === "view"}
+						value={startTime}
 						onChange={(e) => setStartTime(e.target.value)}
 					/>
 				</div>
