@@ -48,7 +48,7 @@ const BookingForm = ({ whenFormSubmit, trainee }) => {
 				<div className="form-input-group">
 					<label className="form-label">Email</label>
 					<input
-						className="form-input"
+						className="form-input form-input-disabled"
 						type="email"
 						label="Email"
 						value={email}

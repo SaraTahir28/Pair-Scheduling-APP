@@ -126,7 +126,7 @@ const TraineeBookingFlow = () => {
 				<div className="timeslot-col trainee-timeslot-width">
 					<BookingForm
 						whenFormSubmit={createBookingDetailsObj}
-						user={activeTrainee}
+						trainee={activeTrainee}
 					/>
 				</div>
 			)}

@@ -183,6 +183,9 @@
 	.form-input {
 		@apply border border-black/10 rounded-[6px] p-3 w-[350px] outline-none transition-all mb-2;
 	}
+	.form-input-disabled {
+		@apply bg-border-color;
+	}
 
 	/* here will add confirmation styling */
 
