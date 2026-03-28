@@ -296,4 +296,7 @@
 	.form-checkbox {
 		@apply w-5 h-5 rounded-md border-border-color text-brand-primary cursor-pointer;
 	}
+	.slots-basket-row {
+		@apply flex justify-between items-center bg-white border border-border-color rounded-xl p-3 mb-2 gap-4;
+	}
 }

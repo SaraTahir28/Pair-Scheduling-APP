@@ -1,5 +1,5 @@
 import React from "react";
-import { ActionBtn } from "../elements/Button"; // Upewnij się, że ścieżka do przycisku jest poprawna
+import { ActionBtn } from "../elements/Button";
 
 const AddingSlotsBasket = ({ addedSlots, removeSlot, saveAll }) => {
 	if (!addedSlots || addedSlots.length === 0) {
@@ -11,11 +11,11 @@ const AddingSlotsBasket = ({ addedSlots, removeSlot, saveAll }) => {
 			<h3 className="form-title">Entries to save:</h3>
 
 			{addedSlots.map((entry, index) => (
-				<div classBame="" key={index}>
-					<p>Time: {entry.start_time.split("T")[1].slice(0, 5)}</p>
+				<div className="slots-basket-row" key={index}>
+					<span>Time: {entry.start_time.split("T")[1].slice(0, 5)}</span>
 
 					{entry.regular === true ? (
-						<p>
+						<span>
 							<input
 								type="checkbox"
 								checked={true}
@@ -23,12 +23,12 @@ const AddingSlotsBasket = ({ addedSlots, removeSlot, saveAll }) => {
 								className="form-checkbox"
 							/>
 							Recurring every {entry.weekday}
-						</p>
+						</span>
 					) : (
-						<p>
+						<span>
 							On date:
 							{entry.start_time.split("T")[0].split("-").reverse().join("-")}
-						</p>
+						</span>
 					)}
 
 					<ActionBtn
@@ -40,7 +40,9 @@ const AddingSlotsBasket = ({ addedSlots, removeSlot, saveAll }) => {
 				</div>
 			))}
 
-			<ActionBtn onClick={saveAll}>Save All</ActionBtn>
+			<ActionBtn additionalBtnClass="btn-primary" onClick={saveAll}>
+				Save All
+			</ActionBtn>
 		</div>
 	);
 };
