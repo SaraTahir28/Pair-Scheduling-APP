@@ -72,13 +72,14 @@ const VolunteerAvailabilityForm = ({
 			<div className="booking-form-container">
 				<form onSubmit={checkInputsValid}>
 					<h2 className="form-title">Select your availability</h2>
-					<div className="form-input-group">
-						<label className="form-label">recurring weekly?</label>
+					<div className="form-input-group-row">
 						<input
+							className="form-checkbox"
 							type="checkbox"
 							checked={isRecurring}
 							onChange={(e) => setIsRecurring(e.target.checked)}
 						/>
+						<label className="form-label">recurring weekly?</label>
 					</div>
 
 					{!isRecurring && (

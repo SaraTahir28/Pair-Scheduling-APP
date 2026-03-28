@@ -7,11 +7,11 @@ const AddingSlotsBasket = ({ addedSlots, removeSlot, saveAll }) => {
 	}
 
 	return (
-		<div className="saved-entries-card ml-6">
-			<h3>Entries to save:</h3>
+		<div className="booking-form-container">
+			<h3 className="form-title">Entries to save:</h3>
 
 			{addedSlots.map((entry, index) => (
-				<div key={index}>
+				<div classBame="" key={index}>
 					<p>Time: {entry.start_time.split("T")[1]}</p>
 
 					{entry.regular === true ? (

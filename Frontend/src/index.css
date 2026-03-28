@@ -282,10 +282,9 @@
 	}
 
 	.form-input-group-row:hover {
-		@apply border-text-main/60;
+		@apply border-border-color;
 	}
-
-	.form-label {
+	ąć .form-label {
 		@apply text-xs font-bold;
 	}
 
