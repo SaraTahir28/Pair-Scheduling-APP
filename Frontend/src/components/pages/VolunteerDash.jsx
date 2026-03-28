@@ -131,35 +131,10 @@ const VolunteerDash = () => {
 							volunteerId={activeVolunteer.id}
 							mode="edit"
 							whenFormSubmit={volunteerSubmitedFormWithSlots}
+							addedSlots={temporaryAddedSlotsStorage}
+							removeSlot={removeSlotFromTemporaryStorage}
+							saveAll={sendVolunteerSlotsToDb}
 						/>
-
-						{/* slots already added by the volunteer show here */}
-						{temporaryAddedSlotsStorage.length > 0 && (
-							<div className="saved-entries-card">
-								<h3>Entries to save:</h3>
-
-								{/* React bierze koszyk i dla każdego wpisu rysuje zwykłego diva */}
-								{temporaryAddedSlotsStorage.map((entry, index) => (
-									<div key={index}>
-										<p>Time: {entry.start_time.split("T")[1]}</p>
-
-										{entry.regular === true ? (
-											<p>
-												<input type="checkbox" checked={true} readOnly />
-												Recurring every: {entry.weekday}
-											</p>
-										) : (
-											<p>
-												<input type="checkbox" checked={false} readOnly />
-												Specific date: {entry.start_time.split("T")[0]}
-											</p>
-										)}
-									</div>
-								))}
-
-								<ActionBtn onClick={sendVolunteerSlotsToDb}>Save All</ActionBtn>
-							</div>
-						)}
 					</div>
 				)}
 				{/* view after adding sessions */}

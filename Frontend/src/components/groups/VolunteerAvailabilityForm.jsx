@@ -1,7 +1,15 @@
 import React, { useState } from "react";
 import { ActionBtn } from "../elements/Button";
+import AddingSlotsBasket from "./AddingSlotsBasket";
 
-const VolunteerAvailabilityForm = ({ whenFormSubmit, volunteerId, mode }) => {
+const VolunteerAvailabilityForm = ({
+	whenFormSubmit,
+	volunteerId,
+	mode,
+	addedSlots,
+	removeSlot,
+	saveAll,
+}) => {
 	//this is with repeated date initially set to off
 	const [isRecurring, setIsRecurring] = useState(false);
 	const [specificDate, setSpecificDate] = useState(
@@ -60,68 +68,78 @@ const VolunteerAvailabilityForm = ({ whenFormSubmit, volunteerId, mode }) => {
 	};
 
 	return (
-		<div className="booking-form-container">
-			<form onSubmit={checkInputsValid}>
-				<h2 className="form-title">Select your availability</h2>
-				<div className="form-input-group">
-					<label className="form-label">recurring weekly?</label>
-					<input
-						type="checkbox"
-						checked={isRecurring}
-						onChange={(e) => setIsRecurring(e.target.checked)}
-					/>
-				</div>
-
-				{!isRecurring && (
+		<>
+			<div className="booking-form-container">
+				<form onSubmit={checkInputsValid}>
+					<h2 className="form-title">Select your availability</h2>
 					<div className="form-input-group">
-						<label className="form-label">Select date</label>
+						<label className="form-label">recurring weekly?</label>
 						<input
-							className="form-input"
-							type="date"
-							disabled={mode === "view"}
-							//TODO admin view later and view selected availability
-							value={specificDate}
-							onChange={(e) => setSpecificDate(e.target.value)}
+							type="checkbox"
+							checked={isRecurring}
+							onChange={(e) => setIsRecurring(e.target.checked)}
 						/>
 					</div>
-				)}
 
-				{isRecurring && (
+					{!isRecurring && (
+						<div className="form-input-group">
+							<label className="form-label">Select date</label>
+							<input
+								className="form-input"
+								type="date"
+								disabled={mode === "view"}
+								//TODO admin view later and view selected availability
+								value={specificDate}
+								onChange={(e) => setSpecificDate(e.target.value)}
+							/>
+						</div>
+					)}
+
+					{isRecurring && (
+						<div className="form-input-group">
+							<label className="form-label">Select day</label>
+							<select
+								className="form-input"
+								disabled={mode === "view"}
+								onChange={(e) => setDropdownSelectionDay(e.target.value)}
+							>
+								<option value="">Select...</option>
+								<option value="monday">Monday</option>
+								<option value="tuesday">Tuesday</option>
+								<option value="wednesday">Wednesday</option>
+								<option value="thursday">Thursday</option>
+								<option value="friday">Friday</option>
+								<option value="saturday">Saturday</option>
+								<option value="sunday">Sunday</option>
+							</select>
+						</div>
+					)}
+
 					<div className="form-input-group">
-						<label className="form-label">Select day</label>
-						<select
+						<label className="form-label">Time</label>
+						<input
 							className="form-input"
+							type="time"
 							disabled={mode === "view"}
-							onChange={(e) => setDropdownSelectionDay(e.target.value)}
-						>
-							<option value="">Select...</option>
-							<option value="monday">Monday</option>
-							<option value="tuesday">Tuesday</option>
-							<option value="wednesday">Wednesday</option>
-							<option value="thursday">Thursday</option>
-							<option value="friday">Friday</option>
-							<option value="saturday">Saturday</option>
-							<option value="sunday">Sunday</option>
-						</select>
+							value={startTime}
+							onChange={(e) => setStartTime(e.target.value)}
+						/>
 					</div>
-				)}
 
-				<div className="form-input-group">
-					<label className="form-label">Time</label>
-					<input
-						className="form-input"
-						type="time"
-						disabled={mode === "view"}
-						value={startTime}
-						onChange={(e) => setStartTime(e.target.value)}
-					/>
-				</div>
+					{mode !== "view" && (
+						<ActionBtn onClick={checkInputsValid}>Add to list</ActionBtn>
+					)}
+				</form>
+			</div>
 
-				{mode !== "view" && (
-					<ActionBtn onClick={checkInputsValid}>Add to list</ActionBtn>
-				)}
-			</form>
-		</div>
+			<div>
+				<AddingSlotsBasket
+					addedSlots={addedSlots}
+					removeSlot={removeSlot}
+					saveAll={saveAll}
+				/>
+			</div>
+		</>
 	);
 };
 
