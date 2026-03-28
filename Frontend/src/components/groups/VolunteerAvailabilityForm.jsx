@@ -19,6 +19,31 @@ const VolunteerAvailabilityForm = ({
 	const [startTime, setStartTime] = useState("09:00");
 	// const [endTime, setEndTime] = useState(""); //TODO nice to haves
 
+	const matchDateToDaySelectedIfRecurring = (userSelectedDayName) => {
+		if (!userSelectedDayName || !specificDate) return;
+
+		const daysToNums = {
+			Sunday: 0,
+			Monday: 1,
+			Tuesday: 2,
+			Wednesday: 3,
+			Thursday: 4,
+			Friday: 5,
+			Saturday: 6,
+		};
+
+		const whatNumIsDay = daysToNums[userSelectedDayName];
+		let userSelectedDate = new Date(specificDate);
+
+		while (userSelectedDate.getDay() !== whatNumIsDay) {
+			userSelectedDate.setDate(userSelectedDate.getDate() + 1);
+		}
+		const fixedDateStr = userSelectedDate.toISOString().split("T")[0];
+		setSpecificDate(fixedDateStr);
+
+		// TODO left show day in dropdown based on user selected date
+	};
+
 	const checkInputsValid = (e) => {
 		e.preventDefault();
 
@@ -38,9 +63,9 @@ const VolunteerAvailabilityForm = ({
 		}
 
 		// dates logic
-		const isToday = new Date().toISOString().split("T")[0];
-		const startDate = isRecurring ? isToday : specificDate;
-		const timeWithDate = `${startDate}T${startTime}:00`;
+		// const isToday = new Date().toISOString().split("T")[0];
+		// const startDate = isRecurring ? isToday : specificDate;
+		const timeWithDate = `${specificDate}T${startTime}:00`;
 
 		// TODO - nice to haves
 		// for now no tim limit
@@ -59,6 +84,7 @@ const VolunteerAvailabilityForm = ({
 			repeat_until: null,
 			// TODO repeat_until: isRecurring ? futureDate.toISOString() : null,
 			// endTime: endTime, // this is for future now no end
+			group: null,
 		};
 		console.log("obj for db", slotsObj);
 		whenFormSubmit(slotsObj);
@@ -95,25 +121,40 @@ const VolunteerAvailabilityForm = ({
 							/>
 						</div>
 					)}
-
 					{isRecurring && (
-						<div className="form-input-group">
-							<label className="form-label">Select day</label>
-							<select
-								className="form-input"
-								disabled={mode === "view"}
-								onChange={(e) => setDropdownSelectionDay(e.target.value)}
-							>
-								<option value="">Select...</option>
-								<option value="Monday">Monday</option>
-								<option value="Tuesday">Tuesday</option>
-								<option value="Wednesday">Wednesday</option>
-								<option value="Thursday">Thursday</option>
-								<option value="Friday">Friday</option>
-								<option value="Saturday">Saturday</option>
-								<option value="Sunday">Sunday</option>
-							</select>
-						</div>
+						<>
+							<div className="form-input-group">
+								<label className="form-label">Starting on</label>
+								<input
+									className="form-input"
+									type="date"
+									disabled={mode === "view"}
+									value={specificDate}
+									onChange={(e) => setSpecificDate(e.target.value)}
+								/>
+							</div>
+							<div className="form-input-group">
+								<label className="form-label">Select day</label>
+								<select
+									className="form-input"
+									disabled={mode === "view"}
+									value={dropdownSelectionDay}
+									onChange={(e) => {
+										setDropdownSelectionDay(e.target.value);
+										matchDateToDaySelectedIfRecurring(e.target.value);
+									}}
+								>
+									<option value="">Select...</option>
+									<option value="Monday">Monday</option>
+									<option value="Tuesday">Tuesday</option>
+									<option value="Wednesday">Wednesday</option>
+									<option value="Thursday">Thursday</option>
+									<option value="Friday">Friday</option>
+									<option value="Saturday">Saturday</option>
+									<option value="Sunday">Sunday</option>
+								</select>
+							</div>
+						</>
 					)}
 
 					<div className="form-input-group">
