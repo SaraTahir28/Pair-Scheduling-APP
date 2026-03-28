@@ -8,12 +8,10 @@ const router = createBrowserRouter([
 	{
 		path: "/",
 		Component: LandingPage,
-		errorElement: <NotFound />,
 	},
 	{
 		path: "/trainee-booking",
 		children: [
-			// index true is root
 			{ index: true, Component: TraineeBookingFlow },
 			{ path: ":selectedDate", Component: TraineeBookingFlow },
 			{ path: ":selectedDate/:selectedTime", Component: TraineeBookingFlow },
@@ -22,7 +20,6 @@ const router = createBrowserRouter([
 	{
 		path: "/volunteer-dash",
 		children: [
-			// index true is root
 			{ index: true, Component: VolunteerDash },
 
 			{ path: "bookings/:id/edit", Component: VolunteerDash },
