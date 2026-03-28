@@ -5,6 +5,7 @@ import Calendar from "../groups/Calendar";
 import TimeSlotGroup from "../groups/TimeSlotGroup";
 import BookingForm from "../groups/BookingForm";
 import { volunteersDetails } from "../../data/UserData";
+import api from "../../api";
 
 const TraineeBookingFlow = () => {
 	//App holds state and sends as props to children as props, children change state and rerender is triggered
@@ -57,19 +58,9 @@ const TraineeBookingFlow = () => {
 			volunteer_name: activeVolunteer.name,
 			volunteer_email: activeVolunteer.email,
 		};
-		fetch("http://localhost:8000/api/create-meeting/", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(bookingDetailsObj),
-		})
-			.then((response) => {
-				if (response.ok) {
-					setIsBookingConfirmed(true);
-				}
-			})
-			.catch((error) => console.log("Error:", error));
+		api.post("/api/create-meeting/", bookingDetailsObj)
+    		.then(() => setIsBookingConfirmed(true))
+    		.catch((error) => console.log("Error:", error.response?.data ?? error.message));
 	};
 
 	return (
