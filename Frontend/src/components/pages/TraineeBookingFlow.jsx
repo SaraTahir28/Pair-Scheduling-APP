@@ -4,7 +4,7 @@ import SessionDetails from "../groups/SessionDetails";
 import Calendar from "../groups/Calendar";
 import TimeSlotGroup from "../groups/TimeSlotGroup";
 import BookingForm from "../groups/BookingForm";
-import { volunteersDetails } from "../../data/UserData";
+import { volunteersDetails, traineeDetails } from "../../data/UserData";
 
 const TraineeBookingFlow = () => {
 	//App holds state and sends as props to children as props, children change state and rerender is triggered
@@ -36,6 +36,9 @@ const TraineeBookingFlow = () => {
 	//for now Duncan is an active volunteer
 	const [activeVolunteer, setActiveVolunteer] = useState(
 		volunteersDetails.find((volunteer) => volunteer.id === 1)
+	);
+	const [activeTrainee] = useState(
+		traineeDetails.find((trainee) => trainee.id === 1)
 	);
 
 	// here we set up booking obj that will be sent to backend
@@ -121,7 +124,10 @@ const TraineeBookingFlow = () => {
 			{/* when user selects date and time we render booking form and hide the cal */}
 			{selectedTime && !isBookingConfirmed && (
 				<div className="timeslot-col trainee-timeslot-width">
-					<BookingForm whenFormSubmit={createBookingDetailsObj} />
+					<BookingForm
+						whenFormSubmit={createBookingDetailsObj}
+						user={activeTrainee}
+					/>
 				</div>
 			)}
 
