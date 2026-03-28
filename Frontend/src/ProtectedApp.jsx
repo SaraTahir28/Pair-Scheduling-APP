@@ -14,7 +14,7 @@ export default function ProtectedApp() {
 	// useEffect runs once after component mounts
 	// It checks the backend to see if there is an active user session
 	useEffect(() => {
-		api.get("http://localhost:8000/auth/user/")
+		api.get("/auth/user/")
 			.then((res) => setUser(res.data))
 			.catch(() => setUser(null)); // if fetch fails, treat as not logged in
 	}, []); // empty dependency array = runs only once on mount
