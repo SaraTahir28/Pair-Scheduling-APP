@@ -12,7 +12,7 @@ const AddingSlotsBasket = ({ addedSlots, removeSlot, saveAll }) => {
 
 			{addedSlots.map((entry, index) => (
 				<div classBame="" key={index}>
-					<p>Time: {entry.start_time.split("T")[1]}</p>
+					<p>Time: {entry.start_time.split("T")[1].slice(0, 5)}</p>
 
 					{entry.regular === true ? (
 						<p>
@@ -26,13 +26,8 @@ const AddingSlotsBasket = ({ addedSlots, removeSlot, saveAll }) => {
 						</p>
 					) : (
 						<p>
-							<input
-								type="checkbox"
-								checked={false}
-								readOnly
-								className="form-checkbox"
-							/>
-							On date: {entry.start_time.split("T")[0]}
+							On date:
+							{entry.start_time.split("T")[0].split("-").reverse().join("-")}
 						</p>
 					)}
 
