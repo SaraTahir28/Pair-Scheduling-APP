@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"; // React hooks: useState for state, useEffect for side effects
 import App from "./App"; // Main app component (calendar, bookings, etc.)
 import Login from "./components/pages/Login"; // Login page with Google sign-in button
-import axios from "axios";
+import api from "./api";
 
 // ProtectedApp: wraps the main App and handles authentication checks
 export default function ProtectedApp() {
@@ -14,9 +14,7 @@ export default function ProtectedApp() {
 	// useEffect runs once after component mounts
 	// It checks the backend to see if there is an active user session
 	useEffect(() => {
-		axios.get("http://localhost:8000/auth/user/", {
-			withCredentials: true, 
-		})
+		api.get("http://localhost:8000/auth/user/")
 			.then((res) => setUser(res.data))
 			.catch(() => setUser(null)); // if fetch fails, treat as not logged in
 	}, []); // empty dependency array = runs only once on mount
