@@ -3,14 +3,6 @@ from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """
-    We use Serializers to bridge the gap between our database and the frontend
-
-    Responsibilities:
-    - Convert User model instances into JSON (for API responses)
-    - Convert JSON into User model (for incoming requests)
-    - Validate incoming data before saving to the database
-    """
 
     class Meta:
 
@@ -24,6 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "email",
             "role",
+            "group",
             "status",
             "last_login",
             "date_joined",
@@ -32,7 +25,6 @@ class UserSerializer(serializers.ModelSerializer):
             "is_superuser",
         ]
 
-        # Fields that cannot be modified via API (read-only)
         read_only_fields = [
             "id",
             "last_login",
