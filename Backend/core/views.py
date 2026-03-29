@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .google_calendar_service import create_google_meeting
 
 #Django Rest Framework and serializer for endpoints
-from rest_framework import generics
+from rest_framework import generics, permissions
 from .models import User
 from .serializers import UserSerializer
 
@@ -75,3 +75,11 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
 
     serializer_class = UserSerializer
+
+class MeView(generics.RetrieveUpdateAPIView):
+ 
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
