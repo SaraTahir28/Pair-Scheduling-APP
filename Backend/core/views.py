@@ -38,12 +38,12 @@ def create_meeting_view(request):
 
         return JsonResponse(
             {
-            "message": "Meeting created successfully.",
-            "event_id": result["event_id"],
-            "meet_link": result["meet_link"],
-            "start": result["start"],
-            "end": result["end"],
-            },
+                "message": "Meeting created successfully.",
+                "event_id": result["event_id"],
+                "meet_link": result["meet_link"],
+                "start": result["start"],
+                "end": result["end"],
+                },
             status=201,
         )
 
