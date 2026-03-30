@@ -25,6 +25,7 @@ class User(AbstractUser):
         ("the_launch", "The Launch"),
     ]
 
+    email = models.EmailField(max_length=254, unique=True)
     group = models.CharField(max_length=20,choices=GROUP_CHOICES,null=True,blank=True,)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="trainee")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="active")
