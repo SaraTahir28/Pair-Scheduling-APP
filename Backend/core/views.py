@@ -21,14 +21,14 @@ def create_meeting_view(request):
     try:
         data = json.loads(request.body)
 
-        # 1. Validate using BookingSerializer
         serializer = BookingSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
 
-        # 2. Extract validated data
-        validated = serializer.validated_data  
+        if not serializer.is_valid():
+            return JsonResponse(serializer.errors, status=400)
+        validated = serializer.validated_data
 
-        # 3. Use validated values
+
+       
         result = create_google_meeting(
             start_time=validated["start_time"],
             end_time=validated["end_time"],
@@ -38,11 +38,11 @@ def create_meeting_view(request):
 
         return JsonResponse(
             {
-                "message": "Meeting created successfully.",
-                "event_id": result["event_id"],
-                "meet_link": result["meet_link"],
-                "start": str(result["start"]),
-                "end": str(result["end"]),
+            "message": "Meeting created successfully.",
+            "event_id": result["event_id"],
+            "meet_link": result["meet_link"],
+            "start": str(result["start"]),
+            "end": str(result["end"]),
             },
             status=201,
         )
