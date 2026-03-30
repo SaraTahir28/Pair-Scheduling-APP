@@ -1,5 +1,4 @@
 import pytest
-from django.contrib.auth import get_user_model
 
 @pytest.mark.django_db
 def test_user_view_authenticated(client, django_user_model):
