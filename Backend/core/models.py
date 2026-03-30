@@ -25,9 +25,6 @@ class User(AbstractUser):
         ("the_launch", "The Launch"),
     ]
 
-    email = models.EmailField(max_length=100, unique=True)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
     group = models.CharField(max_length=20,choices=GROUP_CHOICES,null=True,blank=True,)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="trainee")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="active")
@@ -120,4 +117,4 @@ class Booking(models.Model):
             raise ValidationError(errors)
 
     def __str__(self):
-        return f"session {self.date} | {self.trainee} and {self.volunteer}"
+        return f"session {self.start_time} | {self.trainee} and {self.volunteer}"
