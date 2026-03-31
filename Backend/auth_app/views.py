@@ -15,10 +15,7 @@ def login_required_json(view_func):
 
 @login_required_json
 def user_view(request):
-    """
-    Returns currently logged-in user's info.
-    If not logged in, will return 401 Unauthorized automatically.
-    """
+   
     return JsonResponse({
         "id": request.user.id,
         "email": request.user.email or "",
