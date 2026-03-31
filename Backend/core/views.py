@@ -5,7 +5,6 @@ import json
 
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
 
 from .google_calendar_service import create_google_meeting
 from .serializers.booking_serializer import BookingSerializer
@@ -15,7 +14,7 @@ from rest_framework import generics
 from .models import User
 from .user_serializers import UserSerializer
 
-@csrf_exempt
+
 @require_POST
 def create_meeting_view(request):
     try:
