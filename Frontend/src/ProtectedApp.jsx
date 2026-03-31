@@ -3,16 +3,12 @@ import App from "./App";
 import Login from "./components/pages/Login";
 import { AuthProvider } from "./AuthContext";
 
-// ProtectedApp: wraps the main App and handles authentication checks
+
 export default function ProtectedApp() {
-  // `user` state will hold the current user info:
-  // - undefined: we are still checking if the user is logged in
-  // - null: user is not logged in
-  // - object: user is logged in (contains email, name, etc.)
+
   const [user, setUser] = useState(undefined);
 
-  // useEffect runs once after component mounts
-  // It checks the backend to see if there is an active user session
+  
   useEffect(() => {
     fetch("http://localhost:8000/auth/user/", {
       credentials: "include",
@@ -43,12 +39,12 @@ export default function ProtectedApp() {
       });
   }
 
-  // While checking the session, show a loading indicator
+  
   if (user === undefined) {
     return <div>Loading...</div>;
   }
 
-  // If user is not logged in (null or missing id), show the Login page
+  
   if (!user || !user.id) {
     return <Login />;
   }
