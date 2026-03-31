@@ -40,20 +40,14 @@ const TraineeBookingFlow = () => {
 
 	// here we set up booking obj that will be sent to backend
 	const createBookingDetailsObj = (bookingFormData) => {
-		// const formattedDate = selectedDate.toLocaleDateString("en-CA"); this now comes form url
+		const startDateTime = new Date(`${selectedDate}T${selectedTime}:00`);
+		const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000);
 
 		const bookingDetailsObj = {
 			trainee_name: bookingFormData.traineeName,
 			trainee_email: bookingFormData.traineeEmail,
-			//start_date and start_time icome from the state
-			//converted in fix ----- start
-			// start_date: selectedDate,
-			// // on fornt end I had start_date as date only but backedn uses date and time in one so below
-			// start_time: selectedTime, now below this matches backend
-			// start_date and start_time are one var
-			start_time: `${selectedDate}T${selectedTime}:00Z`,
-			//below is hardcoded as in fe it only exists as 1 hour meeting and no end_time exists
-			end_time: `${selectedDate}T23:59:00Z`,
+			start_time: startDateTime.toISOString(),
+			end_time: endDateTime.toISOString(),
 			volunteer_name: activeVolunteer.name,
 			volunteer_email: activeVolunteer.email,
 		};
@@ -71,7 +65,7 @@ const TraineeBookingFlow = () => {
 			})
 			.catch((error) => console.log("Error:", error));
 	};
-
+	
 	return (
 		<div className="booking-box">
 			<div className="session-details-col">
