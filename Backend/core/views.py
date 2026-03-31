@@ -47,7 +47,7 @@ def create_meeting_view(request):
             status=201,
         )
 
-    except json.JSONDecodeError:
+    except (json.JSONDecodeError, ValueError, TypeError):
         return JsonResponse({"error": "Invalid JSON body."}, status=400)
 
     except Exception as error:
