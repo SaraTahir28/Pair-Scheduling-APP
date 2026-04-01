@@ -7,12 +7,8 @@ import api from "./api/axiosClient";
 export default function ProtectedApp() {
 
   const [user, setUser] = useState(undefined);
-  //Get CSRF cookie once on app load
-  useEffect(() => {
-    api.get("/auth/csrf/");
-  }, []);
-  
-  //if user is logged in (session check)
+ 
+
   useEffect(() => {
     api
       .get("/auth/user/")
@@ -23,6 +19,13 @@ export default function ProtectedApp() {
         setUser(null);
       });
   }, []);
+  
+  // Fetch CSRF ONLY after user is logged in
+  useEffect(() => {
+    if (user && user.id) {
+      api.get("/auth/csrf/");
+    }
+  }, [user]);
 
   //Logout using Axios
   function handleLogout() {
