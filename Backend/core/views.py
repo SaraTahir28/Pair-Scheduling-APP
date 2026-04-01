@@ -73,3 +73,5 @@ class MeView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+class BookingCreateView(generics.CreateAPIView):
+    serializer_class = BookingSerializer
