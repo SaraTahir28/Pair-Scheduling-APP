@@ -15,51 +15,28 @@ const VolunteerAvailabilityForm = ({
 			weekday: "long",
 		});
 	};
-	const getDayNameFromDate = (dateObject) => {
-		return dateObject.toLocaleDateString("en-CA", { weekday: "long" });
-	};
+
 	//this is with repeated date initially set to off
 	const [isRecurring, setIsRecurring] = useState(false);
 	const [specificDate, setSpecificDate] = useState(
 		new Date().toISOString().split("T")[0]
 	);
-	const [dropdownSelectionDay, setDropdownSelectionDay] = useState("");
 	const [startTime, setStartTime] = useState("09:00");
 	// const [endTime, setEndTime] = useState(""); //TODO nice to haves
-
-	const matchDateToDaySelectedIfRecurring = (userSelectedDayName) => {
-		if (!userSelectedDayName || !specificDate) return;
-
-		let userSelectedDate = new Date(specificDate + "T00:00:00");
-
-		while (getDayNameFromDate(userSelectedDate) !== userSelectedDayName) {
-			userSelectedDate.setDate(userSelectedDate.getDate() + 1);
-		}
-		const fixedDateStr = userSelectedDate.toLocaleDateString("en-CA");
-		setSpecificDate(fixedDateStr);
-	};
 
 	const checkInputsValid = (e) => {
 		e.preventDefault();
 
-		if (!isRecurring && !specificDate) {
+		if (!specificDate) {
 			alert("Please pick a date.");
 			return;
 		}
 
-		if (isRecurring && !dropdownSelectionDay) {
-			alert("Please select a day of the week.");
-			return;
-		}
-
 		if (startTime === "") {
-			alert("please enter a start time.");
+			alert("Please enter a start time.");
 			return;
 		}
 
-		// dates logic
-		// const isToday = new Date().toISOString().split("T")[0];
-		// const startDate = isRecurring ? isToday : specificDate;
 		const timeWithDate = `${specificDate}T${startTime}:00`;
 
 		// TODO - nice to haves
@@ -74,7 +51,7 @@ const VolunteerAvailabilityForm = ({
 		const slotsObj = {
 			volunteer_id: volunteerId,
 			regular: isRecurring,
-			weekday: isRecurring ? dropdownSelectionDay : null,
+			weekday: isRecurring ? getDayName(specificDate) : null,
 			start_time: timeWithDate,
 			repeat_until: null,
 			// TODO repeat_until: isRecurring ? futureDate.toISOString() : null,
@@ -83,7 +60,7 @@ const VolunteerAvailabilityForm = ({
 		};
 		console.log("obj for db", slotsObj);
 		whenFormSubmit(slotsObj);
-		setDropdownSelectionDay("");
+
 		setStartTime("09:00");
 		setIsRecurring(false);
 	};
@@ -128,30 +105,13 @@ const VolunteerAvailabilityForm = ({
 									onChange={(e) => {
 										const newDate = e.target.value;
 										setSpecificDate(newDate);
-										setDropdownSelectionDay(getDayName(newDate));
 									}}
 								/>
 							</div>
 							<div className="form-input-group">
-								<label className="form-label">Repeat every</label>
-								<select
-									className="form-input"
-									disabled={mode === "view"}
-									value={dropdownSelectionDay}
-									onChange={(e) => {
-										setDropdownSelectionDay(e.target.value);
-										matchDateToDaySelectedIfRecurring(e.target.value);
-									}}
-								>
-									<option value="">Select...</option>
-									<option value="Monday">Monday</option>
-									<option value="Tuesday">Tuesday</option>
-									<option value="Wednesday">Wednesday</option>
-									<option value="Thursday">Thursday</option>
-									<option value="Friday">Friday</option>
-									<option value="Saturday">Saturday</option>
-									<option value="Sunday">Sunday</option>
-								</select>
+								<span>
+									This session will repeat every {getDayName(specificDate)}
+								</span>
 							</div>
 						</>
 					)}
@@ -168,9 +128,9 @@ const VolunteerAvailabilityForm = ({
 					</div>
 
 					{mode !== "view" && (
-						<ActionBtn type="submit" additionalBtnClass={"btn-primary"}>
+						<button type="submit" className={"action-btn btn-primary"}>
 							Add to list
-						</ActionBtn>
+						</button>
 					)}
 				</form>
 			</div>
