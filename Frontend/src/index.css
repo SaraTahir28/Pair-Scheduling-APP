@@ -284,7 +284,7 @@
 	.form-input-group-row:hover {
 		@apply border-border-color;
 	}
-	ąć .form-label {
+	.form-label {
 		@apply text-xs font-bold;
 	}
 
