@@ -10,11 +10,6 @@ const VolunteerAvailabilityForm = ({
 	removeSlot,
 	saveAll,
 }) => {
-	const getDayName = (dateStr) => {
-		return new Date(dateStr + "T00:00:00").toLocaleDateString("en-", {
-			weekday: "long",
-		});
-	};
 	const getDayNameFromDate = (dateObject) => {
 		return dateObject.toLocaleDateString("en-CA", { weekday: "long" });
 	};
@@ -35,7 +30,7 @@ const VolunteerAvailabilityForm = ({
 		while (getDayNameFromDate(userSelectedDate) !== userSelectedDayName) {
 			userSelectedDate.setDate(userSelectedDate.getDate() + 1);
 		}
-		const fixedDateStr = userSelectedDate.toISOString().split("T")[0];
+		const fixedDateStr = userSelectedDate.toLocaleDateString("en-CA");
 		setSpecificDate(fixedDateStr);
 	};
 
