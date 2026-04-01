@@ -43,3 +43,11 @@ Bash
 npm run cypress:open
 
 4. Backend Integration: Form submissions are sent to http://localhost:8000/api/create-meeting/.
+
+5. Project Notes:
+
+- Temporarily using en-CA in a few places to force dates formatted to YYYY-MM-DD
+- TODO: Discuss with the team dropdown + date selector as date picker (code on branch: redesigned-volunteer-offer-slots
+  ) - time estimation?
+- TODO: Volunteer dash to pass state to Availability component (to prevent rerender of the whole dash)
+- Note: Submit small PRs centered around a feature/flow.
