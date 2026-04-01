@@ -10,6 +10,11 @@ const VolunteerAvailabilityForm = ({
 	removeSlot,
 	saveAll,
 }) => {
+	const getDayName = (dateStr) => {
+		return new Date(dateStr + "T00:00:00").toLocaleDateString("en-CA", {
+			weekday: "long",
+		});
+	};
 	const getDayNameFromDate = (dateObject) => {
 		return dateObject.toLocaleDateString("en-CA", { weekday: "long" });
 	};
