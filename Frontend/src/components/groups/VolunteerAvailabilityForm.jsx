@@ -10,6 +10,11 @@ const VolunteerAvailabilityForm = ({
 	removeSlot,
 	saveAll,
 }) => {
+	const getDayName = (dateStr) => {
+		return new Date(dateStr + "T00:00:00").toLocaleDateString("en-GB", {
+			weekday: "long",
+		});
+	};
 	//this is with repeated date initially set to off
 	const [isRecurring, setIsRecurring] = useState(false);
 	const [specificDate, setSpecificDate] = useState(
@@ -33,15 +38,13 @@ const VolunteerAvailabilityForm = ({
 		};
 
 		const whatNumIsDay = daysToNums[userSelectedDayName];
-		let userSelectedDate = new Date(specificDate);
+		let userSelectedDate = new Date(specificDate + "T00:00:00");
 
 		while (userSelectedDate.getDay() !== whatNumIsDay) {
 			userSelectedDate.setDate(userSelectedDate.getDate() + 1);
 		}
 		const fixedDateStr = userSelectedDate.toISOString().split("T")[0];
 		setSpecificDate(fixedDateStr);
-
-		// TODO left show day in dropdown based on user selected date
 	};
 
 	const checkInputsValid = (e) => {
@@ -130,11 +133,15 @@ const VolunteerAvailabilityForm = ({
 									type="date"
 									disabled={mode === "view"}
 									value={specificDate}
-									onChange={(e) => setSpecificDate(e.target.value)}
+									onChange={(e) => {
+										const newDate = e.target.value;
+										setSpecificDate(newDate);
+										setDropdownSelectionDay(getDayName(newDate));
+									}}
 								/>
 							</div>
 							<div className="form-input-group">
-								<label className="form-label">Select day</label>
+								<label className="form-label">Repeat every</label>
 								<select
 									className="form-input"
 									disabled={mode === "view"}
@@ -169,7 +176,9 @@ const VolunteerAvailabilityForm = ({
 					</div>
 
 					{mode !== "view" && (
-						<ActionBtn onClick={checkInputsValid}>Add to list</ActionBtn>
+						<ActionBtn type="submit" additionalBtnClass={"btn-primary"}>
+							Add to list
+						</ActionBtn>
 					)}
 				</form>
 			</div>
