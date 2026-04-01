@@ -44,3 +44,35 @@ class BookingSerializer(serializers.Serializer):
         attrs["trainee"] = trainee
         attrs["volunteer"] = volunteer
         return attrs
+
+    def create(self, validated_data):
+       trainee = validated_data["trainee"]
+       volunteer = validated_data["volunteer"]
+       start_time = validated_data["start_time"]
+       google_meet_link = validated_data.get("google_meet_link", "")
+       agenda = validated_data.get("agenda", "")
+
+
+       booking = Booking(
+           trainee=trainee,
+           volunteer=volunteer,
+           start_time=start_time,
+           google_meet_link=google_meet_link,
+           agenda=agenda,
+       )
+
+
+       booking.full_clean()
+       booking.save()
+       return booking
+
+
+    def to_representation(self, instance):
+       return {
+           "id": instance.id,
+           "trainee_email": instance.trainee.email,
+           "volunteer_email": instance.volunteer.email,
+           "start_time": instance.start_time,
+           "google_meet_link": instance.google_meet_link,
+           "agenda": instance.agenda,
+       }
