@@ -11,9 +11,12 @@ const VolunteerAvailabilityForm = ({
 	saveAll,
 }) => {
 	const getDayName = (dateStr) => {
-		return new Date(dateStr + "T00:00:00").toLocaleDateString("en-CA", {
+		return new Date(dateStr + "T00:00:00").toLocaleDateString("en-", {
 			weekday: "long",
 		});
+	};
+	const getDayNameFromDate = (dateObject) => {
+		return dateObject.toLocaleDateString("en-CA", { weekday: "long" });
 	};
 	//this is with repeated date initially set to off
 	const [isRecurring, setIsRecurring] = useState(false);
@@ -29,11 +32,7 @@ const VolunteerAvailabilityForm = ({
 
 		let userSelectedDate = new Date(specificDate + "T00:00:00");
 
-		while (
-			userSelectedDate.toLocaleDateString("en-CA", {
-				weekday: "long",
-			}) !== userSelectedDayName
-		) {
+		while (getDayNameFromDate(userSelectedDate) !== userSelectedDayName) {
 			userSelectedDate.setDate(userSelectedDate.getDate() + 1);
 		}
 		const fixedDateStr = userSelectedDate.toISOString().split("T")[0];
