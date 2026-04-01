@@ -11,7 +11,7 @@ const VolunteerAvailabilityForm = ({
 	saveAll,
 }) => {
 	const getDayName = (dateStr) => {
-		return new Date(dateStr + "T00:00:00").toLocaleDateString("en-GB", {
+		return new Date(dateStr + "T00:00:00").toLocaleDateString("en-CA", {
 			weekday: "long",
 		});
 	};
@@ -27,20 +27,13 @@ const VolunteerAvailabilityForm = ({
 	const matchDateToDaySelectedIfRecurring = (userSelectedDayName) => {
 		if (!userSelectedDayName || !specificDate) return;
 
-		const daysToNums = {
-			Sunday: 0,
-			Monday: 1,
-			Tuesday: 2,
-			Wednesday: 3,
-			Thursday: 4,
-			Friday: 5,
-			Saturday: 6,
-		};
-
-		const whatNumIsDay = daysToNums[userSelectedDayName];
 		let userSelectedDate = new Date(specificDate + "T00:00:00");
 
-		while (userSelectedDate.getDay() !== whatNumIsDay) {
+		while (
+			userSelectedDate.toLocaleDateString("en-CA", {
+				weekday: "long",
+			}) !== userSelectedDayName
+		) {
 			userSelectedDate.setDate(userSelectedDate.getDate() + 1);
 		}
 		const fixedDateStr = userSelectedDate.toISOString().split("T")[0];
