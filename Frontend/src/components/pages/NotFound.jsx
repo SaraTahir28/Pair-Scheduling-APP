@@ -1,6 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-
 const NotFound = () => {
 	return (
 		<div className="not-found-page">
