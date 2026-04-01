@@ -12,8 +12,9 @@ from .serializers.booking_serializer import BookingSerializer
 
 #Django Rest Framework and serializer for endpoints
 from rest_framework import generics, permissions
-from .models import User
+from .models import User, SlotRule
 from .user_serializers import UserSerializer
+from .serializers.slot_rule_serializer import SlotRuleSerializer
 
 @csrf_exempt
 @require_POST
@@ -72,4 +73,8 @@ class MeView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
-        return self.request.user
+        return self.request.user   
+class SlotRuleCreateView(generics.CreateAPIView):
+
+    queryset = SlotRule.objects.all()
+    serializer_class = SlotRuleSerializer
