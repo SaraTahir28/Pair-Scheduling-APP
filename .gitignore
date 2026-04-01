@@ -25,3 +25,7 @@ dist-ssr
 *.sw?
 # Environment variables
 .env
+# Cypress
+cypress/screenshots
+cypress/videos
+
