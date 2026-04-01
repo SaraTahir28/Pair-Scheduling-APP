@@ -263,4 +263,21 @@
 	.role-tile p {
 		@apply text-sm text-muted text-center;
 	}
+
+	/* 404 page */
+	.not-found-page {
+		@apply min-h-screen flex flex-col items-center justify-center;
+	}
+
+	.not-found-huge-text {
+		@apply text-8xl font-bold text-brand-primary/60;
+	}
+
+	.not-found-subtitle {
+		@apply text-3xl font-bold text-muted mb-4 mt-2;
+	}
+
+	.not-found-text {
+		@apply text-main mb-8 text-lg;
+	}
 }
