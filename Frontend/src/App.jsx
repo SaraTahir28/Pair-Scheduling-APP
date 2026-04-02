@@ -16,6 +16,10 @@ const router = createBrowserRouter([
 			{ index: true, Component: TraineeBookingFlow },
 			{ path: ":selectedDate", Component: TraineeBookingFlow },
 			{ path: ":selectedDate/:selectedTime", Component: TraineeBookingFlow },
+			{
+				path: ":selectedDate/:selectedTime/:status",
+				Component: TraineeBookingFlow,
+			},
 		],
 	},
 	{
