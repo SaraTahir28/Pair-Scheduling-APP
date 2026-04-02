@@ -155,13 +155,13 @@ GOOGLE_CLIENT_SECRET=your_client_secret
 
 ⚠️ Never commit this file
 
-3. Run migrations & server
+3. Run migrations & start the server
 python manage.py migrate
 python manage.py runserver
 
-Backend runs at:
-
+Once the server is running, the backend will be accessible at:
 http://localhost:8000/
+
 💻 Frontend Setup
 
 Inside the Frontend/ folder:
@@ -172,7 +172,7 @@ npm run dev
 Frontend runs at:
 
 http://localhost:5173/
-🔄 Authentication Flow
+ Authentication Flow
 1. User visits frontend
 http://localhost:5173/
 2. React checks session
@@ -205,3 +205,54 @@ Click Continue with Google
 Complete login
 Redirected back to app
 Booking UI is accessible
+
+# API ENDPOINTS User Management Setup
+# Usage Guide
+
+This project now uses Django REST Framework (DRF) to handle user data via a JSON API.
+
+1. Installation & Environment
+First, ensure you have the updated dependencies installed, including the new version of Django and the REST Framework.
+Bash
+
+# Update your environment
+pip install -r requirements.txt 
+or only: 
+pip install djangorestframework
+
+2. Database Synchronization
+Since we have updated the User model to include google_sub, full_name, and roles, you must apply the migrations:
+Bash
+python manage.py makemigrations
+python manage.py migrate
+
+## Understanding the Data Flow
+We use Serializers to bridge the gap between our database and the frontend
+Serialization converts Django Database Objects into JSON (for the frontend to read)
+Deserialization converts JSON into Django Database Objects (to save incoming data)
+
+4. API Endpoints
+Start the server using python manage.py runserver and use the following endpoints:
+
+GET /api/users/ 			        View all users in the system.
+GET /api/users/[user_id]/		  View a specific user by their ID.
+GET /api/users/?format=json		Access the clean JSON output directly.
+PATCH /api/users/[user_id]/   Update specific user information (role).
+
+You can simply visit 
+  http://127.0.0.1:8000/api/users/?format=json
+  http://127.0.0.1:8000/api/users/
+  http://127.0.0.1:8000/api/users/[user_id]/
+in their browser. 
+
+5. Updating User Information
+To update a user's details (like their role or name), send a PATCH request. This allows you to update only specific fields without sending the entire object.
+Example via cURL:
+
+curl -X PATCH http://127.0.0.1:8000/api/users/1/ \
+-H "Content-Type: application/json" \
+-d '{
+    "first_name": "Joe",
+    "last_name": "Bloggs",
+    "role": "volunteer"
+}'

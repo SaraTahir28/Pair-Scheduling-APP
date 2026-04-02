@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import ProtectedApp from "./ProtectedApp.jsx";
 
+
 createRoot(document.getElementById("root")).render(
 	<StrictMode>
 		<ProtectedApp/>

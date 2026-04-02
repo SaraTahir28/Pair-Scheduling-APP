@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     # -------------------------------
     'core',        # app for project calendar logic
     'auth_app',    # Custom authentication app (must come AFTER allauth)
+    "rest_framework", # Django REST Framework to interact with frontend React.
 ]
 
 # -------------------------------
@@ -109,6 +110,10 @@ ACCOUNT_LOGOUT_REDIRECT_URL = "http://localhost:5173/"
 SOCIALACCOUNT_QUERY_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "none"  # for dev
+
+#skip the “social login confirmation” djnago default page 
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_LOGIN_ON_GET = True
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",

@@ -2,6 +2,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LandingPage from "./components/pages/LandingPage";
 import TraineeBookingFlow from "./components/pages/TraineeBookingFlow";
 import VolunteerDash from "./components/pages/VolunteerDash";
+import NotFound from "./components/pages/NotFound";
+import Navbar from "./components/elements/NavBar";
 
 const router = createBrowserRouter([
 	{
@@ -28,10 +30,21 @@ const router = createBrowserRouter([
 			{ path: "bookings/:id/edit", Component: VolunteerDash },
 		],
 	},
+	{
+		path: "*",
+		Component: NotFound,
+	},
 ]);
 
 function App() {
-	return <RouterProvider router={router} />;
+	return (
+		<div className="min-h-screen flex flex-col">
+			<Navbar />
+			<div className="flex-1">
+				<RouterProvider router={router} />
+			</div>
+		</div>
+	);
 }
 
 export default App;
