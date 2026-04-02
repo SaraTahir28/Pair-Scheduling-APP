@@ -75,3 +75,4 @@ class MeView(generics.RetrieveUpdateAPIView):
         return self.request.user
 class BookingCreateView(generics.CreateAPIView):
     serializer_class = BookingSerializer
+    permission_classes = [permissions.IsAuthenticated]
