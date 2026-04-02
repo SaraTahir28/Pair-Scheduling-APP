@@ -78,3 +78,4 @@ class SlotRuleCreateView(generics.CreateAPIView):
 
     queryset = SlotRule.objects.all()
     serializer_class = SlotRuleSerializer
+    permission_classes = [permissions.IsAuthenticated]
