@@ -7,6 +7,9 @@ import SessionDetails from "../groups/SessionDetails";
 import VolunteerEditSession from "../groups/VolunteerEditSession";
 import VolunteerViewSession from "../groups/VolunteerViewSession";
 
+import VolunteerAvailabilityForm from "../groups/VolunteerAvailabilityForm";
+import { ActionBtn } from "../elements/Button";
+
 const VolunteerDash = () => {
 	const { id } = useParams();
 
@@ -20,6 +23,22 @@ const VolunteerDash = () => {
 
 	const [allBookedSessionsForAllUsers, setAllBookedSessionsForAllUsers] =
 		useState(bookedSessions);
+
+	//adding the step of adding slots before form is sent
+	const [hasUserSetAvailability, setHasUserSetAvailability] = useState(false);
+	const [temporaryAddedSlotsStorage, setTemporaryAddedSlotsStorage] = useState(
+		[]
+	);
+	const volunteerSubmitedFormWithSlots = (newSlotObj) => {
+		setTemporaryAddedSlotsStorage([...temporaryAddedSlotsStorage, newSlotObj]);
+	};
+
+	const sendVolunteerSlotsToDb = () => {
+		console.log("Ready to send to db", temporaryAddedSlotsStorage);
+		alert("Availability is saved.");
+
+		setHasUserSetAvailability(true);
+	};
 
 	// grab all sessions for active user
 	const activeVolunteerSessions = allBookedSessionsForAllUsers.filter(
@@ -85,7 +104,12 @@ const VolunteerDash = () => {
 			}
 		});
 	});
-
+	const removeSlotFromTemporaryStorage = (indexToRemove) => {
+		setTemporaryAddedSlotsStorage(
+			temporaryAddedSlotsStorage.filter((_, index) => index !== indexToRemove)
+		);
+	};
+	// once completed adding slots
 	return (
 		<div className="booking-box">
 			<div className="session-details-col">
@@ -95,25 +119,50 @@ const VolunteerDash = () => {
 				/>
 			</div>
 			<div className="bookings-col">
-				{id ? (
-					editSessionMode ? (
-						<VolunteerEditSession
-							sessions={allBookedSessionsForAllUsers}
-							onSave={saveEditedSession}
+				{/* onboarding if slots are not selected - form shows */}
+				{!hasUserSetAvailability && (
+					<div className="">
+						{/* <h1 className="form-title">Welcome {activeVolunteer.name}!</h1> */}
+						<p className="">
+							Let's start by selecting your availability for 1:1 sessions.
+						</p>
+
+						<VolunteerAvailabilityForm
+							volunteerId={activeVolunteer.id}
+							mode="edit"
+							whenFormSubmit={volunteerSubmitedFormWithSlots}
+							addedSlots={temporaryAddedSlotsStorage}
+							removeSlot={removeSlotFromTemporaryStorage}
+							saveAll={sendVolunteerSlotsToDb}
 						/>
-					) : (
-						<VolunteerViewSession sessions={allBookedSessionsForAllUsers} />
-					)
-				) : (
+					</div>
+				)}
+				{/* view after adding sessions */}
+				{hasUserSetAvailability && (
 					<>
-						<div className="all-cards-container">
-							<h2 className="bookings-heading-selectdt">Upcoming sessions</h2>
-							{renderedSessions.length > 0 ? (
-								renderedSessions
+						{id ? (
+							editSessionMode ? (
+								<VolunteerEditSession
+									sessions={allBookedSessionsForAllUsers}
+									onSave={saveEditedSession}
+								/>
 							) : (
-								<p>You do not have any booked sessions.</p>
-							)}
-						</div>
+								<VolunteerViewSession sessions={allBookedSessionsForAllUsers} />
+							)
+						) : (
+							<>
+								<div className="all-cards-container">
+									<h2 className="bookings-heading-selectdt">
+										Upcoming sessions
+									</h2>
+									{renderedSessions.length > 0 ? (
+										renderedSessions
+									) : (
+										<p>You do not have any booked sessions.</p>
+									)}
+								</div>
+							</>
+						)}
 					</>
 				)}
 			</div>
