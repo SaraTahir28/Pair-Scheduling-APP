@@ -35,12 +35,6 @@ class BookingSerializer(serializers.Serializer):
         except User.DoesNotExist:
             raise serializers.ValidationError({"volunteer_email": "Volunteer user not found."})
 
-        if trainee.role != "trainee":
-            raise serializers.ValidationError({"trainee_email": "Selected user is not a trainee."})
-
-        if volunteer.role != "volunteer":
-            raise serializers.ValidationError({"volunteer_email": "Selected user is not a volunteer."})
-
         attrs["trainee"] = trainee
         attrs["volunteer"] = volunteer
         return attrs
