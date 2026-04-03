@@ -8,6 +8,7 @@ from django.utils import timezone
 from rest_framework.test import APIClient
 
 from core.models import SlotRule
+from core.services.available_slots import build_available_slots, AvailableSlot
 
 NOW = timezone.now()
 FUTURE = timezone.now() + timedelta(days=1)
@@ -22,7 +23,7 @@ def make_slot_rule(volunteer_id=1, start_time=None, repeat_until=None, rule_id=1
 
 def test_one_off_slot():
     rule = make_slot_rule()
-    slots = build_available_slots([rule])
+    slots = build_available_slots([rule], NOW)
     assert len(slots) == 1
     assert slots[0].volunteer_id == rule.volunteer_id
     assert slots[0].slot_rule_id == rule.id
@@ -30,38 +31,20 @@ def test_one_off_slot():
 def test_multiple_one_off_slots():
     rule_1 = make_slot_rule(rule_id=1)
     rule_2 = make_slot_rule(rule_id=2)
-    slots = build_available_slots([rule_1, rule_2])
+    slots = build_available_slots([rule_1, rule_2], NOW)
     assert len(slots) == 2
     assert slots[0].slot_rule_id == rule_1.id
     assert slots[1].slot_rule_id == rule_2.id
 
 def test_past_one_off_slot_excluded():
     rule = make_slot_rule(start_time = NOW - timedelta(weeks=1))
-    slots = build_available_slots([rule])
+    slots = build_available_slots([rule], NOW)
     assert slots == []
 
 def test_recurring_rule_expands_to_multiple_slots():
     start_time = timezone.now() + timedelta(weeks=1)
     repeat_until = timezone.now() + timedelta(weeks=3)
     rule = make_slot_rule(start_time=start_time, repeat_until=repeat_until)
-    slots = build_available_slots([rule])
+    slots = build_available_slots([rule], NOW)
     assert len(slots) == 3
 
-def build_available_slots(rules):
-    slots = []
-    for rule in rules:
-        for start_time in rule.occurrence_start_times():
-            if (start_time <= NOW):
-                continue
-            slots.append(
-                AvailableSlot(
-                    slot_rule_id=rule.id,
-                    volunteer_id=rule.volunteer_id
-                )
-            )
-    return slots
-
-@dataclass
-class AvailableSlot:
-    slot_rule_id: int
-    volunteer_id: int
