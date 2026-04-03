@@ -4,13 +4,18 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 
 from .google_calendar_service import create_google_meeting
 from .serializers.booking_serializer import BookingSerializer
 
-#Django Rest Framework and serializer for endpoints
+import dataclasses
+
 from rest_framework import generics, permissions
-from .models import User
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import User, SlotRule
+from core.services.available_slots import build_available_slots
 from .user_serializers import UserSerializer
 
 @csrf_exempt
@@ -66,3 +71,12 @@ class MeView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class AvailableSlotsView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        rules = SlotRule.objects.all()
+
+        return Response([dataclasses.asdict(slot) for slot in build_available_slots(rules, timezone.now())])

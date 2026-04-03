@@ -4,10 +4,11 @@ from dataclasses import dataclass
 from unittest.mock import MagicMock
 
 from django.utils import timezone
+from django.urls import reverse
 
 from rest_framework.test import APIClient
 
-from core.models import SlotRule
+from core.models import SlotRule, User
 from core.services.available_slots import build_available_slots, AvailableSlot
 
 NOW = timezone.now()
@@ -20,6 +21,15 @@ def make_slot_rule(volunteer_id=1, start_time=None, repeat_until=None, rule_id=1
     rule.repeat_until = repeat_until
     rule.volunteer_id=volunteer_id
     return rule
+
+def make_user(username):
+    user = User.objects.create(
+        username=username,
+        email=f"{username}@example.com",
+    )
+    user.set_unusable_password()
+    user.save()
+    return user
 
 def test_one_off_slot():
     rule = make_slot_rule()
@@ -55,3 +65,27 @@ def test_recurring_rule_past_occurrences_excluded():
     slots = build_available_slots([rule], NOW)
     for slot in slots:
         assert slot.start_time >= NOW
+
+URL = reverse("available-slots")
+
+def auth_client(user):
+    client = APIClient()
+    client.force_authenticate(user=user)
+    return client
+
+@pytest.mark.django_db
+def test_auth_required():
+    response = APIClient().get(URL)
+    assert response.status_code == 403
+
+@pytest.mark.django_db
+def test_slots_returned():
+    trainee = make_user("trainee")
+    volunteer = make_user("volunteer")
+    SlotRule.objects.create(volunteer=volunteer, start_time=FUTURE)
+
+    response = auth_client(trainee).get(URL)
+
+    assert response.status_code == 200
+    assert len(response.data) == 1
+    assert response.data[0]["volunteer_id"] == volunteer.id
