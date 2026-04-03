@@ -89,3 +89,18 @@ def test_slots_returned():
     assert response.status_code == 200
     assert len(response.data) == 1
     assert response.data[0]["volunteer_id"] == volunteer.id
+
+@pytest.mark.django_db
+def test_filter_by_volunteer():
+    trainee = make_user("trainee")
+    volunteer_duncan = make_user("duncan")
+    volunteer_fred = make_user("fred")
+    SlotRule.objects.create(volunteer=volunteer_duncan, start_time=FUTURE)
+    SlotRule.objects.create(volunteer=volunteer_fred, start_time=FUTURE)
+
+    response = auth_client(trainee).get(URL, {"volunteer_id": volunteer_duncan.id})
+
+    assert response.status_code == 200
+    assert len(response.data) == 1
+    assert response.data[0]["volunteer_id"] == volunteer_duncan.id
+

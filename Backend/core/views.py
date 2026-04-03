@@ -77,6 +77,14 @@ class AvailableSlotsView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        rules = SlotRule.objects.all()
+        rules = SlotRule.objects.select_related("volunteer").all()
+
+        volunteer_id = request.query_params.get("volunteer_id")
+        #TODO - more filters (group, time other than NOW, language/tags/labels, volunteer vs staff)
+
+        if volunteer_id:
+            rules = rules.filter(volunteer_id=volunteer_id)
+
+        #TODO filter out already booked slots! Get bookings from DB and pass them to build_available_slots so it can do the filtering
 
         return Response([dataclasses.asdict(slot) for slot in build_available_slots(rules, timezone.now())])
