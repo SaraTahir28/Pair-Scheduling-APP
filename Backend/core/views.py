@@ -1,5 +1,3 @@
-
-# Not used in this view, but commonly imported for rendering HTML templates.
 from django.shortcuts import render
 import json
 
@@ -27,8 +25,6 @@ def create_meeting_view(request):
             return JsonResponse(serializer.errors, status=400)
         validated = serializer.validated_data
 
-
-       
         result = create_google_meeting(
             start_time=validated["start_time"],
             end_time=validated["end_time"],
@@ -55,19 +51,16 @@ def create_meeting_view(request):
 
 
 class UserListCreateView(generics.ListCreateAPIView):
-    
     queryset = User.objects.all().order_by("id")
 
     serializer_class = UserSerializer
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
-    
     queryset = User.objects.all()
 
     serializer_class = UserSerializer
 
 class MeView(generics.RetrieveUpdateAPIView):
- 
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
