@@ -48,3 +48,10 @@ def test_recurring_rule_expands_to_multiple_slots():
     slots = build_available_slots([rule], NOW)
     assert len(slots) == 3
 
+def test_recurring_rule_past_occurrences_excluded():
+    start_time = (NOW - timedelta(weeks=2))
+    repeat_until = (NOW + timedelta(weeks=4))
+    rule = make_slot_rule(start_time=start_time, repeat_until=repeat_until)
+    slots = build_available_slots([rule], NOW)
+    for slot in slots:
+        assert slot.start_time >= NOW
