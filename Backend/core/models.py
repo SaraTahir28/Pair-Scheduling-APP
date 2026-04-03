@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
+from datetime import timedelta
 
 class User(AbstractUser):
     ROLE_CHOICES = [
@@ -58,6 +59,16 @@ class SlotRule(models.Model):
             errors["volunteer"] = "Only users with role 'volunteer' can have slot rules."
         if errors:
             raise ValidationError(errors)
+
+    def occurrence_start_times(self):
+        if self.repeat_until is None:
+            return [self.start_time]
+        result = []
+        current = self.start_time
+        while current <= self.repeat_until:
+            result.append(current)
+            current += timedelta(weeks=1)
+        return result
 
     def __str__(self):
         return f"{self.volunteer} | {self.start_time}"
