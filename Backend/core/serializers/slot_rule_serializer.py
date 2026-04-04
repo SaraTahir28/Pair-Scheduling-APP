@@ -15,14 +15,6 @@ class SlotRuleSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["id"]
 
-    def validate_volunteer(self, value):
-        
-        if value.role != "volunteer":
-            raise serializers.ValidationError(
-                "Only users with role 'volunteer' can have slot rules."
-            )
-        return value
-
     def validate_date(self, attrs):
         
         start_time = attrs.get("start_time")
