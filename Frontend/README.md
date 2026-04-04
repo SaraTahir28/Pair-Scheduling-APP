@@ -44,7 +44,10 @@ npm run cypress:open
 
 4. Backend Integration: Form submissions are sent to http://localhost:8000/api/create-meeting/.
 
-5. Project Notes:
+5. Data Fetching:
+   SWR for API data fetching (such as retrieving active user).
+
+6. Project Notes:
 
 - Temporarily using en-CA in a few places to force dates formatted to YYYY-MM-DD
 - TODO: Discuss with the team dropdown + date selector as date picker (code on branch: redesigned-volunteer-offer-slots
