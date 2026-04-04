@@ -79,3 +79,6 @@ class SlotRuleCreateView(generics.CreateAPIView):
     queryset = SlotRule.objects.all()
     serializer_class = SlotRuleSerializer
     permission_classes = [permissions.IsAuthenticated]
+    #Always assign the slot rule to the logged-in user
+    def perform_create(self, serializer):
+        serializer.save(volunteer=self.request.user)
