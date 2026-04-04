@@ -40,14 +40,13 @@ class BookingSerializer(serializers.Serializer):
         return attrs
 
     def create(self, validated_data):
-       trainee = validated_data["trainee"]
-       volunteer = validated_data["volunteer"]
-       start_time = validated_data["start_time"]
-       google_meet_link = validated_data.get("google_meet_link", "")
-       agenda = validated_data.get("agenda", "")
+        trainee = validated_data["trainee"]
+        volunteer = validated_data["volunteer"]
+        start_time = validated_data["start_time"]
+        google_meet_link = validated_data.get("google_meet_link", "")
+        agenda = validated_data.get("agenda", "")
 
-
-       booking = Booking(
+        booking = Booking(
            trainee=trainee,
            volunteer=volunteer,
            start_time=start_time,
@@ -55,18 +54,17 @@ class BookingSerializer(serializers.Serializer):
            agenda=agenda,
        )
 
-
-       booking.full_clean()
-       booking.save()
-       return booking
+        booking.full_clean()
+        booking.save()
+        return booking
 
 
     def to_representation(self, instance):
-       return {
-           "id": instance.id,
-           "trainee_email": instance.trainee.email,
-           "volunteer_email": instance.volunteer.email,
-           "start_time": instance.start_time,
-           "google_meet_link": instance.google_meet_link,
-           "agenda": instance.agenda,
+        return {
+            "id": instance.id,
+            "trainee_email": instance.trainee.email,
+            "volunteer_email": instance.volunteer.email,
+            "start_time": instance.start_time,
+            "google_meet_link": instance.google_meet_link,
+            "agenda": instance.agenda,
        }
