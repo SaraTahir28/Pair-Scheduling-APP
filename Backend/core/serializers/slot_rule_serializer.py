@@ -13,7 +13,10 @@ class SlotRuleSerializer(serializers.ModelSerializer):
             "repeat_until",
             "group",
         ]
-        read_only_fields = ["id"]
+        read_only_fields = [
+            "id",
+            "volunteer"
+        ]
 
     def validate_date(self, attrs):
         
