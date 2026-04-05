@@ -18,17 +18,18 @@ class SlotRuleSerializer(serializers.ModelSerializer):
             "volunteer"
         ]
 
-    def validate_date(self, attrs):
-        
+    def validate_repeat_until_is_after_start_time(self, attrs):
         start_time = attrs.get("start_time")
         repeat_until = attrs.get("repeat_until")
-
         if repeat_until is not None and start_time is not None:
             if repeat_until < start_time.date():
                 raise serializers.ValidationError(
                     {"repeat_until": "repeat_until cannot be earlier than start_time date."}
                 )
+        return attrs
 
+    def validate(self, attrs):
+        attrs = self.validate_repeat_until_is_after_start_time(attrs)
         return attrs
 
     def create(self, validated_data):
