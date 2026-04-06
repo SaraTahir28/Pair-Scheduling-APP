@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views import create_meeting_view
 from .views import MeView
-from .views import UserListCreateView, UserDetailView, BookingCreateView
+from .views import UserListCreateView, UserDetailView
 
 # API routes for calendar-related actions
 urlpatterns = [
