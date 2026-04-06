@@ -201,4 +201,20 @@ def test_slots_filtered_by_custom_future_limit():
 
     # It should have fewer than total occurrences
     assert len(slots) < len(rule.occurrence_start_times())
-    
+
+def test_slots_include_past_when_limit_is_in_past():
+    start_time = NOW - timedelta(weeks=2)
+    repeat_until = NOW + timedelta(weeks=2)
+
+    rule = make_slot_rule(
+        start_time=start_time,
+        repeat_until=repeat_until,
+        group="itd",
+    )
+
+    custom_limit = NOW - timedelta(weeks=3)
+    slots = build_available_slots([rule], custom_limit)
+
+    # past occurrences should be included
+    occurrence_times = rule.occurrence_start_times()
+    assert len(slots) == len(occurrence_times)
