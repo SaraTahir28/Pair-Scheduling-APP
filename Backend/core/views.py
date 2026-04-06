@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
+from django.db.models import Q
 
 from .google_calendar_service import create_google_meeting
 from .serializers.booking_serializer import BookingSerializer
@@ -78,6 +79,12 @@ class AvailableSlotsView(APIView):
 
     def get(self, request):
         rules = SlotRule.objects.select_related("volunteer").all()
+
+        user_group = request.user.group
+        if user_group:
+            rules = rules.filter(Q(group=user_group) | Q(group='all'))
+        else:
+            rules = rules.filter(group="all")
 
         volunteer_id = request.query_params.get("volunteer_id")
         #TODO - more filters (group, time other than NOW, language/tags/labels, volunteer vs staff)
