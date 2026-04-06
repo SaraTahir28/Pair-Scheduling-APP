@@ -153,3 +153,29 @@ def test_user_sees_slots_for_their_group_and_all():
 
     assert response.status_code == 200
     assert len(response.data) == 2
+
+@pytest.mark.django_db
+def test_users_with_different_groups_see_different_slots():
+    trainee_itd = make_user("trainee_itd")
+    trainee_itd.group = "itd"
+    trainee_itd.save()
+
+    trainee_piscine = make_user("trainee_piscine")
+    trainee_piscine.group = "piscine"
+    trainee_piscine.save()
+
+    volunteer = make_user("volunteer")
+
+    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="itd",)
+    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="piscine",)
+    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="itd",)
+    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="all",)
+
+    response_itd = auth_client(trainee_itd).get(URL)
+    response_piscine = auth_client(trainee_piscine).get(URL)
+
+    assert response_itd.status_code == 200
+    assert len(response_itd.data) == 3
+
+    assert response_piscine.status_code == 200
+    assert len(response_piscine.data) == 2
