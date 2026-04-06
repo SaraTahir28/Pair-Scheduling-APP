@@ -14,12 +14,13 @@ from core.services.available_slots import build_available_slots, AvailableSlot
 NOW = timezone.now()
 FUTURE = timezone.now() + timedelta(days=1)
 
-def make_slot_rule(volunteer_id=1, start_time=None, repeat_until=None, rule_id=1):
+def make_slot_rule(volunteer_id=1, start_time=None, repeat_until=None, rule_id=1, group="itd"):
     rule = SlotRule()
     rule.id = rule_id
     rule.start_time = start_time or FUTURE
     rule.repeat_until = repeat_until
     rule.volunteer_id=volunteer_id
+    rule.group = group
     return rule
 
 def make_user(username):
@@ -32,11 +33,12 @@ def make_user(username):
     return user
 
 def test_one_off_slot():
-    rule = make_slot_rule()
+    rule = make_slot_rule(group="itd")
     slots = build_available_slots([rule], NOW)
     assert len(slots) == 1
     assert slots[0].volunteer_id == rule.volunteer_id
     assert slots[0].slot_rule_id == rule.id
+    assert slots[0].group == "itd"
 
 def test_multiple_one_off_slots():
     rule_1 = make_slot_rule(rule_id=1)
@@ -81,15 +83,17 @@ def test_auth_required():
 @pytest.mark.django_db
 def test_slots_returned():
     trainee = make_user("trainee")
+    trainee.group = "itd"
     volunteer = make_user("volunteer")
 
-    SlotRule.objects.create(volunteer=volunteer, start_time=FUTURE, group="all")
+    SlotRule.objects.create(volunteer=volunteer, start_time=FUTURE, group="itd")
 
     response = auth_client(trainee).get(URL)
 
     assert response.status_code == 200
     assert len(response.data) == 1
     assert response.data[0]["volunteer_id"] == volunteer.id
+    assert response.data[0]["group"] == "itd"
 
 @pytest.mark.django_db
 def test_filter_by_volunteer():
