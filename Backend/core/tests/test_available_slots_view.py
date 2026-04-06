@@ -183,3 +183,22 @@ def test_users_with_different_groups_see_different_slots():
 
     assert response_piscine.status_code == 200
     assert len(response_piscine.data) == 2
+
+def test_slots_filtered_by_custom_future_limit():
+    start_time = NOW + timedelta(days=1)  
+    repeat_until = NOW + timedelta(days=21)
+
+    rule = make_slot_rule(start_time=start_time,repeat_until=repeat_until,group="itd",)
+
+    # moving booking window 2 weeks forward 
+    custom_limit = NOW + timedelta(weeks=2)
+
+    slots = build_available_slots([rule], custom_limit)
+
+    #  returned slots must be >= limit
+    for slot in slots:
+        assert slot.start_time >= custom_limit
+
+    # It should have fewer than total occurrences
+    assert len(slots) < len(rule.occurrence_start_times())
+    
