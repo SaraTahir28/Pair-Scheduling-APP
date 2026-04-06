@@ -15,6 +15,7 @@ dist-ssr
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
+!.vscode/settngs.json
 .idea
 .DS_Store
 *.suo
@@ -24,3 +25,7 @@ dist-ssr
 *.sw?
 # Environment variables
 .env
+# Cypress
+cypress/screenshots
+cypress/videos
+

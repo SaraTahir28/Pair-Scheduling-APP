@@ -3,6 +3,9 @@ from .serializers.booking_serializer import BookingSerializer
 
 # Django Rest Framework and serializer for endpoints
 from rest_framework import generics
+
+# Django Rest Framework and serializer for endpoints
+from rest_framework import generics, permissions
 from .models import User
 from .user_serializers import UserSerializer
 from rest_framework.views import APIView
@@ -61,3 +64,11 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
 
     serializer_class = UserSerializer
+
+
+class MeView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
