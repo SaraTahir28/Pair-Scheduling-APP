@@ -5,7 +5,7 @@ import Calendar from "../groups/Calendar";
 import TimeSlotGroup from "../groups/TimeSlotGroup";
 import BookingForm from "../groups/BookingForm";
 import { volunteersDetails } from "../../data/UserData";
-import api from "../../api/axiosclient";
+import api from "../../api/axiosClient";
 
 
 const TraineeBookingFlow = () => {
