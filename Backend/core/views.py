@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.exceptions import ParseError
 
 
 class CreateMeetingView(APIView):
@@ -22,13 +23,21 @@ class CreateMeetingView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         validated = serializer.validated_data
-
-        result = create_google_meeting(
-            start_time=validated["start_time"],
-            end_time=validated["end_time"],
-            trainee_email=validated["trainee_email"],
-            volunteer_email=validated["volunteer_email"],
-        )
+        try:
+            result = create_google_meeting(
+                start_time=validated["start_time"],
+                end_time=validated["end_time"],
+                trainee_email=validated["trainee_email"],
+                volunteer_email=validated["volunteer_email"],
+            )
+        except ParseError:
+            return Response(
+                {"error": "Invalid JSON body."}, status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as error:
+            return Response(
+                {"error": str(error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
         return Response(
             {
