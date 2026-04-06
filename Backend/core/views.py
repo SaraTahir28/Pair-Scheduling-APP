@@ -26,8 +26,6 @@ def create_meeting_view(request):
         if not serializer.is_valid():
             return JsonResponse(serializer.errors, status=400)
         validated = serializer.validated_data
-
-
        
         result = create_google_meeting(
             start_time=validated["start_time"],
@@ -36,8 +34,12 @@ def create_meeting_view(request):
             volunteer_email=validated["volunteer_email"],
         )
 
+        booking = serializer.save(
+            google_meet_link = result["meet_link"]
+        )
         return JsonResponse(
             {
+                "booking_id": booking.id,
                 "message": "Meeting created successfully.",
                 "event_id": result["event_id"],
                 "meet_link": result["meet_link"],
@@ -73,7 +75,3 @@ class MeView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
-    
-class BookingCreateView(generics.CreateAPIView):
-    serializer_class = BookingSerializer
-    permission_classes = [permissions.IsAuthenticated]
