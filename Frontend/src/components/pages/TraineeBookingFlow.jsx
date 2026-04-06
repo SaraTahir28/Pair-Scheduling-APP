@@ -7,7 +7,6 @@ import BookingForm from "../groups/BookingForm";
 import { volunteersDetails } from "../../data/UserData";
 import api from "../../api/axiosClient";
 
-
 const TraineeBookingFlow = () => {
 	//App holds state and sends as props to children as props, children change state and rerender is triggered
 
