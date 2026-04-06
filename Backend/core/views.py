@@ -18,6 +18,11 @@ from .user_serializers import UserSerializer
 @csrf_exempt
 @require_POST
 def create_meeting_view(request):
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {"detail":"User is not Authenticated."},
+            status=401,
+        )
     try:
         data = json.loads(request.body)
 
@@ -26,6 +31,12 @@ def create_meeting_view(request):
         if not serializer.is_valid():
             return JsonResponse(serializer.errors, status=400)
         validated = serializer.validated_data
+
+        if validated["trainee_email"] != request.user.email:
+            return JsonResponse(
+                {"detail": "Users can only create bookings for themselves."},
+                status=403,
+            )
        
         result = create_google_meeting(
             start_time=validated["start_time"],
