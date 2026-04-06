@@ -138,3 +138,18 @@ def test_user_only_sees_slots_for_their_group():
     assert len(response.data) == 1
     assert response.data[0]["volunteer_id"] == volunteer.id
 
+@pytest.mark.django_db
+def test_user_sees_slots_for_their_group_and_all():
+    trainee = make_user("trainee_itd")
+    trainee.group = "itd"
+
+    volunteer = make_user("volunteer")
+
+    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="itd",)
+    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="all",)
+    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="piscine",)
+
+    response = auth_client(trainee).get(URL)
+
+    assert response.status_code == 200
+    assert len(response.data) == 2
