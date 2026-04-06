@@ -8,7 +8,6 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const token = getCSRFToken();
-  console.log("CSRF token from cookie:", token);
   if (token) {
     config.headers["X-CSRFToken"] = token;
   }
