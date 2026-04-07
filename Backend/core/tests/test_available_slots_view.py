@@ -241,3 +241,26 @@ def test_filter_by_host_role_trainee():
     assert response.status_code == 200
     assert len(response.data) == 1
     assert response.data[0]["volunteer_id"] == trainee_host.id
+
+@pytest.mark.django_db
+def test_filter_by_host_role_admin():
+    trainee = make_user("trainee")
+    trainee.group = "itd"
+    trainee.save()
+ 
+    admin_host = make_user("admin_host")
+    admin_host.role = "admin"
+    admin_host.save()
+
+    volunteer_host = make_user("volunteer_host")
+    volunteer_host.role = "volunteer"
+    volunteer_host.save()
+
+    SlotRule.objects.create(volunteer=admin_host,start_time=FUTURE,group="itd",)
+    SlotRule.objects.create(volunteer=volunteer_host,start_time=FUTURE,group="itd",)
+
+    response = auth_client(trainee).get(URL, {"role": "admin"})
+
+    assert response.status_code == 200
+    assert len(response.data) == 1
+    assert response.data[0]["volunteer_id"] == admin_host.id

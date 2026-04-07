@@ -94,6 +94,7 @@ class AvailableSlotsView(APIView):
         if group:
             rules = rules.filter(group=group)
 
+        # Filtering by host will be used to filter volunteer/staff/trainee/etc
         role = request.query_params.get("role")
         if role:
             rules = rules.filter(volunteer__role=role)
