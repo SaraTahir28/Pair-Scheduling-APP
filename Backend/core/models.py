@@ -105,12 +105,6 @@ class Booking(models.Model):
 
         errors = {}
 
-        if self.trainee_id and self.trainee.role != "trainee":
-            errors["trainee"] = "Selected trainee must have role 'trainee'."
-
-        if self.volunteer_id and self.volunteer.role != "volunteer":
-            errors["volunteer"] = "Selected volunteer must have role 'volunteer'."
-
         if self.trainee_id and self.volunteer_id and self.trainee_id == self.volunteer_id:
             errors["volunteer"] = "A user cannot book a session with themselves."
 
