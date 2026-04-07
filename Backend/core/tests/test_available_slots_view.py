@@ -301,3 +301,27 @@ def test_booked_slot_is_excluded_but_other_free_slot_is_returned():
     assert len(response.data) == 1
     assert response.data[0]["volunteer_id"] == volunteer.id
     assert response.data[0]["start_time"] == second_start
+
+@pytest.mark.django_db
+def test_booking_only_blocks_matching_volunteer_and_start_time():
+    trainee = make_user("trainee")
+    trainee.group = "itd"
+    trainee.save()
+
+    volunteer_duncan = make_user("duncan")
+    volunteer_fred = make_user("fred")
+
+    SlotRule.objects.create(
+        volunteer=volunteer_duncan,
+        start_time=FUTURE,
+        group="itd",
+    )
+    SlotRule.objects.create(volunteer=volunteer_fred,start_time=FUTURE,group="itd",)
+    Booking.objects.create(trainee=trainee,volunteer=volunteer_duncan,start_time=FUTURE,google_meet_link="https://meet.example.com/1",)
+
+    response = auth_client(trainee).get(URL)
+
+    assert response.status_code == 200
+    assert len(response.data) == 1
+    assert response.data[0]["volunteer_id"] == volunteer_fred.id
+    
