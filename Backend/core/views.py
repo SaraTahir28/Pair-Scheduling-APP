@@ -15,7 +15,7 @@ import dataclasses
 from rest_framework import generics, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import User, SlotRule
+from .models import User, SlotRule, Booking
 from core.services.available_slots import build_available_slots
 from .user_serializers import UserSerializer
 
@@ -99,6 +99,19 @@ class AvailableSlotsView(APIView):
         if role:
             rules = rules.filter(volunteer__role=role)
 
-        #TODO filter out already booked slots! Get bookings from DB and pass them to build_available_slots so it can do the filtering
+        # filter out already booked slots. Get bookings from DB and passing them to build_available_slots
+        slots = build_available_slots(rules, timezone.now())
 
-        return Response([dataclasses.asdict(slot) for slot in build_available_slots(rules, timezone.now())])
+        booked_pairs = set(
+            Booking.objects.filter(
+                volunteer_id__in=[slot.volunteer_id for slot in slots],
+                start_time__in=[slot.start_time for slot in slots],
+            ).values_list("volunteer_id", "start_time")
+        )
+
+        slots = [
+            slot for slot in slots
+            if (slot.volunteer_id, slot.start_time) not in booked_pairs
+        ]
+
+        return Response([dataclasses.asdict(slot) for slot in slots])
