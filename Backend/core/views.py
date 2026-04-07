@@ -87,10 +87,16 @@ class AvailableSlotsView(APIView):
             rules = rules.filter(group="all")
 
         volunteer_id = request.query_params.get("volunteer_id")
-        #TODO - more filters (group, time other than NOW, language/tags/labels, volunteer vs staff)
-
         if volunteer_id:
             rules = rules.filter(volunteer_id=volunteer_id)
+        
+        group = request.query_params.get("group")
+        if group:
+            rules = rules.filter(group=group)
+
+        role = request.query_params.get("role")
+        if role:
+            rules = rules.filter(volunteer__role=role)
 
         #TODO filter out already booked slots! Get bookings from DB and pass them to build_available_slots so it can do the filtering
 
