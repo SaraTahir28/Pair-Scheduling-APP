@@ -55,14 +55,14 @@ def test_past_one_off_slot_excluded():
 
 def test_recurring_rule_expands_to_multiple_slots():
     start_time = timezone.now() + timedelta(weeks=1)
-    repeat_until = timezone.now() + timedelta(weeks=3)
+    repeat_until = (timezone.now() + timedelta(weeks=3)).date()
     rule = make_slot_rule(start_time=start_time, repeat_until=repeat_until)
     slots = build_available_slots([rule], NOW)
     assert len(slots) == 3
 
 def test_recurring_rule_past_occurrences_excluded():
-    start_time = (NOW - timedelta(weeks=2))
-    repeat_until = (NOW + timedelta(weeks=4))
+    start_time = NOW - timedelta(weeks=2)
+    repeat_until = (NOW + timedelta(weeks=4)).date()
     rule = make_slot_rule(start_time=start_time, repeat_until=repeat_until)
     slots = build_available_slots([rule], NOW)
     for slot in slots:
@@ -186,7 +186,7 @@ def test_users_with_different_groups_see_different_slots():
 
 def test_slots_filtered_by_custom_future_limit():
     start_time = NOW + timedelta(days=1)  
-    repeat_until = NOW + timedelta(days=21)
+    repeat_until = (NOW + timedelta(days=21)).date()
 
     rule = make_slot_rule(start_time=start_time,repeat_until=repeat_until,group="itd",)
 
@@ -204,7 +204,7 @@ def test_slots_filtered_by_custom_future_limit():
 
 def test_slots_include_past_when_limit_is_in_past():
     start_time = NOW - timedelta(weeks=2)
-    repeat_until = NOW + timedelta(weeks=2)
+    repeat_until = (NOW + timedelta(weeks=2)).date()
 
     rule = make_slot_rule(
         start_time=start_time,
@@ -281,3 +281,23 @@ def test_taken_slot_is_not_returned_in_available_slots():
     assert response.status_code == 200
     assert len(response.data) == 0
     
+@pytest.mark.django_db
+def test_booked_slot_is_excluded_but_other_free_slot_is_returned():
+    trainee = make_user("trainee")
+    trainee.group = "itd"
+    trainee.save()
+
+    volunteer = make_user("volunteer")
+
+    first_start = FUTURE
+    second_start = FUTURE + timedelta(weeks=1)
+
+    SlotRule.objects.create(volunteer=volunteer,start_time=first_start,repeat_until=second_start.date(),group="itd",)
+    Booking.objects.create(trainee=trainee,volunteer=volunteer,start_time=first_start,google_meet_link="https://meet.example.com/1",)
+
+    response = auth_client(trainee).get(URL)
+
+    assert response.status_code == 200
+    assert len(response.data) == 1
+    assert response.data[0]["volunteer_id"] == volunteer.id
+    assert response.data[0]["start_time"] == second_start
