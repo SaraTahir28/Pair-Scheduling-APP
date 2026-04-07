@@ -65,7 +65,7 @@ class SlotRule(models.Model):
             return [self.start_time]
         result = []
         current = self.start_time
-        while current <= self.repeat_until:
+        while current.date() <= self.repeat_until:
             result.append(current)
             current += timedelta(weeks=1)
         return result
