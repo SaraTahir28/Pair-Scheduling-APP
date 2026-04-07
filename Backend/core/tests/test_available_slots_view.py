@@ -8,7 +8,7 @@ from django.urls import reverse
 
 from rest_framework.test import APIClient
 
-from core.models import SlotRule, User
+from core.models import SlotRule, User, Booking
 from core.services.available_slots import build_available_slots, AvailableSlot
 
 NOW = timezone.now()
@@ -264,3 +264,20 @@ def test_filter_by_host_role_admin():
     assert response.status_code == 200
     assert len(response.data) == 1
     assert response.data[0]["volunteer_id"] == admin_host.id
+
+@pytest.mark.django_db
+def test_taken_slot_is_not_returned_in_available_slots():
+    trainee = make_user("trainee")
+    trainee.group = "itd"
+    trainee.save()
+
+    volunteer = make_user("volunteer")
+
+    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="itd",)
+    Booking.objects.create(trainee=trainee,volunteer=volunteer,start_time=FUTURE,google_meet_link="https://meet.test/1",)
+
+    response = auth_client(trainee).get(URL)
+
+    assert response.status_code == 200
+    assert len(response.data) == 0
+    
