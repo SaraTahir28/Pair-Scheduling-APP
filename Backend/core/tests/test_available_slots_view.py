@@ -218,3 +218,26 @@ def test_slots_include_past_when_limit_is_in_past():
     # past occurrences should be included
     occurrence_times = rule.occurrence_start_times()
     assert len(slots) == len(occurrence_times)
+
+@pytest.mark.django_db
+def test_filter_by_host_role_trainee():
+    trainee = make_user("trainee")
+    trainee.group = "itd"
+    trainee.save()
+
+    volunteer_host = make_user("volunteer_host")
+    volunteer_host.role = "volunteer"
+    volunteer_host.save()
+
+    trainee_host = make_user("trainee_host")
+    trainee_host.role = "trainee"
+    trainee_host.save()
+
+    SlotRule.objects.create(volunteer=volunteer_host,start_time=FUTURE,group="itd",)
+    SlotRule.objects.create(volunteer=trainee_host,start_time=FUTURE,group="itd",)
+
+    response = auth_client(trainee).get(URL, {"role": "trainee"})
+
+    assert response.status_code == 200
+    assert len(response.data) == 1
+    assert response.data[0]["volunteer_id"] == trainee_host.id
