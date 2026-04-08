@@ -6,13 +6,13 @@ from rest_framework import generics
 
 # Django Rest Framework and serializer for endpoints
 from rest_framework import generics, permissions
-from .models import User
+from .models import User, SlotRule
 from .user_serializers import UserSerializer
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.exceptions import ParseError
+from .serializers.slot_rule_serializer import SlotRuleSerializer
 
 
 class CreateMeetingView(APIView):
@@ -50,7 +50,6 @@ class CreateMeetingView(APIView):
             status=status.HTTP_201_CREATED,
         )
 
-
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = User.objects.all().order_by("id")
 
@@ -68,4 +67,13 @@ class MeView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
-        return self.request.user
+
+        return self.request.user   
+class SlotRuleCreateView(generics.CreateAPIView):
+
+    queryset = SlotRule.objects.all()
+    serializer_class = SlotRuleSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    #Always assign the slot rule to the logged-in user
+    def perform_create(self, serializer):
+        serializer.save(volunteer=self.request.user)
