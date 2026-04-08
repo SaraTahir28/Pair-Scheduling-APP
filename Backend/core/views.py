@@ -33,10 +33,7 @@ class CreateMeetingView(APIView):
                 trainee_email=validated["trainee_email"],
                 volunteer_email=validated["volunteer_email"],
             )
-        except ParseError:
-            return Response(
-                {"error": "Invalid JSON body."}, status=status.HTTP_400_BAD_REQUEST
-            )
+
         except Exception as error:
             return Response(
                 {"error": str(error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
