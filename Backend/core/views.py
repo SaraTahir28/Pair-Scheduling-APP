@@ -17,7 +17,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import User, SlotRule, Booking
 from core.services.available_slots import build_available_slots
+from .models import User, SlotRule
 from .user_serializers import UserSerializer
+from .serializers.slot_rule_serializer import SlotRuleSerializer
 
 @csrf_exempt
 @require_POST
@@ -115,3 +117,12 @@ class AvailableSlotsView(APIView):
         ]
 
         return Response([dataclasses.asdict(slot) for slot in slots])
+        return self.request.user   
+class SlotRuleCreateView(generics.CreateAPIView):
+
+    queryset = SlotRule.objects.all()
+    serializer_class = SlotRuleSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    #Always assign the slot rule to the logged-in user
+    def perform_create(self, serializer):
+        serializer.save(volunteer=self.request.user)

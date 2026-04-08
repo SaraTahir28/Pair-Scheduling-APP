@@ -4,6 +4,7 @@ from .views import create_meeting_view
 from .views import MeView
 from .views import UserListCreateView, UserDetailView
 from .views import AvailableSlotsView
+from .views import UserListCreateView, UserDetailView, SlotRuleCreateView
 
 # API routes for calendar-related actions
 urlpatterns = [
@@ -13,4 +14,6 @@ urlpatterns = [
     path("users/<int:pk>/", UserDetailView.as_view(), name="user-detail"),
     path("me/", MeView.as_view(), name="me"),
     path("available-slots/", AvailableSlotsView.as_view(), name="available-slots"),
+]
+    path("slot-rules/", SlotRuleCreateView.as_view(), name="slot-rule-create"),
 ]

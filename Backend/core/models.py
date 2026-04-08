@@ -88,7 +88,7 @@ class Booking(models.Model):
 
     start_time = models.DateTimeField()
 
-    google_meet_link = models.CharField(max_length=100)
+    google_meet_link = models.CharField(max_length=128)
     agenda = models.CharField(max_length=500, null=True, blank=True)
 
     class Meta:
@@ -107,10 +107,6 @@ class Booking(models.Model):
     def clean(self):
         errors = {}
 
-        if self.trainee_id and self.trainee.role != "trainee":
-            errors["trainee"] = "Selected trainee must have role 'trainee'."
-        if self.volunteer_id and self.volunteer.role != "volunteer":
-            errors["volunteer"] = "Selected volunteer must have role 'volunteer'."
         if self.trainee_id and self.volunteer_id and self.trainee_id == self.volunteer_id:
             errors["volunteer"] = "A user cannot book a session with themselves."
         if errors:
