@@ -17,7 +17,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import User, SlotRule, Booking
 from core.services.available_slots import build_available_slots
-from .models import User, SlotRule
 from .user_serializers import UserSerializer
 from .serializers.slot_rule_serializer import SlotRuleSerializer
 
