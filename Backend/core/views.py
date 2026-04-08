@@ -117,7 +117,7 @@ class AvailableSlotsView(APIView):
         ]
 
         return Response([dataclasses.asdict(slot) for slot in slots])
-        return self.request.user   
+ 
 class SlotRuleCreateView(generics.CreateAPIView):
 
     queryset = SlotRule.objects.all()
