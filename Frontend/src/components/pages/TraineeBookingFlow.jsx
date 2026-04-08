@@ -48,7 +48,11 @@ const TraineeBookingFlow = () => {
     };
     api
       .post("/api/create-meeting/", bookingDetailsObj)
-      .then(() => setIsBookingConfirmed(true))
+      .then(() => {
+        navigate(
+          `/trainee-booking/${selectedDate}/${selectedTime}/confirmation`
+        );
+      })
       .catch((error) => console.log("Error:", error));
   };
 
