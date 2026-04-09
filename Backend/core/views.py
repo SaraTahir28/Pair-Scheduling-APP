@@ -1,4 +1,3 @@
-
 # Not used in this view, but commonly imported for rendering HTML templates.
 from django.shortcuts import render
 import json
@@ -10,11 +9,12 @@ from django.views.decorators.csrf import csrf_exempt
 from .google_calendar_service import create_google_meeting
 from .serializers.booking_serializer import BookingSerializer
 
-#Django Rest Framework and serializer for endpoints
+# Django Rest Framework and serializer for endpoints
 from rest_framework import generics, permissions
 from .models import User, SlotRule
 from .user_serializers import UserSerializer
 from .serializers.slot_rule_serializer import SlotRuleSerializer
+
 
 @csrf_exempt
 @require_POST
@@ -28,8 +28,6 @@ def create_meeting_view(request):
             return JsonResponse(serializer.errors, status=400)
         validated = serializer.validated_data
 
-
-       
         result = create_google_meeting(
             start_time=validated["start_time"],
             end_time=validated["end_time"],
@@ -44,7 +42,7 @@ def create_meeting_view(request):
                 "meet_link": result["meet_link"],
                 "start": result["start"],
                 "end": result["end"],
-                },
+            },
             status=201,
         )
 
@@ -56,29 +54,30 @@ def create_meeting_view(request):
 
 
 class UserListCreateView(generics.ListCreateAPIView):
-    
     queryset = User.objects.all().order_by("id")
 
     serializer_class = UserSerializer
 
+
 class UserDetailView(generics.RetrieveUpdateAPIView):
-    
     queryset = User.objects.all()
 
     serializer_class = UserSerializer
 
-class MeView(generics.RetrieveUpdateAPIView):
- 
+
+class CurrentProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
-        return self.request.user   
-class SlotRuleCreateView(generics.CreateAPIView):
+        return self.request.user
 
+
+class SlotRuleCreateView(generics.CreateAPIView):
     queryset = SlotRule.objects.all()
     serializer_class = SlotRuleSerializer
     permission_classes = [permissions.IsAuthenticated]
-    #Always assign the slot rule to the logged-in user
+
+    # Always assign the slot rule to the logged-in user
     def perform_create(self, serializer):
         serializer.save(volunteer=self.request.user)
