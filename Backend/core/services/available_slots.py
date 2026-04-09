@@ -1,7 +1,6 @@
 from datetime import timedelta, datetime
 from dataclasses import dataclass
 from typing import Optional
-from core.models import Booking
 
 @dataclass
 class AvailableSlot:
@@ -26,16 +25,11 @@ def build_available_slots(rules, beginning_of_booking_window):
                     end_time=start_time + timedelta(hours=1),
                 )
             )
-    if not slots:
-        return []
+    return slots
 
-    # filter out already booked slots. Get bookings from DB and passing them to build_available_slots
-    booked_pairs = set(
-        Booking.objects.filter(
-            volunteer_id__in= [slot.volunteer_id for slot in slots],
-            start_time__in= [slot.start_time for slot in slots],
-        ).values_list("volunteer_id", "start_time")
-    )
+def exclude_booked_slots(slots, booked_pairs):
+    if not booked_pairs:
+        return slots
     return [slot for slot in slots
         if (slot.volunteer_id, slot.start_time) not in booked_pairs
     ]
