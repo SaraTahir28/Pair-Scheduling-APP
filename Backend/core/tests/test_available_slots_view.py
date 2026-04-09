@@ -1,7 +1,7 @@
 import pytest
 from datetime import timedelta
 from dataclasses import dataclass
-from unittest.mock import MagicMock
+from unittest.mock import patch
 
 from django.utils import timezone
 from django.urls import reverse
@@ -32,6 +32,7 @@ def make_user(username):
     user.save()
     return user
 
+@pytest.mark.django_db
 def test_one_off_slot():
     rule = make_slot_rule(group="itd")
     slots = build_available_slots([rule], NOW)
@@ -40,6 +41,7 @@ def test_one_off_slot():
     assert slots[0].slot_rule_id == rule.id
     assert slots[0].group == "itd"
 
+@pytest.mark.django_db
 def test_multiple_one_off_slots():
     rule_1 = make_slot_rule(rule_id=1)
     rule_2 = make_slot_rule(rule_id=2)
@@ -53,6 +55,7 @@ def test_past_one_off_slot_excluded():
     slots = build_available_slots([rule], NOW)
     assert slots == []
 
+@pytest.mark.django_db
 def test_recurring_rule_expands_to_multiple_slots():
     start_time = timezone.now() + timedelta(weeks=1)
     repeat_until = (timezone.now() + timedelta(weeks=3)).date()
@@ -60,6 +63,7 @@ def test_recurring_rule_expands_to_multiple_slots():
     slots = build_available_slots([rule], NOW)
     assert len(slots) == 3
 
+@pytest.mark.django_db
 def test_recurring_rule_past_occurrences_excluded():
     start_time = NOW - timedelta(weeks=2)
     repeat_until = (NOW + timedelta(weeks=4)).date()
@@ -108,22 +112,6 @@ def test_filter_by_volunteer():
     assert response.status_code == 200
     assert len(response.data) == 1
     assert response.data[0]["volunteer_id"] == volunteer_duncan.id
-
-@pytest.mark.django_db
-def test_filter_by_request_user_group():
-    trainee = make_user("trainee")
-    trainee.group = "itd"
-    trainee.save()
-
-    volunteer = make_user("volunteer")
-
-    SlotRule.objects.create(volunteer=volunteer, start_time=FUTURE, group="itd")
-    SlotRule.objects.create(volunteer=volunteer, start_time=FUTURE, group="piscine")
-
-    response = auth_client(trainee).get(URL)
-
-    assert response.status_code == 200
-    assert len(response.data) == 1
 
 @pytest.mark.django_db
 def test_user_only_sees_slots_for_their_group():
@@ -184,6 +172,7 @@ def test_users_with_different_groups_see_different_slots():
     assert response_piscine.status_code == 200
     assert len(response_piscine.data) == 2
 
+@pytest.mark.django_db
 def test_slots_filtered_by_custom_future_limit():
     start_time = NOW + timedelta(days=1)  
     repeat_until = (NOW + timedelta(days=21)).date()
@@ -202,6 +191,7 @@ def test_slots_filtered_by_custom_future_limit():
     # It should have fewer than total occurrences
     assert len(slots) < len(rule.occurrence_start_times())
 
+@pytest.mark.django_db
 def test_slots_include_past_when_limit_is_in_past():
     start_time = NOW - timedelta(weeks=2)
     repeat_until = (NOW + timedelta(weeks=2)).date()
@@ -324,4 +314,78 @@ def test_booking_only_blocks_matching_volunteer_and_start_time():
     assert response.status_code == 200
     assert len(response.data) == 1
     assert response.data[0]["volunteer_id"] == volunteer_fred.id
-    
+
+@patch("core.services.available_slots.Booking.objects.filter")
+def test_build_available_slots_returns_slot_when_not_booked(mock_filter):
+    mock_filter.return_value.values_list.return_value = []
+
+    rule = make_slot_rule()
+
+    slots = build_available_slots([rule], NOW)
+
+    assert len(slots) == 1
+    assert slots[0].slot_rule_id == rule.id
+    assert slots[0].volunteer_id == rule.volunteer_id
+    assert slots[0].group == rule.group
+
+
+@patch("core.services.available_slots.Booking.objects.filter")
+def test_build_available_slots_excludes_booked_slot(mock_filter):
+    rule = make_slot_rule()
+
+    mock_filter.return_value.values_list.return_value = [
+        (rule.volunteer_id, rule.start_time),
+    ]
+
+    slots = build_available_slots([rule], NOW)
+
+    assert slots == []
+
+
+@patch("core.services.available_slots.Booking.objects.filter")
+def test_build_available_slots_excludes_only_exact_booked_pair(mock_filter):
+    rule_1 = make_slot_rule(volunteer_id=1, rule_id=1, start_time=FUTURE)
+    rule_2 = make_slot_rule(volunteer_id=2, rule_id=2, start_time=FUTURE)
+
+    mock_filter.return_value.values_list.return_value = [
+        (rule_1.volunteer_id, rule_1.start_time),
+    ]
+
+    slots = build_available_slots([rule_1, rule_2], NOW)
+
+    assert len(slots) == 1
+    assert slots[0].slot_rule_id == rule_2.id
+    assert slots[0].volunteer_id == rule_2.volunteer_id
+
+
+@patch("core.services.available_slots.Booking.objects.filter")
+def test_build_available_slots_keeps_other_occurrences_for_same_volunteer(mock_filter):
+    start_time = FUTURE
+    second_occurrence = FUTURE + timedelta(weeks=1)
+
+    rule = make_slot_rule(
+        volunteer_id=1,
+        rule_id=1,
+        start_time=start_time,
+        repeat_until=second_occurrence.date(),
+    )
+
+    mock_filter.return_value.values_list.return_value = [
+        (1, start_time),
+    ]
+
+    slots = build_available_slots([rule], NOW)
+
+    assert len(slots) == 1
+    assert slots[0].volunteer_id == 1
+    assert slots[0].start_time == second_occurrence
+
+
+@patch("core.services.available_slots.Booking.objects.filter")
+def test_build_available_slots_does_not_query_bookings_when_no_candidate_slots(mock_filter):
+    rule = make_slot_rule(start_time=NOW - timedelta(weeks=1))
+
+    slots = build_available_slots([rule], NOW)
+
+    assert slots == []
+    mock_filter.assert_not_called()
