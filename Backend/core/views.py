@@ -26,6 +26,7 @@ class CreateMeetingView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         validated = serializer.validated_data
+
         try:
             result = create_google_meeting(
                 start_time=validated["start_time"],
@@ -50,6 +51,7 @@ class CreateMeetingView(APIView):
             status=status.HTTP_201_CREATED,
         )
 
+
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = User.objects.all().order_by("id")
 
@@ -62,18 +64,19 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSerializer
 
 
-class MeView(generics.RetrieveUpdateAPIView):
+class CurrentProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
+        return self.request.user
 
-        return self.request.user   
+
 class SlotRuleCreateView(generics.CreateAPIView):
-
     queryset = SlotRule.objects.all()
     serializer_class = SlotRuleSerializer
     permission_classes = [permissions.IsAuthenticated]
-    #Always assign the slot rule to the logged-in user
+
+    # Always assign the slot rule to the logged-in user
     def perform_create(self, serializer):
         serializer.save(volunteer=self.request.user)
