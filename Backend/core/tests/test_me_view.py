@@ -2,7 +2,7 @@ import pytest
 
 
 @pytest.mark.django_db
-def test_me_view_authenticated_get(client, django_user_model):
+def test_current_user_profile_get_authenticated(client, django_user_model):
     user = django_user_model.objects.create_user(
         username="sara",
         email="sara@example.com",
@@ -22,13 +22,13 @@ def test_me_view_authenticated_get(client, django_user_model):
 
 
 @pytest.mark.django_db
-def test_me_view_unauthenticated_get(client):
+def test_current_user_profile_get_unauthenticated(client):
     response = client.get("/api/me/")
     assert response.status_code == 403
 
 
 @pytest.mark.django_db
-def test_me_view_patch_update(client, django_user_model):
+def test_current_user_profile_patch_updates_role(client, django_user_model):
     user = django_user_model.objects.create_user(
         username="emiliano",
         email="emiliano@example.com",
@@ -48,7 +48,7 @@ def test_me_view_patch_update(client, django_user_model):
 
 
 @pytest.mark.django_db
-def test_me_view_invalid_role(client, django_user_model):
+def test_current_user_profile_patch_invalid_role(client, django_user_model):
     user = django_user_model.objects.create_user(
         username="kaska",
         email="kaska@example.com",
