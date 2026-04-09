@@ -16,9 +16,9 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-#This tells Django to read  .env file so  Google credentials become available.
+# This tells Django to read  .env file so  Google credentials become available.
 env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 # Google OAuth2 credentials for manual login flow
 # These are read from the .env file to avoid exposing secrets in code
@@ -33,7 +33,7 @@ BASE_API_URL = "http://localhost:8000"
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-(#1c#^ypty_2-2!3g^uu9p@z0=#2+7nv8qz#swf@yg&okj0ld1'
+SECRET_KEY = "django-insecure-(#1c#^ypty_2-2!3g^uu9p@z0=#2+7nv8qz#swf@yg&okj0ld1"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -42,39 +42,36 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-#Adding authentication app to settings
+# Adding authentication app to settings
 
 INSTALLED_APPS = [
     # -------------------------------
     # Default Django apps
     # -------------------------------
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
     # -------------------------------
     # Third‑party apps
     # -------------------------------
-    'corsheaders',  # Handles Cross-Origin Resource Sharing (CORS)
-
+    "corsheaders",  # Handles Cross-Origin Resource Sharing (CORS)
     # -------------------------------
     # Django Allauth / Social Login apps
     # -------------------------------
-    'django.contrib.sites',                     # Required by allauth (site framework)
-    'allauth',                                  # Core allauth app
-    'allauth.account',                          # Handles login, signup, email verification
-    'allauth.socialaccount',                    # Enables social login functionality
-    'allauth.socialaccount.providers.google',   # Google OAuth provider
-
+    "django.contrib.sites",  # Required by allauth (site framework)
+    "allauth",  # Core allauth app
+    "allauth.account",  # Handles login, signup, email verification
+    "allauth.socialaccount",  # Enables social login functionality
+    "allauth.socialaccount.providers.google",  # Google OAuth provider
     # -------------------------------
     # Your project apps
     # -------------------------------
-    'core',        # app for project calendar logic
-    'auth_app',    # Custom authentication app (must come AFTER allauth)
-    "rest_framework", # Django REST Framework to interact with frontend React.
+    "core",  # app for project calendar logic
+    "auth_app",  # Custom authentication app (must come AFTER allauth)
+    "rest_framework",  # Django REST Framework to interact with frontend React.
 ]
 
 # -------------------------------
@@ -96,64 +93,66 @@ SOCIALACCOUNT_PROVIDERS = {
         "APP": {
             "client_id": env("GOOGLE_CLIENT_ID"),
             "secret": env("GOOGLE_CLIENT_SECRET"),
-            "key": ""
-        }
+            "key": "",
+        },
     }
 }
 
-#After Google login => user goes to your frontend
-LOGIN_REDIRECT_URL = "http://localhost:5173/"  #used by Django’s built‑in auth
-ACCOUNT_LOGIN_REDIRECT_URL = "http://localhost:5173/" #used by allauth (Google login)
+# After Google login => user goes to your frontend
+LOGIN_REDIRECT_URL = "http://localhost:5173/"  # used by Django’s built‑in auth
+ACCOUNT_LOGIN_REDIRECT_URL = "http://localhost:5173/"  # used by allauth (Google login)
 LOGOUT_REDIRECT_URL = "http://localhost:5173/"
 ACCOUNT_LOGOUT_REDIRECT_URL = "http://localhost:5173/"
-#This makes sure Google login actually fills the email in the user record.
+# This makes sure Google login actually fills the email in the user record.
 SOCIALACCOUNT_QUERY_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "none"  # for dev
 
-#skip the “social login confirmation” djnago default page 
+# skip the “social login confirmation” djnago default page
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
 MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'allauth.account.middleware.AccountMiddleware', #adding oauth running middleware.
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # CSRF MUST come after CommonMiddleware
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'booking_system.urls'
+
+ROOT_URLCONF = "booking_system.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'booking_system.wsgi.application'
+WSGI_APPLICATION = "booking_system.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
@@ -166,16 +165,16 @@ AUTH_USER_MODEL = "core.User"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -183,9 +182,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -195,29 +194,29 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
 
 # Google Calendar integration settings with cyf service account
-#"primary" means “use the service account’s main calendar”
+# "primary" means “use the service account’s main calendar”
 GOOGLE_CALENDAR_ID = "primary"
 GOOGLE_SERVICE_ACCOUNT_FILE = BASE_DIR / "secrets/cyf-service-account.json"
 
 
-#Adding cors settings
+# Adding cors settings
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "http://localhost:5174",   
+    "http://localhost:5174",
     "http://127.0.0.1:5174",
-    "http://localhost:3000"   
+    "http://localhost:3000",
 ]
 CORS_ALLOW_CREDENTIALS = True
 
-#send logs to the console
+# send logs to the console
 
-#show INFO, WARNING, ERROR, CRITICAL
+# show INFO, WARNING, ERROR, CRITICAL
 
-#include your module logs
+# include your module logs
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -233,13 +232,21 @@ LOGGING = {
         },
     },
 }
-#Adding this ID as are service account user which will act as a bot to generate emails for us.
+# Adding this ID as are service account user which will act as a bot to generate emails for us.
 GOOGLE_IMPERSONATED_USER_EMAIL = "automated@codeyourfuture.io"
 
 # -------------------------------
 # Authentication backends (required by allauth)
 # -------------------------------
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',       # Default Django authentication
-    'allauth.account.auth_backends.AuthenticationBackend', # Needed for allauth(Google to work)
+    "django.contrib.auth.backends.ModelBackend",  # Default Django authentication
+    "allauth.account.auth_backends.AuthenticationBackend",  # Needed for allauth(Google to work)
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
+    "http://localhost:3000",
 ]
