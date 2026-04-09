@@ -48,10 +48,12 @@ class TestCreateMeetingView:
         assert "detail" in response.json()
 
     @patch("core.views.create_google_meeting")
-    def test_successful_meeting_creation_returns_201(self, mock_create, auth_client):
+    def test_successful_meeting_creation_returns_201(
+        self, mock_google_meeting, auth_client
+    ):
         url = reverse("create_meeting")
 
-        mock_create.return_value = {
+        mock_google_meeting.return_value = {
             "event_id": "abc123",
             "meet_link": "https://meet.google.com/xyz",
             "start": "2025-01-01T10:00:00Z",
@@ -80,7 +82,7 @@ class TestCreateMeetingView:
         assert data["meet_link"] == "https://meet.google.com/xyz"
 
     @patch("core.views.create_google_meeting", side_effect=Exception("Boom"))
-    def test_unexpected_error_returns_500(self, mock_create, auth_client):
+    def test_unexpected_error_returns_500(self, mock_google_meeting, auth_client):
         url = reverse("create_meeting")
 
         # Must be >= 24 hours ahead or serializer will block before mock triggers
