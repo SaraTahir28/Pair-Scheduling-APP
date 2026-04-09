@@ -1,12 +1,12 @@
 from rest_framework import serializers
 from core.models import User, Booking
 from core.policies.min_booking_window import MinimumBookingWindowPolicy
+from datetime import timedelta
 
 class BookingSerializer(serializers.Serializer):
     trainee_email = serializers.EmailField()
     volunteer_email = serializers.EmailField()
     start_time = serializers.DateTimeField()
-    end_time = serializers.DateTimeField()
     google_meet_link = serializers.CharField(max_length=128, required=False, allow_blank=True)
     agenda = serializers.CharField(max_length=500, required=False, allow_blank=True)
 
@@ -66,6 +66,7 @@ class BookingSerializer(serializers.Serializer):
             "trainee_email": instance.trainee.email,
             "volunteer_email": instance.volunteer.email,
             "start_time": instance.start_time,
+            "end_time": instance.start_time + timedelta(hours=1),
             "google_meet_link": instance.google_meet_link,
             "agenda": instance.agenda,
        }
