@@ -44,6 +44,9 @@ def test_current_user_profile_patch_updates_role(client, django_user_model):
     assert response.status_code == 200
 
     data = response.json()
+    user.refresh_from_db()
+    assert user.role == "volunteer"
+    # Ensure response reflects the change
     assert data["role"] == "volunteer"
 
 
