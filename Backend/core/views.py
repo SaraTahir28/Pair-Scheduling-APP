@@ -16,7 +16,7 @@ from rest_framework import generics, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import User, SlotRule, Booking
-from core.services.available_slots import build_available_slots
+from core.services.available_slots import build_available_slots, exclude_booked_slots
 from .user_serializers import UserSerializer
 from .serializers.slot_rule_serializer import SlotRuleSerializer
 
@@ -99,8 +99,19 @@ class AvailableSlotsView(APIView):
         role = request.query_params.get("role")
         if role:
             rules = rules.filter(volunteer__role=role)
+        
+        slots = build_available_slots(rules, timezone.now())
 
-        return Response([dataclasses.asdict(slot) for slot in build_available_slots(rules, timezone.now())])
+        booked_pairs = set(
+            Booking.objects.filter(
+                volunteer_id__in= [slot.volunteer_id for slot in slots],
+                start_time__in= [slot.start_time for slot in slots],
+            ).values_list("volunteer_id", "start_time")
+        )
+        
+        slots = exclude_booked_slots(slots, booked_pairs)
+
+        return Response([dataclasses.asdict(slot) for slot in slots])
  
 class SlotRuleCreateView(generics.CreateAPIView):
 
