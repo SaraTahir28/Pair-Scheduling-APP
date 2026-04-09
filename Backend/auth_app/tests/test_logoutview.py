@@ -21,7 +21,7 @@ def test_logout_view_authenticated(client, django_user_model):
 
     # After logout, Sara should not be authenticated anymore
     response = client.get("/auth/user/")
-    assert response.status_code in (302, 401)
+    assert response.status_code == 401
 
 
 @pytest.mark.django_db
