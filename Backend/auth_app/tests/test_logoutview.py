@@ -25,18 +25,8 @@ def test_logout_view_authenticated(client, django_user_model):
 
 
 @pytest.mark.django_db
-def test_logout_view_method_not_allowed(client, django_user_model):
-    # Create and log in a user (Emiliano)
-    emiliano = django_user_model.objects.create_user(
-        username="emiliano",
-        email="emiliano@example.com",
-        password="strongpass456",
-        role="mentor",
-        status="active",
-    )
-    client.login(username="emiliano", password="strongpass456")
-
-    # Call logout with GET instead of POST
+def test_logout_view_method_not_allowed(client):
+    # Call logout with GET inetsead of POST
     response = client.get("/auth/logout/")
     assert response.status_code == 405
     data = response.json()
