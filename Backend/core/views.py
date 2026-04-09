@@ -100,22 +100,7 @@ class AvailableSlotsView(APIView):
         if role:
             rules = rules.filter(volunteer__role=role)
 
-        # filter out already booked slots. Get bookings from DB and passing them to build_available_slots
-        slots = build_available_slots(rules, timezone.now())
-
-        booked_pairs = set(
-            Booking.objects.filter(
-                volunteer_id__in=[slot.volunteer_id for slot in slots],
-                start_time__in=[slot.start_time for slot in slots],
-            ).values_list("volunteer_id", "start_time")
-        )
-
-        slots = [
-            slot for slot in slots
-            if (slot.volunteer_id, slot.start_time) not in booked_pairs
-        ]
-
-        return Response([dataclasses.asdict(slot) for slot in slots])
+        return Response([dataclasses.asdict(slot) for slot in build_available_slots(rules, timezone.now())])
  
 class SlotRuleCreateView(generics.CreateAPIView):
 
