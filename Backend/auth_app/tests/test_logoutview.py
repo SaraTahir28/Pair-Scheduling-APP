@@ -8,7 +8,6 @@ def test_logout_view_authenticated(client, django_user_model):
         username="sara",
         email="sara@example.com",
         password="securepass123",
-        role="trainee",
         status="active",
     )
     client.login(username="sara", password="securepass123")
@@ -40,14 +39,12 @@ def test_logout_clears_session(client, django_user_model):
         username="kaska",
         email="kaska@example.com",
         password="securepass678",
-        role="trainee",
         status="active",
     )
     client.login(username="kaska", password="securepass678")
 
     # Confirm session contains auth user id before logout
     assert "_auth_user_id" in client.session
-
     response = client.post("/auth/logout/")
     assert response.status_code == 200
     assert response.json()["message"] == "Logged out"
