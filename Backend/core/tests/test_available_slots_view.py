@@ -23,10 +23,11 @@ def make_slot_rule(volunteer_id=1, start_time=None, repeat_until=None, rule_id=1
     rule.group = group
     return rule
 
-def make_user(username):
+def make_user(username, group=None):
     user = User.objects.create(
         username=username,
         email=f"{username}@example.com",
+        group=group,
     )
     user.set_unusable_password()
     user.save()
@@ -86,8 +87,7 @@ def test_auth_required():
 
 @pytest.mark.django_db
 def test_slots_returned():
-    trainee = make_user("trainee")
-    trainee.group = "itd"
+    trainee = make_user("trainee",group="itd")
     volunteer = make_user("volunteer")
 
     SlotRule.objects.create(volunteer=volunteer, start_time=FUTURE, group="itd")
@@ -115,10 +115,7 @@ def test_filter_by_volunteer():
 
 @pytest.mark.django_db
 def test_user_only_sees_slots_for_their_group():
-    trainee = make_user("trainee")
-    trainee.group = "itd"
-    trainee.save()
-
+    trainee = make_user("trainee", group="itd")
     volunteer = make_user("volunteer")
 
     SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="itd",)
@@ -132,8 +129,7 @@ def test_user_only_sees_slots_for_their_group():
 
 @pytest.mark.django_db
 def test_user_sees_slots_for_their_group_and_all():
-    trainee = make_user("trainee_itd")
-    trainee.group = "itd"
+    trainee = make_user("trainee_itd", group="itd")
 
     volunteer = make_user("volunteer")
 
@@ -211,9 +207,7 @@ def test_slots_include_past_when_limit_is_in_past():
 
 @pytest.mark.django_db
 def test_filter_by_host_role_trainee():
-    trainee = make_user("trainee")
-    trainee.group = "itd"
-    trainee.save()
+    trainee = make_user("trainee", group="itd")
 
     volunteer_host = make_user("volunteer_host")
     volunteer_host.role = "volunteer"
@@ -234,9 +228,7 @@ def test_filter_by_host_role_trainee():
 
 @pytest.mark.django_db
 def test_filter_by_host_role_admin():
-    trainee = make_user("trainee")
-    trainee.group = "itd"
-    trainee.save()
+    trainee = make_user("trainee", group="itd")
  
     admin_host = make_user("admin_host")
     admin_host.role = "admin"
@@ -257,9 +249,7 @@ def test_filter_by_host_role_admin():
 
 @pytest.mark.django_db
 def test_taken_slot_is_not_returned_in_available_slots():
-    trainee = make_user("trainee")
-    trainee.group = "itd"
-    trainee.save()
+    trainee = make_user("trainee", group="itd")
 
     volunteer = make_user("volunteer")
 
@@ -273,9 +263,7 @@ def test_taken_slot_is_not_returned_in_available_slots():
     
 @pytest.mark.django_db
 def test_booked_slot_is_excluded_but_other_free_slot_is_returned():
-    trainee = make_user("trainee")
-    trainee.group = "itd"
-    trainee.save()
+    trainee = make_user("trainee", group="itd")
 
     volunteer = make_user("volunteer")
 
@@ -294,9 +282,7 @@ def test_booked_slot_is_excluded_but_other_free_slot_is_returned():
 
 @pytest.mark.django_db
 def test_booking_only_blocks_matching_volunteer_and_start_time():
-    trainee = make_user("trainee")
-    trainee.group = "itd"
-    trainee.save()
+    trainee = make_user("trainee", group="itd")
 
     volunteer_duncan = make_user("duncan")
     volunteer_fred = make_user("fred")
