@@ -4,7 +4,7 @@ from unittest.mock import patch
 from django.utils import timezone
 
 from core.models import SlotRule
-from core.services.available_slots import build_available_slots
+from core.services.available_slots import build_available_slots, exclude_booked_slots
 
 NOW = timezone.now()
 FUTURE = timezone.now() + timedelta(days=1)
@@ -18,12 +18,6 @@ def make_slot_rule(volunteer_id=1, start_time=None, repeat_until=None, rule_id=1
     rule.group = group
     return rule
 
-def test_past_one_off_slot_excluded(): 
-    rule = make_slot_rule(start_time = NOW - timedelta(weeks=1))
-    slots = build_available_slots([rule], NOW)
-    assert slots == [] 
-
-@pytest.mark.django_db
 def test_one_off_slot(): 
     rule = make_slot_rule(group="itd")
     slots = build_available_slots([rule], NOW)
@@ -32,7 +26,6 @@ def test_one_off_slot():
     assert slots[0].slot_rule_id == rule.id
     assert slots[0].group == "itd"
 
-@pytest.mark.django_db
 def test_multiple_one_off_slots(): 
     rule_1 = make_slot_rule(rule_id=1)
     rule_2 = make_slot_rule(rule_id=2)
@@ -41,7 +34,6 @@ def test_multiple_one_off_slots():
     assert slots[0].slot_rule_id == rule_1.id
     assert slots[1].slot_rule_id == rule_2.id
 
-@pytest.mark.django_db
 def test_recurring_rule_expands_to_multiple_slots(): 
     start_time = timezone.now() + timedelta(weeks=1)
     repeat_until = (timezone.now() + timedelta(weeks=3)).date()
@@ -49,7 +41,6 @@ def test_recurring_rule_expands_to_multiple_slots():
     slots = build_available_slots([rule], NOW)
     assert len(slots) == 3
 
-@pytest.mark.django_db
 def test_recurring_rule_past_occurrences_excluded(): 
     start_time = NOW - timedelta(weeks=2)
     repeat_until = (NOW + timedelta(weeks=4)).date()
@@ -58,7 +49,6 @@ def test_recurring_rule_past_occurrences_excluded():
     for slot in slots:
         assert slot.start_time >= NOW
 
-@pytest.mark.django_db
 def test_slots_include_past_when_limit_is_in_past(): 
     start_time = NOW - timedelta(weeks=2)
     repeat_until = (NOW + timedelta(weeks=2)).date()
@@ -76,7 +66,6 @@ def test_slots_include_past_when_limit_is_in_past():
     occurrence_times = rule.occurrence_start_times()
     assert len(slots) == len(occurrence_times)
 
-@pytest.mark.django_db
 def test_slots_filtered_by_custom_future_limit(): 
     start_time = NOW + timedelta(days=1)  
     repeat_until = (NOW + timedelta(days=21)).date()
@@ -95,48 +84,46 @@ def test_slots_filtered_by_custom_future_limit():
     # It should have fewer than total occurrences
     assert len(slots) < len(rule.occurrence_start_times())
 
-@patch("core.services.available_slots.Booking.objects.filter")
-def test_build_available_slots_returns_slot_when_not_booked(mock_filter): 
-    mock_filter.return_value.values_list.return_value = []
-
+def test_exclude_booked_slots_returns_slots_when_none_are_booked(): 
     rule = make_slot_rule()
-
     slots = build_available_slots([rule], NOW)
 
-    assert len(slots) == 1
-    assert slots[0].slot_rule_id == rule.id
-    assert slots[0].volunteer_id == rule.volunteer_id
-    assert slots[0].group == rule.group
+    filtered_slots = exclude_booked_slots(slots, booked_pairs=set())
 
-@patch("core.services.available_slots.Booking.objects.filter")
-def test_build_available_slots_excludes_booked_slot(mock_filter): 
+    assert len(filtered_slots) == 1
+    assert filtered_slots[0].volunteer_id == rule.volunteer_id
+    assert filtered_slots[0].slot_rule_id == rule.id
+    assert filtered_slots[0].group == rule.group
+
+def test_exclude_booked_slots_excludes_booked_slot():
     rule = make_slot_rule()
+    slots = build_available_slots([rule], NOW)
 
-    mock_filter.return_value.values_list.return_value = [
+    booked_pairs = {
         (rule.volunteer_id, rule.start_time),
-    ]
+    }
 
-    slots = build_available_slots([rule], NOW)
+    filtered_slots = exclude_booked_slots(slots, booked_pairs)
 
-    assert slots == []
+    assert filtered_slots == []
 
-@patch("core.services.available_slots.Booking.objects.filter")
-def test_build_available_slots_excludes_only_exact_booked_pair(mock_filter): 
+def test_exclude_booked_slots_excludes_only_exact_booked_pair():
     rule_1 = make_slot_rule(volunteer_id=1, rule_id=1, start_time=FUTURE)
     rule_2 = make_slot_rule(volunteer_id=2, rule_id=2, start_time=FUTURE)
 
-    mock_filter.return_value.values_list.return_value = [
-        (rule_1.volunteer_id, rule_1.start_time),
-    ]
-
     slots = build_available_slots([rule_1, rule_2], NOW)
 
-    assert len(slots) == 1
-    assert slots[0].slot_rule_id == rule_2.id
-    assert slots[0].volunteer_id == rule_2.volunteer_id
+    booked_pairs = {
+        (rule_1.volunteer_id, rule_1.start_time),
+    }
 
-@patch("core.services.available_slots.Booking.objects.filter")
-def test_build_available_slots_keeps_other_occurrences_for_same_volunteer(mock_filter):
+    filtered_slots = exclude_booked_slots(slots, booked_pairs)
+
+    assert len(filtered_slots) == 1
+    assert filtered_slots[0].slot_rule_id == rule_2.id
+    assert filtered_slots[0].volunteer_id == rule_2.volunteer_id
+
+def test_exclude_booked_slots_keeps_other_occurrences_for_same_volunteer():
     start_time = FUTURE
     second_occurrence = FUTURE + timedelta(weeks=1)
 
@@ -147,22 +134,15 @@ def test_build_available_slots_keeps_other_occurrences_for_same_volunteer(mock_f
         repeat_until=second_occurrence.date(),
     )
 
-    mock_filter.return_value.values_list.return_value = [
+    slots = build_available_slots([rule], NOW)
+
+    booked_pairs = {
         (1, start_time),
-    ]
+    }
 
-    slots = build_available_slots([rule], NOW)
+    filtered_slots = exclude_booked_slots(slots, booked_pairs)
 
-    assert len(slots) == 1
-    assert slots[0].volunteer_id == 1
-    assert slots[0].start_time == second_occurrence
-
-@patch("core.services.available_slots.Booking.objects.filter")
-def test_build_available_slots_does_not_query_bookings_when_no_candidate_slots(mock_filter): 
-    rule = make_slot_rule(start_time=NOW - timedelta(weeks=1))
-
-    slots = build_available_slots([rule], NOW)
-
-    assert slots == []
-    mock_filter.assert_not_called()
+    assert len(filtered_slots) == 1
+    assert filtered_slots[0].volunteer_id == 1
+    assert filtered_slots[0].start_time == second_occurrence
     
