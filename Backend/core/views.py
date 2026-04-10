@@ -1,17 +1,28 @@
-from .google_calendar_service import create_google_meeting
-from .serializers.booking_serializer import BookingSerializer
+import json
+import dataclasses
 
-# Django Rest Framework and serializer for endpoints
-from rest_framework import generics
+# Django Core
+from django.db.models import Q
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
-# Django Rest Framework and serializer for endpoints
-from rest_framework import generics, permissions
-from .models import User, SlotRule
-from .user_serializers import UserSerializer
-from rest_framework.views import APIView
+# Django Rest Framework
+from rest_framework import generics, permissions, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.views import APIView
+
+# Local Models & Services
+from .models import User, SlotRule, Booking
+from core.services.available_slots import build_available_slots, exclude_booked_slots
+from .google_calendar_service import create_google_meeting
+
+# Local Serializers
+from .user_serializers import UserSerializer
+from .serializers.booking_serializer import BookingSerializer
 from .serializers.slot_rule_serializer import SlotRuleSerializer
 
 
@@ -71,6 +82,45 @@ class CurrentProfileView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user
 
+
+class AvailableSlotsView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        rules = SlotRule.objects.select_related("volunteer").all()
+
+        user_group = request.user.group
+        if user_group:
+            rules = rules.filter(Q(group=user_group) | Q(group='all'))
+        else:
+            rules = rules.filter(group="all")
+
+        volunteer_id = request.query_params.get("volunteer_id")
+        if volunteer_id:
+            rules = rules.filter(volunteer_id=volunteer_id)
+        
+        group = request.query_params.get("group")
+        if group:
+            rules = rules.filter(group=group)
+
+        # Filtering by host will be used to filter volunteer/staff/trainee/etc
+        role = request.query_params.get("role")
+        if role:
+            rules = rules.filter(volunteer__role=role)
+        
+        slots = build_available_slots(rules, timezone.now())
+
+        booked_pairs = set(
+            Booking.objects.filter(
+                volunteer_id__in= [slot.volunteer_id for slot in slots],
+                start_time__in= [slot.start_time for slot in slots],
+            ).values_list("volunteer_id", "start_time")
+        )
+        
+        slots = exclude_booked_slots(slots, booked_pairs)
+
+        return Response([dataclasses.asdict(slot) for slot in slots])
+   
 
 class SlotRuleCreateView(generics.CreateAPIView):
     queryset = SlotRule.objects.all()
