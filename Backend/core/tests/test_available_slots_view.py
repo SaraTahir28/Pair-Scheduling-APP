@@ -11,11 +11,12 @@ from core.models import SlotRule, User
 NOW = timezone.now()
 FUTURE = timezone.now() + timedelta(days=1)
 
-def make_user(username, group=None):
+def make_user(username, group=None, role="trainee"):
     user = User.objects.create(
         username=username,
         email=f"{username}@example.com",
         group=group,
+        role=role,
     )
     user.set_unusable_password()
     user.save()
@@ -114,13 +115,8 @@ def test_users_with_different_groups_see_different_slots():
 def test_filter_by_host_role_trainee():
     trainee = make_user("trainee", group="itd")
 
-    volunteer_host = make_user("volunteer_host")
-    volunteer_host.role = "volunteer"
-    volunteer_host.save()
-
-    trainee_host = make_user("trainee_host")
-    trainee_host.role = "trainee"
-    trainee_host.save()
+    volunteer_host = make_user("volunteer_host", role="volunteer")
+    trainee_host = make_user("trainee_host", role="trainee")
 
     SlotRule.objects.create(volunteer=volunteer_host,start_time=FUTURE,group="itd",)
     SlotRule.objects.create(volunteer=trainee_host,start_time=FUTURE,group="itd",)
@@ -133,15 +129,9 @@ def test_filter_by_host_role_trainee():
 
 @pytest.mark.django_db
 def test_filter_by_host_role_admin():
-    trainee = make_user("trainee", group="itd")
- 
-    admin_host = make_user("admin_host")
-    admin_host.role = "admin"
-    admin_host.save()
-
-    volunteer_host = make_user("volunteer_host")
-    volunteer_host.role = "volunteer"
-    volunteer_host.save()
+    trainee = make_user("trainee", group="itd") 
+    admin_host = make_user("admin_host", role="admin")
+    volunteer_host = make_user("volunteer_host", role="volunteer")
 
     SlotRule.objects.create(volunteer=admin_host,start_time=FUTURE,group="itd",)
     SlotRule.objects.create(volunteer=volunteer_host,start_time=FUTURE,group="itd",)
