@@ -75,6 +75,9 @@ const Calendar = ({
 	const daysInMonth = new Date(year, month + 1, 0).getDate();
 	const numOfEmptyFieldsBeforeFirstDay = (firstDay.getDay() + 6) % 7;
 
+	const today = new Date();
+	const currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+	const isPastDate = firstDay <= currentMonth;
 	//empty and full with dates divs to push into the cal grid
 	const emptyDaySquares = [];
 	for (let i = 0; i < numOfEmptyFieldsBeforeFirstDay; i++) {
@@ -128,7 +131,11 @@ const Calendar = ({
 		<div className="cal-div">
 			<h2 className="cal-heading-selectdt">Select Date & Time</h2>
 			<div className="cal-buttons-and-month-div">
-				<button onClick={prevMonth} className="cal-chevron">
+				<button
+					onClick={prevMonth}
+					className={`cal-chevron ${isPastDate ? "invisible" : ""}`}
+					disabled={isPastDate}
+				>
 					<ChevronLeft />
 				</button>
 
