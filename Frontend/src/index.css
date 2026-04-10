@@ -17,188 +17,190 @@
 }
 
 @layer components {
-  .p,
-  p,
-  label,
-  .confirmation-container span {
-    @apply font-normal text-main;
-  }
-  h1 {
-    @apply text-2xl font-bold text-dark;
-  }
-  h2 {
-    @apply mt-2 text-lg font-bold text-main;
-  }
+	.p,
+	p,
+	label {
+		@apply font-normal text-main;
+	}
+	h1 {
+		@apply text-2xl font-bold text-dark;
+	}
+	h2 {
+		@apply mt-2 text-lg font-bold text-main;
+	}
 
-  /* action buttons and time seleciton buttons */
-  .action-btn {
-    @apply gap-[10px] rounded-3xl text-base font-bold py-[8px] px-[24px] flex justify-center items-center transition-all hover:opacity-90;
-  }
+	/* action buttons and time seleciton buttons */
+	.action-btn {
+		@apply gap-[10px] rounded-3xl text-base font-bold py-[8px] px-[24px] flex justify-center items-center transition-all hover:opacity-90;
+	}
 
-  .btn-primary {
-    @apply bg-brand-primary text-white;
-  }
-  .btn-secondary {
-    @apply bg-white border border-border-color text-main hover:bg-black/5 hover:text-brand-blue;
-  }
-  .btn-tertiary {
-    @apply bg-transparent text-muted hover:text-brand-blue;
-  }
-  .btn-destructive {
-    @apply bg-white border border-red-600 text-main hover:bg-black/5 hover:text-main;
-  }
+	.btn-primary {
+		@apply bg-brand-primary text-white;
+	}
+	.btn-secondary {
+		@apply bg-white border border-border-color text-main hover:bg-black/5 hover:text-brand-blue;
+	}
+	.btn-tertiary {
+		@apply bg-transparent text-muted hover:text-brand-blue;
+	}
+	.btn-destructive {
+		@apply bg-white border border-red-600 text-main hover:bg-black/5 hover:text-main;
+	}
 
-  .btn-time-slot {
-    @apply w-full py-3 border border-brand-blue/60 bg-white text-main rounded-lg text-sm font-bold transition-all;
-    @apply hover:bg-brand-blue/10 hover:border-brand-blue hover:text-brand-blue;
-  }
+	.btn-time-slot {
+		@apply w-full py-3 border border-brand-blue/60 bg-white text-main rounded-lg text-sm font-bold transition-all;
+		@apply hover:bg-brand-blue/10 hover:border-brand-blue hover:text-brand-blue;
+	}
 
-  /* TRAINEE BOOKING */
-  /* outer div */
-  .booking-box {
-    @apply m-10 bg-white rounded-2xl shadow-sm border border-border-color flex w-full max-w-[1080px] min-h-[400px] overflow-hidden;
-  }
+	/* TRAINEE BOOKING */
+	/* outer div */
+	.booking-box {
+		@apply m-10 bg-white rounded-2xl shadow-sm border border-border-color flex w-full max-w-[1080px] min-h-[400px] overflow-hidden;
+	}
 
-  /* main layout with all section columns*/
-  .timeslot-col {
-    @apply w-[30%] p-4;
-  }
-  .trainee-timeslot-width {
-    @apply w-[30%];
-  }
-  .session-details-col {
-    @apply w-[30%] p-4 border-r border-black/10 flex flex-col gap-8;
-  }
-  .calendar-col {
-    @apply w-[40%] p-4;
-  }
-  .bookings-col {
-    @apply w-[70%] p-4;
-  }
+	/* main layout with all section columns*/
+	.timeslot-col {
+		@apply w-[30%] p-4;
+	}
+	.trainee-timeslot-width {
+		@apply w-[30%];
+	}
+	.session-details-col {
+		@apply w-[30%] p-4 border-r border-black/10 flex flex-col gap-8;
+	}
+	.calendar-col {
+		@apply w-[40%] p-4;
+	}
+	.bookings-col {
+		@apply w-[70%] p-4;
+	}
 
-  /* SESSION SECTION left col */
-  .session-details-div {
-    @apply flex flex-col;
-  }
-  .session-details-div h1 {
-    @apply mt-3;
-  }
-  .session-icon-text-line {
-    @apply w-full flex items-center gap-2 text-muted mt-2;
-  }
+	/* SESSION SECTION left col */
+	.session-details-div {
+		@apply flex flex-col;
+	}
+	.session-details-div h1 {
+		@apply mt-3;
+	}
+	.session-icon-text-line {
+		@apply w-full flex items-center gap-2 text-muted mt-2;
+	}
 
-  .session-icon {
-    @apply w-5 h-5 text-muted;
-  }
-  /* avatar box styling */
-  .availableVolunteersDiv {
-    @apply gap-4;
-  }
-  .avatar {
-    @apply mb-2;
-  }
-  /* MIDDLE CALENDAR */
-  .calendar-col {
-    @apply flex flex-col items-center border-r border-border-color transition-all duration-300;
-  }
+	.session-icon {
+		@apply w-5 h-5 text-muted;
+	}
+	/* avatar box styling */
+	.availableVolunteersDiv {
+		@apply gap-4;
+	}
+	.avatar {
+		@apply mb-2;
+	}
+	/* MIDDLE CALENDAR */
+	.calendar-col {
+		@apply flex flex-col items-center border-r border-border-color transition-all duration-300;
+	}
 
-  .cal-div {
-    @apply w-full max-w-[360px] p-2 bg-white;
-  }
+	.cal-div {
+		@apply w-full max-w-[360px] p-2 bg-white;
+	}
 
-  .cal-heading-selectdt {
-    @apply text-lg font-bold text-dark mb-8;
-  }
+	.cal-heading-selectdt {
+		@apply text-lg font-bold text-dark mb-8;
+	}
 
-  .cal-buttons-and-month-div {
-    @apply flex items-center justify-center mb-8 relative;
-  }
+	.cal-buttons-and-month-div {
+		@apply flex items-center justify-center mb-8 relative;
+	}
 
-  .cal-chevron {
-    @apply w-8 h-8 rounded-full flex items-center justify-center text-muted transition-all bg-transparent;
-    @apply hover:bg-brand-blue/10 hover:text-brand-blue;
-  }
+	.cal-chevron {
+		@apply w-8 h-8 rounded-full flex items-center justify-center text-muted transition-all bg-transparent;
+		@apply hover:bg-brand-blue/10 hover:text-brand-blue;
+	}
 
-  .cal-month-year-heading {
-    @apply text-[16px] text-dark;
-  }
+	.cal-month-year-heading {
+		@apply text-[16px] text-dark;
+	}
 
-  .cal-day-grid {
-    @apply grid grid-cols-7 gap-1 mb-4 text-center;
-  }
+	.cal-day-grid {
+		@apply grid grid-cols-7 gap-1 mb-4 text-center;
+	}
 
-  /* DAY SELECTION SECTION */
-  .cal-day {
-    @apply w-10 h-10 mx-auto rounded-full flex items-center justify-center text-sm font-medium text-main transition-all cursor-pointer hover:bg-brand-blue/10 hover:text-brand-blue;
-  }
+	/* DAY SELECTION SECTION */
+	.cal-day {
+		@apply w-10 h-10 mx-auto rounded-full flex items-center justify-center text-sm font-medium text-main transition-all cursor-pointer hover:bg-brand-blue/10 hover:text-brand-blue;
+	}
 
-  .cal-day-today {
-    @apply border border-brand-blue text-brand-blue font-bold;
-  }
+	.cal-day-today {
+		@apply border border-brand-blue text-brand-blue font-bold;
+	}
 
-  .cal-day-selected {
-    @apply w-10 h-10 mx-auto rounded-full flex items-center justify-center text-sm font-bold text-white bg-brand-blue transition-all cursor-pointer;
-  }
+	.cal-day-selected {
+		@apply w-10 h-10 mx-auto rounded-full flex items-center justify-center text-sm font-bold text-white bg-brand-blue transition-all cursor-pointer;
+	}
 
-  .cal-day-past {
-    @apply text-muted opacity-40 cursor-default;
-  }
+	.cal-day-past {
+		@apply text-muted opacity-40 cursor-default;
+	}
 
-  .cal-day-available {
-    @apply text-brand-blue bg-brand-blue/10 font-bold hover:bg-brand-blue/20;
-  }
+	.cal-day-available {
+		@apply text-brand-blue bg-brand-blue/10 font-bold hover:bg-brand-blue/20;
+	}
 
-  .cal-day-unavailable {
-    @apply text-muted opacity-50 cursor-default;
-  }
+	.cal-day-unavailable {
+		@apply text-muted opacity-50 cursor-default;
+	}
 
-  /* BOOKING TIME SLOT SECTION */
+	/* BOOKING TIME SLOT SECTION */
 
-  .timeslot-group-div {
-    @apply flex flex-col gap-2;
-  }
+	.timeslot-group-div {
+		@apply flex flex-col gap-2;
+	}
 
-  .timeslot-group-div p {
-    @apply mt-3;
-  }
+	.timeslot-group-div p {
+		@apply mt-3;
+	}
 
-  .timeslot-date-label {
-    @apply text-muted text-sm font-normal mb-3;
-  }
+	.timeslot-date-label {
+		@apply text-muted text-sm font-normal mb-3;
+	}
 
-  .btn-confirm {
-    @apply bg-brand-primary text-white px-10 py-3 rounded-full font-bold text-sm transition-transform active:scale-95 hover:opacity-90;
-  }
+	.btn-confirm {
+		@apply bg-brand-primary text-white px-10 py-3 rounded-full font-bold text-sm transition-transform active:scale-95 hover:opacity-90;
+	}
 
-  /* BOOKING  FORM */
-  .booking-form-container {
-    @apply px-6 mt-2 mb-4 flex flex-col items-start w-full;
-  }
-  .form-title {
-    @apply text-lg font-bold text-dark mb-4;
-  }
-  .form-input-group {
-    @apply gap-2 flex flex-col;
-  }
+	/* BOOKING  FORM */
+	.booking-form-container {
+		@apply px-6 mt-2 mb-4 flex flex-col items-start w-full;
+	}
+	.form-title {
+		@apply text-lg font-bold text-dark mb-4;
+	}
+	.form-input-group {
+		@apply gap-2 flex flex-col;
+	}
 
-  .form-input {
-    @apply border border-black/10 rounded-[6px] p-3 w-[350px] outline-none transition-all mb-2;
-  }
+	.form-input {
+		@apply border border-black/10 rounded-[6px] p-3 w-[350px] outline-none transition-all mb-2;
+	}
+	.form-input-disabled {
+		@apply bg-border-color;
+	}
 
-  /* here will add confirmation styling */
+	/* here will add confirmation styling */
 
-  /* volunteer flow */
-  .booking-card-div {
-    @apply my-2;
-  }
-  .booking-card {
-    @apply bg-white rounded-2xl shadow-sm border border-border-color p-6 w-full flex justify-between gap-12;
-  }
+	/* volunteer flow */
+	.booking-card-div {
+		@apply my-2;
+	}
+	.booking-card {
+		@apply bg-white rounded-2xl shadow-sm border border-border-color p-6 w-full flex justify-between gap-12;
+	}
 
-  .session-details-div-booking-card {
-    @apply flex flex-col;
-  }
-  /* .session-plus-trainee-details-div {
+	.session-details-div-booking-card {
+		@apply flex flex-col;
+	}
+	/* .session-plus-trainee-details-div {
 		@apply flex flex-col;
 	} */
   .booking-card-btns {

@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { ActionBtn } from "../elements/Button";
 
-const BookingForm = ({ whenFormSubmit }) => {
+const BookingForm = ({ whenFormSubmit, trainee }) => {
 	//set up local state that will be passed to app
-	const [name, setName] = useState("");
-	const [email, setEmail] = useState("");
-
+	const [name, setName] = useState(trainee?.name || "");
+	const [email, setEmail] = useState(trainee?.email || "");
 	const checkInputsValid = (e) => {
 		//stop reload
 		e.preventDefault();
@@ -24,7 +23,7 @@ const BookingForm = ({ whenFormSubmit }) => {
 
 		whenFormSubmit({
 			traineeName: cleanName,
-			traineeEmail: cleanEmail,
+			traineeEmail: email,
 		});
 	};
 
@@ -49,12 +48,11 @@ const BookingForm = ({ whenFormSubmit }) => {
 				<div className="form-input-group">
 					<label className="form-label">Email</label>
 					<input
-						className="form-input"
+						className="form-input form-input-disabled"
 						type="email"
 						label="Email"
-						placeholder="Enter your email"
 						value={email}
-						onChange={(e) => setEmail(e.target.value)}
+						readOnly
 					/>
 				</div>
 				<br></br>
