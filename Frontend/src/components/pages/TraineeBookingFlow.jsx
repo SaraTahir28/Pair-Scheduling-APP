@@ -44,7 +44,7 @@ const TraineeBookingFlow = () => {
 			start_time: startDateTime.toISOString(),
 			end_time: endDateTime.toISOString(),
 			volunteer_name: activeVolunteer.name,
-			volunteer_email: activeVolunteer.email,
+			volunteer_email: "duncan_volunteer@test.com",
 		};
 		api
 			.post("/api/create-meeting/", bookingDetailsObj)
