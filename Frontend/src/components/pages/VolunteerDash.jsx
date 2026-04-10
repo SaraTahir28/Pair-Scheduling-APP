@@ -10,6 +10,7 @@ import VolunteerViewSession from "../groups/VolunteerViewSession";
 import VolunteerAvailabilityForm from "../groups/VolunteerAvailabilityForm";
 import { ActionBtn } from "../elements/Button";
 import { useAuth } from "../../AuthContext";
+import duncanImg from "../../assets/duncan.png";
 
 const VolunteerDash = () => {
 	const { id } = useParams();
@@ -18,6 +19,9 @@ const VolunteerDash = () => {
 
 	const activeVolunteer =
 		volunteersDetails.find((v) => v.email === user?.email) || user;
+	if (activeVolunteer && !activeVolunteer.img) {
+		activeVolunteer.img = duncanImg;
+	}
 
 	const [allBookedSessionsForAllUsers, setAllBookedSessionsForAllUsers] =
 		useState(bookedSessions);
