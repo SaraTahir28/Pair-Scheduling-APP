@@ -9,10 +9,11 @@ import VolunteerViewSession from "../groups/VolunteerViewSession";
 
 import VolunteerAvailabilityForm from "../groups/VolunteerAvailabilityForm";
 import { ActionBtn } from "../elements/Button";
+import { useAuth } from "../../AuthContext";
 
 const VolunteerDash = () => {
 	const { id } = useParams();
-
+	const { user } = useAuth();
 	const editSessionMode = window.location.pathname.includes("edit");
 
 	//here we select state of activeVolunteer that will be passed to session details volunteers div
