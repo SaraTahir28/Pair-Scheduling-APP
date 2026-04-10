@@ -1,5 +1,6 @@
 import json
 import dataclasses
+from datetime import timedelta
 
 # Django Core
 from django.db.models import Q
@@ -17,8 +18,8 @@ from rest_framework.views import APIView
 
 # Local Models & Services
 from .models import User, SlotRule, Booking
-from core.services.available_slots import build_available_slots, exclude_booked_slots
 from .google_calendar_service import create_google_meeting
+from core.services.available_slots import build_available_slots, exclude_booked_slots
 
 # Local Serializers
 from .user_serializers import UserSerializer
@@ -30,7 +31,6 @@ class CreateMeetingView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-
         serializer = BookingSerializer(data=request.data)
 
         if not serializer.is_valid():
@@ -38,21 +38,36 @@ class CreateMeetingView(APIView):
 
         validated = serializer.validated_data
 
+        if validated["trainee_email"] != request.user.email:
+            return Response(
+                {"detail": "Users can only create bookings for themselves."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
         try:
+            start_time = validated["start_time"]
+            end_time = start_time + timedelta(hours=1)
+
             result = create_google_meeting(
-                start_time=validated["start_time"],
-                end_time=validated["end_time"],
+                start_time=start_time,
+                end_time=end_time,
                 trainee_email=validated["trainee_email"],
                 volunteer_email=validated["volunteer_email"],
             )
 
+            booking = serializer.save(
+                google_meet_link=result["meet_link"]
+            )
+
         except Exception as error:
             return Response(
-                {"error": str(error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                {"error": str(error)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
         return Response(
             {
+                "booking_id": booking.id,
                 "message": "Meeting created successfully.",
                 "event_id": result["event_id"],
                 "meet_link": result["meet_link"],
