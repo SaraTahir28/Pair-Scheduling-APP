@@ -52,7 +52,7 @@ const Calendar = ({
 	setSelectedDateProps,
 	availableDates = [],
 }) => {
-	const setDefaultMonthView = new Date(2026, 2, 1);
+	const setDefaultMonthView = new Date();
 
 	// here add state (state is month - initially march)so the UI updates automatically
 	// hook useState() returns [current value of state, function called to update state]
