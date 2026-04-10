@@ -52,14 +52,6 @@ class SlotRule(models.Model):
     class Meta:
         ordering = ["volunteer_id", "start_time"]
 
-    def clean(self):
-        errors = {}
-
-        if self.volunteer_id and self.volunteer.role != "volunteer":
-            errors["volunteer"] = "Only users with role 'volunteer' can have slot rules."
-        if errors:
-            raise ValidationError(errors)
-
     def occurrence_start_times(self):
         if self.repeat_until is None:
             return [self.start_time]
