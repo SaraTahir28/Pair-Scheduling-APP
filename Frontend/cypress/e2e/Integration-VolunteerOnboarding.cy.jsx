@@ -105,4 +105,33 @@ describe("Volunteer flow", () => {
 		cy.contains("Entries to save:").should("not.exist");
 		cy.contains(/save all/i).should("not.exist");
 	});
+
+	it("hides onboarding after successful slots save", () => {
+		cy.intercept("GET", "**/auth/user/", {
+			statusCode: 200,
+			body: {
+				id: 1,
+				name: "Duncan Parkinson",
+				email: "duncan@test.com",
+				is_volunteer: true,
+			},
+		}).as("getUser");
+
+		cy.visit("/volunteer-dash");
+		cy.wait("@getUser");
+
+		cy.get('input[type="date"]').clear().type("2026-05-20");
+		cy.get('input[type="date"]').should("have.value", "2026-05-20");
+		cy.contains("button", "Add to list").click();
+
+		cy.contains(/save all/i).click();
+
+		cy.contains("Let's start by selecting your availability").should(
+			"not.exist"
+		);
+		cy.get("form").should("not.exist");
+		cy.contains("Upcoming sessions").should("be.visible");
+		cy.get(".all-cards-container").should("be.visible");
+		cy.contains("button", "Add to list").should("not.exist");
+	});
 });

@@ -16,16 +16,12 @@ const VolunteerDash = () => {
 	const { user } = useAuth();
 	const editSessionMode = window.location.pathname.includes("edit");
 
-	//here we select state of activeVolunteer that will be passed to session details volunteers div
-	//for now Duncan is an active volunteer
-	const [activeVolunteer, setActiveVolunteer] = useState(
-		volunteersDetails.find((volunteer) => volunteer.id === 1)
-	);
+	const activeVolunteer =
+		volunteersDetails.find((v) => v.email === user?.email) || user;
 
 	const [allBookedSessionsForAllUsers, setAllBookedSessionsForAllUsers] =
 		useState(bookedSessions);
 
-	//adding the step of adding slots before form is sent
 	const [hasUserSetAvailability, setHasUserSetAvailability] = useState(false);
 	const [temporaryAddedSlotsStorage, setTemporaryAddedSlotsStorage] = useState(
 		[]
@@ -45,10 +41,8 @@ const VolunteerDash = () => {
 	const activeVolunteerSessions = allBookedSessionsForAllUsers.filter(
 		(session) => session.volunteerId === activeVolunteer.id
 	);
-	//set up where all booked sessions will go on cards
 	const renderedSessions = [];
 
-	//for now this is for volunteer only bc trainee will have limitations of times and will see rerender of cal + times
 	const saveEditedSession = (updatedSessionFromCard) => {
 		const updatedSessions = allBookedSessionsForAllUsers.map((session) => {
 			if (session.id === updatedSessionFromCard.id) {
@@ -56,12 +50,9 @@ const VolunteerDash = () => {
 			}
 			return session;
 		});
-		// rerender
 		setAllBookedSessionsForAllUsers(updatedSessions);
 	};
 
-	//function for deleting booked session sent as props to BookingCard.jsx, runs when delete is confirmed
-	// for the id we want to delete - grab all other ids and pass to update state
 	const deleteBookedSession = (idToDelete) => {
 		const varPassToUpdateStateBookedSessions =
 			allBookedSessionsForAllUsers.filter(
@@ -89,7 +80,6 @@ const VolunteerDash = () => {
 		//      .catch((error) => console.log("Error:", error));
 	};
 
-	//check all sessions from active vol and find id and match to traineeDetails by id
 	activeVolunteerSessions.forEach((session) => {
 		traineeDetails.forEach((trainee) => {
 			if (trainee.id === session.traineeId) {
@@ -110,7 +100,6 @@ const VolunteerDash = () => {
 			temporaryAddedSlotsStorage.filter((_, index) => index !== indexToRemove)
 		);
 	};
-	// once completed adding slots
 	return (
 		<div className="booking-box">
 			<div className="session-details-col">
@@ -138,7 +127,7 @@ const VolunteerDash = () => {
 						/>
 					</div>
 				)}
-				{/* view after adding sessions */}
+
 				{hasUserSetAvailability && (
 					<>
 						{id ? (
