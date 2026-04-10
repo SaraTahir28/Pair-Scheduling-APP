@@ -7,7 +7,6 @@ class BookingSerializer(serializers.Serializer):
     trainee_email = serializers.EmailField()
     volunteer_email = serializers.EmailField()
     start_time = serializers.DateTimeField()
-    google_meet_link = serializers.CharField(max_length=128, required=False, allow_blank=True)
     agenda = serializers.CharField(max_length=500, required=False, allow_blank=True)
 
     def validate_start_time(self, value):
