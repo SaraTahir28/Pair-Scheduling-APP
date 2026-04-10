@@ -50,7 +50,7 @@ const DayDot = ({
 const Calendar = ({
 	selectedDateProps,
 	setSelectedDateProps,
-	availableDates,
+	availableDates = [],
 }) => {
 	const setDefaultMonthView = new Date(2026, 2, 1);
 
