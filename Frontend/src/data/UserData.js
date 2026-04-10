@@ -7,7 +7,7 @@ export const volunteersDetails = [
 		id: 1,
 		name: "Duncan Parkinson",
 		img: duncanImg,
-		email: "duncan@duncan.com",
+		email: "duncan@test.com",
 		availableDates: [17, 18, 19, 24, 25, 26, 31],
 		availableTimes: ["15:00", "15:30", "16:00", "16:30", "17:00"],
 	},

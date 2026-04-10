@@ -36,15 +36,20 @@ const TraineeBookingFlow = () => {
 	// here we set up booking obj that will be sent to backend
 	const createBookingDetailsObj = (bookingFormData) => {
 		const startDateTime = new Date(`${selectedDate}T${selectedTime}:00`);
-		const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000);
+		// const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000);
 
+		// const bookingDetailsObj = { endDateTime and this is commented out
+		// 	trainee_name: bookingFormData.traineeName,
+		// 	trainee_email: bookingFormData.traineeEmail,
+		// 	start_time: startDateTime.toISOString(),
+		// 	end_time: endDateTime.toISOString(),
+		// 	volunteer_name: activeVolunteer.name,
+		// 	volunteer_email: activeVolunteer.email,
+		// };
 		const bookingDetailsObj = {
-			trainee_name: bookingFormData.traineeName,
 			trainee_email: bookingFormData.traineeEmail,
 			start_time: startDateTime.toISOString(),
-			end_time: endDateTime.toISOString(),
-			volunteer_name: activeVolunteer.name,
-			volunteer_email: "duncan_volunteer@test.com",
+			volunteer_email: activeVolunteer.email,
 		};
 		api
 			.post("/api/create-meeting/", bookingDetailsObj)
@@ -53,7 +58,12 @@ const TraineeBookingFlow = () => {
 					`/trainee-booking/${selectedDate}/${selectedTime}/confirmation`
 				);
 			})
-			.catch((error) => console.log("Error:", error));
+			.catch((error) =>
+				console.error(
+					"Backend Rejection Details:",
+					error.response?.data || error.message
+				)
+			);
 	};
 
 	return (
