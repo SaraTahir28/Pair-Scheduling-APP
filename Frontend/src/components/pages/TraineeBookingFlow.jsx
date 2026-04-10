@@ -4,11 +4,13 @@ import SessionDetails from "../groups/SessionDetails";
 import Calendar from "../groups/Calendar";
 import TimeSlotGroup from "../groups/TimeSlotGroup";
 import BookingForm from "../groups/BookingForm";
-import { volunteersDetails, traineeDetails } from "../../data/UserData";
+import { volunteersDetails } from "../../data/UserData";
+import api from "../../api/axiosClient";
+import BookingConfirmation from "../groups/BookingConfirmation";
 import useSWR from "swr";
 
 const TraineeBookingFlow = () => {
-	const { selectedDate, selectedTime } = useParams();
+	const { selectedDate, selectedTime, status } = useParams();
 	const navigate = useNavigate();
 
 	const selectedDateObj = selectedDate ? new Date(selectedDate) : null;
@@ -21,7 +23,7 @@ const TraineeBookingFlow = () => {
 		navigate(`/trainee-booking/${selectedDate}/${newTime}`);
 	};
 
-	const [isBookingConfirmed, setIsBookingConfirmed] = useState(false);
+	const isConfirmationPage = status === "confirmation";
 	const [activeVolunteer, setActiveVolunteer] = useState(
 		volunteersDetails.find((volunteer) => volunteer.id === 1)
 	);

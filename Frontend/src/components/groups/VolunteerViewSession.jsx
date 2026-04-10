@@ -5,38 +5,15 @@ import { Link, useParams } from "react-router-dom";
 import { bookedSessions } from "../../data/BookedSessions";
 import { traineeDetails } from "../../data/UserData";
 
-const ViewBooking = ({
-	deleteBookedSession,
-	//fix -updated so when user clicks on edit the div does not dissapear and editing div opens
-	// saveEditedSession, - this is not needed anymore with routing
-}) => {
-	// here added so routing works with this as a separate page
+const ViewBooking = ({ deleteBookedSession }) => {
 	const { id } = useParams();
 	const session = bookedSessions.find((s) => String(s.id) === id);
 	const trainee = traineeDetails.find((t) => t.id === session?.traineeId);
 
 	const [isUserClickingDelete, setIsUserClickingDelete] = useState(false);
 
-	//routing update split into url - not needed
-	// // const [isEditing, setIsEditing] = useState(false);
-
-	// const handleEditSubmit = (e) => {
-	//  e.preventDefault();
-	//  const formData = new FormData(e.target);
-
-	//  const updatedSession = {
-	//      ...session,
-	//      date: formData.get("new_date"),
-	//      time: formData.get("new_time"),
-	//  };
-
-	//  saveEditedSession(updatedSession);
-	//  setIsEditing(false);
-	// };
-
 	if (!session || !trainee) return <div className="p-4">Session not found</div>;
 
-	//ask for a confirmation if clicked on delete
 	if (isUserClickingDelete) {
 		return (
 			<div className="confirm-delete-div">
@@ -57,7 +34,6 @@ const ViewBooking = ({
 		);
 	}
 
-	// routing - this is not needed
 	//edit is moved from app
 	// if (isEditing) {
 	//  return (
