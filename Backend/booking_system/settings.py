@@ -18,27 +18,32 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 # This tells Django to read  .env file so  Google credentials become available.
 env = environ.Env()
+
+# Always load secrets
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
-# Google OAuth2 credentials for manual login flow
-# These are read from the .env file to avoid exposing secrets in code
+# Then overlay environment-specific URLs
+DJANGO_ENV = os.getenv("DJANGO_ENV", "development")
+env_file = ".env.production" if DJANGO_ENV == "production" else ".env.development"
+environ.Env.read_env(os.path.join(BASE_DIR, env_file))
+
+FRONTEND_URL = env("FRONTEND_URL")
+BASE_API_URL = env("VITE_API_URL")
 GOOGLE_OAUTH2_CLIENT_ID = env("GOOGLE_CLIENT_ID")
 GOOGLE_OAUTH2_CLIENT_SECRET = env("GOOGLE_CLIENT_SECRET")
 
-# Base URL of the backend API
-# Used to build redirect URIs for OAuth2 login flow
-BASE_API_URL = "http://localhost:8000"
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-(#1c#^ypty_2-2!3g^uu9p@z0=#2+7nv8qz#swf@yg&okj0ld1"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = DJANGO_ENV != "production"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "pairscheduler-backend.hosting.codeyourfuture.io",  # production backend
+    "localhost",
+    "127.0.0.1",
+]
 
 
 # Application definition
@@ -98,11 +103,12 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-# After Google login => user goes to your frontend
-LOGIN_REDIRECT_URL = "http://localhost:5173/"  # used by Django’s built‑in auth
-ACCOUNT_LOGIN_REDIRECT_URL = "http://localhost:5173/"  # used by allauth (Google login)
-LOGOUT_REDIRECT_URL = "http://localhost:5173/"
-ACCOUNT_LOGOUT_REDIRECT_URL = "http://localhost:5173/"
+LOGIN_REDIRECT_URL = f"{FRONTEND_URL}/"
+ACCOUNT_LOGIN_REDIRECT_URL = f"{FRONTEND_URL}/"
+LOGOUT_REDIRECT_URL = f"{FRONTEND_URL}/"
+ACCOUNT_LOGOUT_REDIRECT_URL = f"{FRONTEND_URL}/"
+
+
 # This makes sure Google login actually fills the email in the user record.
 SOCIALACCOUNT_QUERY_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = True
@@ -208,7 +214,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://localhost:5174",
     "http://127.0.0.1:5174",
-    "http://localhost:3000",
+    "https://pairscheduler-frontend.hosting.codeyourfuture.io",  # production frontend
 ]
 CORS_ALLOW_CREDENTIALS = True
 
@@ -248,5 +254,8 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://localhost:5174",
     "http://127.0.0.1:5174",
-    "http://localhost:3000",
+    "https://pairscheduler-frontend.hosting.codeyourfuture.io",
 ]
+
+print("DJANGO_ENV:", DJANGO_ENV)
+print("FRONTEND_URL loaded:", FRONTEND_URL)
