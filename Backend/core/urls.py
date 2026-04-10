@@ -1,7 +1,6 @@
 from django.urls import path
 from .views import CreateMeetingView
 from .views import MeView
-from .views import UserListCreateView, UserDetailView
 from .views import AvailableSlotsView
 from .views import UserListCreateView, UserDetailView, SlotRuleCreateView
 
