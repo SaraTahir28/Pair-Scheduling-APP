@@ -12,7 +12,7 @@ def test_current_user_profile_get_authenticated(client, django_user_model):
     )
     client.login(username="sara", password="securepass123")
 
-    response = client.get("/api/me/")
+    response = client.get("/api/profile/")
     assert response.status_code == 200
 
     data = response.json()
@@ -23,7 +23,7 @@ def test_current_user_profile_get_authenticated(client, django_user_model):
 
 @pytest.mark.django_db
 def test_current_user_profile_get_unauthenticated(client):
-    response = client.get("/api/me/")
+    response = client.get("/api/profile/")
     assert response.status_code == 403
 
 
@@ -39,7 +39,7 @@ def test_current_user_profile_patch_updates_role(client, django_user_model):
     client.login(username="emiliano", password="strongpass456")
 
     response = client.patch(
-        "/api/me/", data={"role": "volunteer"}, content_type="application/json"
+        "/api/profile/", data={"role": "volunteer"}, content_type="application/json"
     )
     assert response.status_code == 200
 
@@ -62,7 +62,7 @@ def test_current_user_profile_patch_invalid_role(client, django_user_model):
     client.login(username="kaska", password="securepass678")
 
     response = client.patch(
-        "/api/me/",
+        "/api/profile/",
         data={"role": "hacker"},  # invalid role
         content_type="application/json",
     )
