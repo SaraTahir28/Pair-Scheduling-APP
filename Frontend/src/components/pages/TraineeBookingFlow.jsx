@@ -7,9 +7,11 @@ import BookingForm from "../groups/BookingForm";
 import { volunteersDetails } from "../../data/UserData";
 import api from "../../api/axiosClient";
 import BookingConfirmation from "../groups/BookingConfirmation";
+import { useAuth } from "../../AuthContext";
 
 const TraineeBookingFlow = () => {
 	const { selectedDate, selectedTime, status } = useParams();
+	const { user } = useAuth();
 	const navigate = useNavigate();
 
 	const selectedDateObj = selectedDate ? new Date(selectedDate) : null;
@@ -93,7 +95,11 @@ const TraineeBookingFlow = () => {
 
 					{selectedTime && !isConfirmationPage && (
 						<div className="timeslot-col trainee-timeslot-width">
-							<BookingForm whenFormSubmit={createBookingDetailsObj} />
+							<BookingForm
+								whenFormSubmit={createBookingDetailsObj}
+								trainee={user}
+								key={user?.email || "guest"}
+							/>
 						</div>
 					)}
 				</>

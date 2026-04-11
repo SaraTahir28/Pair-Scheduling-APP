@@ -4,9 +4,10 @@ describe("Trainee booking flow", () => {
 			body: { id: 1, name: "Duncan Parkinson", email: "duncan@test.com" },
 		}).as("getUser");
 
-		cy.intercept("POST", "**/api/create-meeting/", { statusCode: 201 }).as(
-			"postBooking"
-		);
+		cy.intercept("POST", "**/api/create-meeting/", {
+			statusCode: 201,
+			body: { message: "Meeting created successfully.", event_id: "abc123" },
+		}).as("postBooking");
 
 		cy.visit("/trainee-booking");
 		cy.wait("@getUser");

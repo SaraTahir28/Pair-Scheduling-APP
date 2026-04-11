@@ -4,26 +4,26 @@ import { ActionBtn } from "../elements/Button";
 const BookingForm = ({ whenFormSubmit, trainee }) => {
 	//set up local state that will be passed to app
 	const [name, setName] = useState(trainee?.name || "");
-	const [email, setEmail] = useState(trainee?.email || "");
+	// Email is now derived directly from props to avoid stale state
+	const currentEmail = trainee?.email || "";
 	const checkInputsValid = (e) => {
 		//stop reload
 		e.preventDefault();
 		const cleanName = name.trim().replace(/[^a-zA-Z\s]/g, "");
-		const cleanEmail = email.trim();
 
 		if (cleanName.length < 2 || cleanName.length > 50) {
 			alert("Name should be between 2 and 50 chars.");
 			return;
 		}
 
-		if (!cleanEmail.includes("@") || !cleanEmail.includes(".")) {
+		if (!currentEmail.includes("@") || !currentEmail.includes(".")) {
 			alert("Please enter a valid email.");
 			return;
 		}
 
 		whenFormSubmit({
 			traineeName: cleanName,
-			traineeEmail: email,
+			traineeEmail: currentEmail,
 		});
 	};
 
@@ -51,7 +51,7 @@ const BookingForm = ({ whenFormSubmit, trainee }) => {
 						className="form-input form-input-disabled"
 						type="email"
 						label="Email"
-						value={email}
+						value={currentEmail}
 						readOnly
 					/>
 				</div>
