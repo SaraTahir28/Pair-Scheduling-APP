@@ -31,3 +31,5 @@ jobs:
         env:
           SECRET_KEY: ci-secret-key-not-used-in-prod
           # GOOGLE_CLIENT_ID / SECRET intentionally omitted — Google Calendar calls are mocked in tests
+          GOOGLE_CLIENT_ID: test-client-id
+          GOOGLE_CLIENT_SECRET: test-client-secret
