@@ -8,16 +8,6 @@ import { volunteersDetails } from "../../data/UserData";
 import api from "../../api/axiosClient";
 import BookingConfirmation from "../groups/BookingConfirmation";
 import { BackBtn } from "../elements/Button";
-
-const TraineeBookingFlow = () => {
-	//App holds state and sends as props to children as props, children change state and rerender is triggered
-
-	const { selectedDate, selectedTime, status } = useParams();
-	const navigate = useNavigate();
-
-	//we have selectedDate - a stering from url and need obj for Calendar in next step
-	const selectedDateObj = selectedDate ? new Date(selectedDate) : null;
-	// instead of changing local state changing url replace setSelectedDate and setSelectedTime
 import { useAuth } from "../../AuthContext";
 
 const TraineeBookingFlow = () => {
@@ -116,9 +106,6 @@ const TraineeBookingFlow = () => {
 							<div style={{ marginBottom: "16px" }}>
 								<BackBtn onClick={handleGoBack} />
 							</div>
-							<BookingForm whenFormSubmit={createBookingDetailsObj} />
-					{selectedTime && !isConfirmationPage && (
-						<div className="timeslot-col trainee-timeslot-width">
 							<BookingForm
 								whenFormSubmit={createBookingDetailsObj}
 								trainee={user}
