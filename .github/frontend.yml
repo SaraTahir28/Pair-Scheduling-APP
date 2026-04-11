@@ -1,0 +1,69 @@
+name: Frontend Tests
+
+on:
+  push:
+    paths: ["Frontend/**"]
+  pull_request:
+    paths: ["Frontend/**"]
+
+jobs:
+  lint-and-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: Frontend/package-lock.json
+
+      - run: npm ci
+
+      - run: npm run build
+
+  cypress-component:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: Frontend/package-lock.json
+
+      - uses: cypress-io/github-action@v6
+        with:
+          working-directory: Frontend
+          component: true
+
+  cypress-e2e:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: Frontend/package-lock.json
+
+      - uses: cypress-io/github-action@v6
+        with:
+          working-directory: Frontend
+          start: npm run dev
+          wait-on: "http://127.0.0.1:5173"
+          wait-on-timeout: 30
