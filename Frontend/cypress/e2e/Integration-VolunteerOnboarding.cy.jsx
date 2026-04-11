@@ -8,6 +8,20 @@ describe("Volunteer flow", () => {
 				email: "duncan@example.com",
 			},
 		}).as("getUser");
+
+		cy.intercept("GET", "**/auth/csrf/", {
+			statusCode: 200,
+			body: { detail: "CSRF cookie set" },
+		}).as("getCsrf");
+
+		cy.intercept("POST", "**/api/**", {
+			statusCode: 200,
+			body: { message: "OK" },
+		}).as("postApi");
+		cy.intercept("DELETE", "**/api/**", {
+			statusCode: 200,
+			body: { message: "OK" },
+		}).as("deleteApi");
 	});
 
 	it("allows volunteer to save a single date availability", () => {
