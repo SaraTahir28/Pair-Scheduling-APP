@@ -41,7 +41,7 @@ const AddingSlotsBasket = ({ addedSlots, removeSlot, saveAll }) => {
 			))}
 
 			<ActionBtn additionalBtnClass="btn-primary" onClick={saveAll}>
-				Save All
+				Save all
 			</ActionBtn>
 		</div>
 	);

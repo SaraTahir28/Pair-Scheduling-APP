@@ -18,6 +18,15 @@ const TraineeBookingFlow = () => {
 	//we have selectedDate - a stering from url and need obj for Calendar in next step
 	const selectedDateObj = selectedDate ? new Date(selectedDate) : null;
 	// instead of changing local state changing url replace setSelectedDate and setSelectedTime
+import { useAuth } from "../../AuthContext";
+
+const TraineeBookingFlow = () => {
+	const { selectedDate, selectedTime, status } = useParams();
+	const { user } = useAuth();
+	const navigate = useNavigate();
+
+	const selectedDateObj = selectedDate ? new Date(selectedDate) : null;
+
 	const updateUrlWithDate = (newDate) => {
 		const dateString = newDate.toLocaleDateString("en-CA");
 		navigate(`/trainee-booking/${dateString}`);
@@ -38,7 +47,6 @@ const TraineeBookingFlow = () => {
 		volunteersDetails.find((volunteer) => volunteer.id === 1)
 	);
 
-	// here we set up booking obj that will be sent to backend
 	const createBookingDetailsObj = (bookingFormData) => {
 		const startDateTime = new Date(`${selectedDate}T${selectedTime}:00`);
 		const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000);
@@ -65,7 +73,6 @@ const TraineeBookingFlow = () => {
 		<div className="booking-box">
 			{isConfirmationPage ? (
 				<div className="conf-page-div">
-					{/* this is the full width view of confirmation view */}
 					<BookingConfirmation
 						selectedDateObj={selectedDateObj}
 						selectedTime={selectedTime}
@@ -75,35 +82,18 @@ const TraineeBookingFlow = () => {
 			) : (
 				<>
 					<div className="session-details-col">
-						{/* this is standard view with split cols 
-						cond to show left panel only if no confirmation yet */}
-						{/* {!isBookingConfirmed && ( changed */}
-
 						{!isConfirmationPage && (
 							<SessionDetails
-								// here left is prop passed to component rihght data sent from app
-								// selectedDateProps={selectedDate} now the date obj instead of str
 								selectedDateProps={selectedDateObj}
-								// again label for data sent = data sent
 								activeVolunteerProps={activeVolunteer}
 							/>
 						)}
 					</div>
 
-					{/* here we conditionally render groups/sections of the screen so no clutter in UI 
-				first if not time selected we show calendar and timeslots*/}
 					{!selectedTime && (
-						// <>  this empty tag is added here because as it is not possible to generate 2 divs and our sections
-						// come in 2 separate divs so the invisible div is to not mess with the styling
 						<>
 							<div className="calendar-col">
-								{/* here we send as props to component and component changes state then react rerenders when stae is changed */}
 								<Calendar
-									//here prop name = assigned to state from const [selectedDate, setSelectedDate] = useState(null)
-									// so Calendar gets props(argument) selectedDate={null}
-									// selectedDateProps={selectedDate}
-									// setSelectedDateProps={setSelectedDate}
-									// this is replaced instead of the old state setter
 									selectedDateProps={selectedDateObj}
 									setSelectedDateProps={updateUrlWithDate}
 									availableDates={activeVolunteer.availableDates}
@@ -111,8 +101,6 @@ const TraineeBookingFlow = () => {
 							</div>
 							<div className="timeslot-col">
 								<TimeSlotGroup
-									// props = state
-									// selectedDateProps={selectedDate} here also replaced with obj
 									selectedDateProps={selectedDateObj}
 									setSelectedTimeProps={updateUrlWithTime}
 									availableTimes={activeVolunteer.availableTimes}
@@ -129,6 +117,13 @@ const TraineeBookingFlow = () => {
 								<BackBtn onClick={handleGoBack} />
 							</div>
 							<BookingForm whenFormSubmit={createBookingDetailsObj} />
+					{selectedTime && !isConfirmationPage && (
+						<div className="timeslot-col trainee-timeslot-width">
+							<BookingForm
+								whenFormSubmit={createBookingDetailsObj}
+								trainee={user}
+								key={user?.email || "guest"}
+							/>
 						</div>
 					)}
 				</>
