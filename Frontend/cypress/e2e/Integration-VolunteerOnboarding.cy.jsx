@@ -1,15 +1,16 @@
 describe("Volunteer flow", () => {
-	it("allows volunteer to save a single date availability", () => {
+	beforeEach(() => {
 		cy.intercept("GET", "**/auth/user/", {
 			statusCode: 200,
 			body: {
 				id: 1,
 				name: "Duncan Parkinson",
-				email: "duncan@test.com",
-				is_volunteer: true,
+				email: "duncan@example.com",
 			},
 		}).as("getUser");
+	});
 
+	it("allows volunteer to save a single date availability", () => {
 		cy.visit("/volunteer-dash");
 		cy.wait("@getUser");
 
@@ -35,16 +36,6 @@ describe("Volunteer flow", () => {
 	});
 
 	it("allows volunteer to save a recurring availability", () => {
-		cy.intercept("GET", "**/auth/user/", {
-			statusCode: 200,
-			body: {
-				id: 1,
-				name: "Duncan Parkinson",
-				email: "duncan@test.com",
-				is_volunteer: true,
-			},
-		}).as("getUser");
-
 		cy.visit("/volunteer-dash");
 		cy.wait("@getUser");
 
@@ -78,16 +69,6 @@ describe("Volunteer flow", () => {
 	});
 
 	it("allows volunteer to remove an item from the basket", () => {
-		cy.intercept("GET", "**/auth/user/", {
-			statusCode: 200,
-			body: {
-				id: 1,
-				name: "Duncan Parkinson",
-				email: "duncan@test.com",
-				is_volunteer: true,
-			},
-		}).as("getUser");
-
 		cy.visit("/volunteer-dash");
 		cy.wait("@getUser");
 
@@ -107,16 +88,6 @@ describe("Volunteer flow", () => {
 	});
 
 	it("hides onboarding after successful slots save", () => {
-		cy.intercept("GET", "**/auth/user/", {
-			statusCode: 200,
-			body: {
-				id: 1,
-				name: "Duncan Parkinson",
-				email: "duncan@test.com",
-				is_volunteer: true,
-			},
-		}).as("getUser");
-
 		cy.visit("/volunteer-dash");
 		cy.wait("@getUser");
 
