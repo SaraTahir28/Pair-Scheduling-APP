@@ -11,10 +11,23 @@ User = get_user_model()
 
 
 @pytest.fixture
-def auth_client(db):
-    user = User.objects.create_user(username="testuser", password="testpass")
+def trainee_user(db):
+    return User.objects.create_user(
+        username="trainee", password="testpass", email="trainee@example.com"
+    )
+
+
+@pytest.fixture
+def volunteer_user(db):
+    return User.objects.create_user(
+        username="volunteer", password="testpass", email="volunteer@example.com"
+    )
+
+
+@pytest.fixture
+def auth_client(trainee_user):
     client = APIClient()
-    client.force_authenticate(user=user)
+    client.force_authenticate(user=trainee_user)
     return client
 
 
@@ -48,9 +61,7 @@ class TestCreateMeetingView:
         assert "detail" in response.json()
 
     @patch("core.views.create_google_meeting")
-    def test_successful_meeting_creation_returns_201(
-        self, mock_google_meeting, auth_client
-    ):
+    def test_successful_meeting_creation_returns_201(self, mock_google_meeting, auth_client, volunteer_user):  
         url = reverse("create_meeting")
 
         mock_google_meeting.return_value = {
@@ -82,7 +93,7 @@ class TestCreateMeetingView:
         assert data["meet_link"] == "https://meet.google.com/xyz"
 
     @patch("core.views.create_google_meeting", side_effect=Exception("Boom"))
-    def test_unexpected_error_returns_500(self, mock_google_meeting, auth_client):
+    def test_unexpected_error_returns_500(self, mock_google_meeting, auth_client, volunteer_user):
         url = reverse("create_meeting")
 
         # Must be >= 24 hours ahead or serializer will block before mock triggers
