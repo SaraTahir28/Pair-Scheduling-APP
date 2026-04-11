@@ -110,7 +110,8 @@ const VolunteerAvailabilityForm = ({
 							</div>
 							<div className="form-input-group">
 								<span>
-									This session will repeat every {getDayName(specificDate)}
+									This session will repeat every{" "}
+									<strong>{getDayName(specificDate)}</strong>
 								</span>
 							</div>
 						</>
@@ -128,7 +129,7 @@ const VolunteerAvailabilityForm = ({
 					</div>
 
 					{mode !== "view" && (
-						<button type="submit" className={"action-btn btn-primary"}>
+						<button type="submit" className={"action-btn btn-secondary"}>
 							Add to list
 						</button>
 					)}

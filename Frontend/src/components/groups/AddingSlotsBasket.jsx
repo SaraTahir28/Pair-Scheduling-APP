@@ -49,15 +49,7 @@ const AddingSlotsBasket = ({ addedSlots, removeSlot, saveAll }) => {
 						</ActionBtn>
 					</div>
 				))}
-
-					<ActionBtn
-						additionalBtnClass="btn-tertiary"
-						onClick={() => removeSlot(index)}
-					>
-						✕
-					</ActionBtn>
-				</div>
-			))}
+			</div>
 
 			<ActionBtn additionalBtnClass="btn-primary" onClick={saveAll}>
 				Save all

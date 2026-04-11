@@ -307,20 +307,20 @@
 	}
 
 	.basket-title {
-		@apply text-[11px] font-bold text-muted uppercase tracking-wider mb-2 px-1;
+		@apply text-muted mb-2 text-lg;
 	}
 
 	.basket-list {
-		@apply flex flex-col;
+		@apply flex flex-col pb-3;
 	}
 
 	.basket-row {
-		@apply flex justify-between items-center py-3 border-b border-black/5 last:border-0 transition-all;
+		@apply flex justify-between items-center py-2 border-b border-black/5 last:border-0 transition-all;
 		@apply hover:bg-black/[0.02];
 	}
 
 	.basket-delete-btn {
-		@apply text-muted hover:text-red-500 opacity-50 hover:opacity-100 transition-all p-2 flex items-center justify-center;
+		@apply text-muted opacity-50 hover:opacity-100 transition-all p-2 flex items-center justify-center;
 	}
 
 	.basket-save-btn {
