@@ -1,14 +1,22 @@
 describe("Trainee booking flow", () => {
-	it("allows a trainee to book a session from start to finish", () => {
+	beforeEach(() => {
 		cy.intercept("GET", "**/auth/user/", {
-			body: { id: 1, name: "Duncan Parkinson", email: "duncan@test.com" },
+			statusCode: 200,
+			body: { id: 1, name: "Duncan Parkinson", email: "duncan@example.com" },
 		}).as("getUser");
+
+		cy.intercept("GET", "**/auth/csrf/", {
+			statusCode: 200,
+			body: { detail: "CSRF cookie set" },
+		}).as("getCsrf");
 
 		cy.intercept("POST", "**/api/create-meeting/", {
 			statusCode: 201,
 			body: { message: "Meeting created successfully.", event_id: "abc123" },
 		}).as("postBooking");
+	});
 
+	it("allows a trainee to book a session from start to finish", () => {
 		cy.visit("/trainee-booking");
 		cy.wait("@getUser");
 
