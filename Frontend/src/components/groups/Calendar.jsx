@@ -58,6 +58,9 @@ const Calendar = ({
 	const firstDay = new Date(year, month, 1);
 	const daysInMonth = new Date(year, month + 1, 0).getDate();
 	const numOfEmptyFieldsBeforeFirstDay = (firstDay.getDay() + 6) % 7;
+	const today = new Date();
+	const currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+	const isPastDate = firstDay <= currentMonth;
 
 	const emptyDaySquares = [];
 	for (let i = 0; i < numOfEmptyFieldsBeforeFirstDay; i++) {
