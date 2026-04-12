@@ -320,7 +320,7 @@
 	}
 
 	.basket-delete-btn {
-		@apply text-muted opacity-50 hover:opacity-100 transition-all p-2 flex items-center justify-center;
+		@apply w-5 h-5 hover:text-brand-blue transition-all cursor-pointer;
 	}
 
 	.basket-save-btn {

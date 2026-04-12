@@ -45,7 +45,7 @@ const AddingSlotsBasket = ({ addedSlots, removeSlot, saveAll }) => {
 							additionalBtnClass="btn-tertiary"
 							onClick={() => removeSlot(index)}
 						>
-							✕
+							<X className="basket-delete-btn" />
 						</ActionBtn>
 					</div>
 				))}
