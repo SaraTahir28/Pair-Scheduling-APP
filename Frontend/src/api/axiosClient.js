@@ -1,8 +1,9 @@
 import axios from "axios";
 import { getCSRFToken } from "../utilities/csrf";
 
+const BASE_URL = import.meta.env.VITE_API_URL;
 const api = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: BASE_URL,
   withCredentials: true,
 });
 
