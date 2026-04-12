@@ -88,3 +88,15 @@ class TestSlotRuleCreateView:
         slot_rule = SlotRule.objects.get(group="sdc")
         assert slot_rule.volunteer == user
         assert slot_rule.group == "sdc"
+
+    def test_multiple_slot_rules_for_same_user(self, api_client, user):
+        api_client.force_authenticate(user=user)
+        for group in ["piscine", "sdc"]:
+            payload = {
+                "start_time": "2026-04-12T10:00:00Z",
+                "repeat_until": "2026-04-15",
+                "group": group,
+            }
+            response = api_client.post(self.get_url(), payload, format="json")
+            assert response.status_code == 201
+        assert SlotRule.objects.filter(volunteer=user).count() == 2
