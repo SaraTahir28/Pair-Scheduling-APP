@@ -57,6 +57,9 @@
 		@apply hover:text-brand-blue;
 	}
 
+	.back-btn-div {
+		@apply mb-4;
+	}
 	/* TRAINEE BOOKING */
 	/* outer div */
 	.booking-box {

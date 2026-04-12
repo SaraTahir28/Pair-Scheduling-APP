@@ -99,11 +99,9 @@ const TraineeBookingFlow = () => {
 						</>
 					)}
 
-					{/* when user selects date and time we render booking form and hide the cal */}
-					{/* {selectedTime && !isBookingConfirmed && ( */}
 					{selectedTime && !isConfirmationPage && (
 						<div className="timeslot-col trainee-timeslot-width">
-							<div style={{ marginBottom: "16px" }}>
+							<div className="back-btn-div">
 								<BackBtn onClick={handleGoBack} />
 							</div>
 							<BookingForm
