@@ -3,19 +3,34 @@ from datetime import timedelta
 from unittest.mock import patch
 from django.utils import timezone
 
-from core.models import SlotRule
+from core.models import SlotRule, User
 from core.services.available_slots import build_available_slots, exclude_booked_slots
 
 NOW = timezone.now()
 FUTURE = timezone.now() + timedelta(days=1)
 
-def make_slot_rule(volunteer_id=1, start_time=None, repeat_until=None, rule_id=1, group="itd"):
+def make_slot_rule(
+        volunteer_id=1,
+    start_time=None,
+    repeat_until=None,
+    rule_id=1,
+    group="itd",
+    first_name="Duncan",
+    last_name="Parkinson",
+    username="duncan",
+):
     rule = SlotRule()
     rule.id = rule_id
     rule.start_time = start_time or FUTURE
     rule.repeat_until = repeat_until
     rule.volunteer_id=volunteer_id
     rule.group = group
+    rule.volunteer = User(
+        id=volunteer_id,
+        username=username,
+        first_name=first_name,
+        last_name=last_name,
+    )
     return rule
 
 def test_one_off_slot(): 
