@@ -76,3 +76,15 @@ class TestSlotRuleCreateView:
         response = api_client.post(self.get_url(), payload, format="json")
         assert response.status_code in [401, 403]
         assert SlotRule.objects.count() == 0
+
+    def test_slot_rule_persisted_in_db(self, api_client, user):
+        api_client.force_authenticate(user=user)
+        payload = {
+            "start_time": "2026-04-12T10:00:00Z",
+            "repeat_until": "2026-04-20",
+            "group": "sdc",
+        }
+        api_client.post(self.get_url(), payload, format="json")
+        slot_rule = SlotRule.objects.get(group="sdc")
+        assert slot_rule.volunteer == user
+        assert slot_rule.group == "sdc"
