@@ -32,3 +32,19 @@ class TestSlotRuleCreateView:
         assert response.status_code == 201
         assert response.data["volunteer"] == user.id
         assert SlotRule.objects.count() == 1
+
+    def test_volunteer_auto_assigned(self, api_client, user):
+        api_client.force_authenticate(user=user)
+
+        # Try to override volunteer with a random id
+        payload = {
+            "start_time": "2026-04-12T10:00:00Z",
+            "repeat_until": "2026-04-15",
+            "group": "piscine",
+            "volunteer": 3421,
+        }
+
+        response = api_client.post(self.get_url(), payload, format="json")
+        assert response.status_code == 201
+        slot_rule = SlotRule.objects.get(group="piscine")
+        assert slot_rule.volunteer == user
