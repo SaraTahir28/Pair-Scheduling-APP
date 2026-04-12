@@ -48,3 +48,21 @@ class TestSlotRuleCreateView:
         assert response.status_code == 201
         slot_rule = SlotRule.objects.get(group="piscine")
         assert slot_rule.volunteer == user
+
+    def test_repeat_until_before_start_time(self, api_client, user):
+        api_client.force_authenticate(user=user)
+        payload = {
+            "start_time": "2026-04-12T10:00:00Z",
+            "repeat_until": "2026-04-10",
+            "group": "sdc",
+        }
+        response = api_client.post(self.get_url(), payload, format="json")
+        assert response.status_code == 400
+        assert "repeat_until" in response.data
+
+    def test_missing_required_fields(self, api_client, user):
+        api_client.force_authenticate(user=user)
+        payload = {"repeat_until": "2026-04-20"}
+        response = api_client.post(self.get_url(), payload, format="json")
+        assert response.status_code == 400
+        assert "start_time" in response.data
