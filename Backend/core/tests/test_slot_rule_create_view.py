@@ -66,3 +66,13 @@ class TestSlotRuleCreateView:
         response = api_client.post(self.get_url(), payload, format="json")
         assert response.status_code == 400
         assert "start_time" in response.data
+
+    def test_unauthenticated_user_cannot_create(self, api_client):
+        payload = {
+            "start_time": "2026-04-12T10:00:00Z",
+            "repeat_until": "2026-04-20",
+            "group": "the_launch",
+        }
+        response = api_client.post(self.get_url(), payload, format="json")
+        assert response.status_code in [401, 403]
+        assert SlotRule.objects.count() == 0
