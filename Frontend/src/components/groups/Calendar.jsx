@@ -58,6 +58,9 @@ const Calendar = ({
 	const firstDay = new Date(year, month, 1);
 	const daysInMonth = new Date(year, month + 1, 0).getDate();
 	const numOfEmptyFieldsBeforeFirstDay = (firstDay.getDay() + 6) % 7;
+	const today = new Date();
+	const currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+	const isCurrentMonth = firstDay <= currentMonth;
 
 	const emptyDaySquares = [];
 	for (let i = 0; i < numOfEmptyFieldsBeforeFirstDay; i++) {
@@ -97,7 +100,11 @@ const Calendar = ({
 		<div className="cal-div">
 			<h2 className="cal-heading-selectdt">Select Date & Time</h2>
 			<div className="cal-buttons-and-month-div">
-				<button onClick={prevMonth} className="cal-chevron">
+				<button
+					onClick={prevMonth}
+					className={`cal-chevron ${isCurrentMonth ? "invisible" : ""}`}
+					disabled={isCurrentMonth}
+				>
 					<ChevronLeft />
 				</button>
 
@@ -111,7 +118,7 @@ const Calendar = ({
 			</div>
 			<div className="cal-day-grid">
 				{dayNames.map((day) => (
-					<div key={day} className="p font-bold">
+					<div key={day} className="cal-day-name">
 						{day}
 					</div>
 				))}
