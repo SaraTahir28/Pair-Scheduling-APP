@@ -52,6 +52,14 @@
 		@apply hover:bg-brand-blue/10 hover:border-brand-blue hover:text-brand-blue;
 	}
 
+	.back-btn {
+		@apply inline-flex items-center gap-1 text-sm font-bold text-muted bg-transparent transition-colors cursor-pointer;
+		@apply hover:text-brand-blue;
+	}
+
+	.back-btn-div {
+		@apply mb-4;
+	}
 	/* TRAINEE BOOKING */
 	/* outer div */
 	.booking-box {

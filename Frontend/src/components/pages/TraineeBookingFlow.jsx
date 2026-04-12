@@ -7,6 +7,7 @@ import BookingForm from "../groups/BookingForm";
 import { volunteersDetails } from "../../data/UserData";
 import api from "../../api/axiosClient";
 import BookingConfirmation from "../groups/BookingConfirmation";
+import { BackBtn } from "../elements/Button";
 import { useAuth } from "../../AuthContext";
 
 const TraineeBookingFlow = () => {
@@ -25,8 +26,13 @@ const TraineeBookingFlow = () => {
 		navigate(`/trainee-booking/${selectedDate}/${newTime}`);
 	};
 
-	const isConfirmationPage = status === "confirmation";
+	const handleGoBack = () => {
+		navigate(`/trainee-booking/${selectedDate}`);
+	};
 
+	const isConfirmationPage = status === "confirmation";
+	//here we select state of activeVolunteer that will be passed to session details volunteers div
+	//for now Duncan is an active volunteer
 	const [activeVolunteer, setActiveVolunteer] = useState(
 		volunteersDetails.find((volunteer) => volunteer.id === 1)
 	);
@@ -95,6 +101,9 @@ const TraineeBookingFlow = () => {
 
 					{selectedTime && !isConfirmationPage && (
 						<div className="timeslot-col trainee-timeslot-width">
+							<div className="back-btn-div">
+								<BackBtn onClick={handleGoBack} />
+							</div>
 							<BookingForm
 								whenFormSubmit={createBookingDetailsObj}
 								trainee={user}

@@ -1,11 +1,5 @@
-// destructuring this:
-// function ActionBtn(whole objejct props) {
-// 	return <button onClick={props.onClick}>{props.children}</button>;
-// }
+import { ChevronLeft } from "lucide-react";
 
-//children is what is between <> like .textContent
-// here all action buttons have by default acton-btn class
-// with additional class passed as props when rendering
 const ActionBtn = ({ children, onClick, additionalBtnClass }) => (
 	<button
 		type="button"
@@ -22,4 +16,15 @@ const TimeSlotBtn = ({ time, onClick }) => (
 	</button>
 );
 
-export { ActionBtn, TimeSlotBtn };
+const BackBtn = ({ onClick, additionalBtnClass }) => (
+	<button
+		type="button"
+		className={`back-btn ${additionalBtnClass}`}
+		onClick={onClick}
+	>
+		<ChevronLeft className="back-btn-icon" />
+		Back
+	</button>
+);
+
+export { ActionBtn, TimeSlotBtn, BackBtn };
