@@ -100,3 +100,15 @@ class TestSlotRuleCreateView:
             response = api_client.post(self.get_url(), payload, format="json")
             assert response.status_code == 201
         assert SlotRule.objects.filter(volunteer=user).count() == 2
+
+    def test_repeat_until_none(self, api_client, user):
+        api_client.force_authenticate(user=user)
+        payload = {
+            "start_time": "2026-04-12T10:00:00Z",
+            "repeat_until": None,
+            "group": "itp",
+        }
+        response = api_client.post(self.get_url(), payload, format="json")
+        assert response.status_code == 201
+        slot_rule = SlotRule.objects.get(group="itp")
+        assert slot_rule.repeat_until is None
