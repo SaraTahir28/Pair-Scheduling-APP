@@ -3,17 +3,17 @@
 @tailwind utilities;
 
 :root {
-  /* accent, highlight */
-  --brand-primary: 57 18 255;
-  --brand-blue: 0 105 255;
+	/* accent, highlight */
+	--brand-primary: 57 18 255;
+	--brand-blue: 0 105 255;
 
-  /* title, body, icon */
-  --text-dark: #1a1a1a;
-  --text-main: #3a3a3c;
-  --text-muted: #737373;
+	/* title, body, icon */
+	--text-dark: #1a1a1a;
+	--text-main: #3a3a3c;
+	--text-muted: #737373;
 
-  /* shadows / borders */
-  --border-color: rgba(0, 0, 0, 0.1);
+	/* shadows / borders */
+	--border-color: rgba(0, 0, 0, 0.1);
 }
 
 @layer components {
@@ -113,6 +113,10 @@
 		@apply flex items-center justify-center mb-8 relative;
 	}
 
+	.cal-day-name {
+		@apply text-main font-bold;
+	}
+
 	.cal-chevron {
 		@apply w-8 h-8 rounded-full flex items-center justify-center text-muted transition-all bg-transparent;
 		@apply hover:bg-brand-blue/10 hover:text-brand-blue;
@@ -203,162 +207,162 @@
 	/* .session-plus-trainee-details-div {
 		@apply flex flex-col;
 	} */
-  .booking-card-btns {
-    @apply flex flex-row items-start gap-1;
-  }
-  /* bookings section */
-  .bookings-col {
-    @apply flex flex-col items-center border-border-color transition-all duration-300;
-  }
+	.booking-card-btns {
+		@apply flex flex-row items-start gap-1;
+	}
+	/* bookings section */
+	.bookings-col {
+		@apply flex flex-col items-center border-border-color transition-all duration-300;
+	}
 
-  .all-cards-container {
-    @apply w-full p-2 bg-white;
-  }
+	.all-cards-container {
+		@apply w-full p-2 bg-white;
+	}
 
-  .bookings-heading-selectdt {
-    @apply text-lg font-bold text-dark mb-8;
-  }
-  /* edit booking section */
-  .view-booking-details-card {
-    @apply p-2 w-full flex justify-start gap-12;
-  }
+	.bookings-heading-selectdt {
+		@apply text-lg font-bold text-dark mb-8;
+	}
+	/* edit booking section */
+	.view-booking-details-card {
+		@apply p-2 w-full flex justify-start gap-12;
+	}
 
-  /* landing page */
-  .landing-page {
-    @apply min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6;
-  }
+	/* landing page */
+	.landing-page {
+		@apply min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6;
+	}
 
-  .role-selection-grid {
-    @apply grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-8 max-w-3xl;
-  }
+	.role-selection-grid {
+		@apply grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-8 max-w-3xl;
+	}
 
-  .role-tile {
-    @apply flex flex-col items-center justify-start p-8 rounded-2xl border-2 border-black/10 bg-white transition-all cursor-pointer text-main;
-    @apply hover:shadow-lg hover:scale-105;
-  }
+	.role-tile {
+		@apply flex flex-col items-center justify-start p-8 rounded-2xl border-2 border-black/10 bg-white transition-all cursor-pointer text-main;
+		@apply hover:shadow-lg hover:scale-105;
+	}
 
-  .role-tile-icon {
-    @apply w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-all;
-  }
+	.role-tile-icon {
+		@apply w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-all;
+	}
 
-  .role-tile-trainee .role-tile-icon {
-    @apply bg-brand-blue/10 text-brand-blue;
-  }
-  .role-tile-trainee:hover {
-    @apply border-brand-blue duration-300 ease-in-out;
-  }
+	.role-tile-trainee .role-tile-icon {
+		@apply bg-brand-blue/10 text-brand-blue;
+	}
+	.role-tile-trainee:hover {
+		@apply border-brand-blue duration-300 ease-in-out;
+	}
 
-  .role-tile-volunteer .role-tile-icon {
-    @apply bg-brand-primary/10 text-brand-primary;
-  }
-  .role-tile-volunteer:hover {
-    @apply border-brand-primary duration-300 ease-in-out;
-  }
-  .landing-tile {
-    @apply text-4xl font-bold mb-4 tracking-tight;
-    @apply bg-gradient-to-r from-brand-blue to-brand-primary;
-    @apply bg-clip-text text-transparent;
-  }
-  .role-tile h3 {
-    @apply text-xl font-bold text-dark mb-2;
-  }
+	.role-tile-volunteer .role-tile-icon {
+		@apply bg-brand-primary/10 text-brand-primary;
+	}
+	.role-tile-volunteer:hover {
+		@apply border-brand-primary duration-300 ease-in-out;
+	}
+	.landing-tile {
+		@apply text-4xl font-bold mb-4 tracking-tight;
+		@apply bg-gradient-to-r from-brand-blue to-brand-primary;
+		@apply bg-clip-text text-transparent;
+	}
+	.role-tile h3 {
+		@apply text-xl font-bold text-dark mb-2;
+	}
 
-  .role-tile p {
-    @apply text-sm text-muted text-center;
-  }
+	.role-tile p {
+		@apply text-sm text-muted text-center;
+	}
 
-  /* offer timeslots */
-  .booking-form-container {
-    @apply p-6 rounded-2xl shadow-sm;
-  }
+	/* offer timeslots */
+	.booking-form-container {
+		@apply p-6 rounded-2xl shadow-sm;
+	}
 
-  .form-title {
-    @apply text-xl font-bold mb-6;
-  }
+	.form-title {
+		@apply text-xl font-bold mb-6;
+	}
 
-  .form-input-group {
-    @apply mb-5 flex flex-col;
-  }
+	.form-input-group {
+		@apply mb-5 flex flex-col;
+	}
 
-  .form-input-group-row {
-    @apply mb-6 flex flex-row items-center gap-3 p-3;
-  }
+	.form-input-group-row {
+		@apply mb-6 flex flex-row items-center gap-3 p-3;
+	}
 
-  .form-input-group-row:hover {
-    @apply border-border-color;
-  }
-  .form-label {
-    @apply text-xs font-bold;
-  }
+	.form-input-group-row:hover {
+		@apply border-border-color;
+	}
+	.form-label {
+		@apply text-xs font-bold;
+	}
 
-  .form-input {
-    @apply w-full p-3 bg-gray-50 border-border-color rounded-xl text-gray-700 focus:text-brand-primary focus:outline-none 
+	.form-input {
+		@apply w-full p-3 bg-gray-50 border-border-color rounded-xl text-gray-700 focus:text-brand-primary focus:outline-none 
            transition-all cursor-pointer;
-  }
+	}
 
-  .form-checkbox {
-    @apply w-5 h-5 rounded-md border-border-color text-brand-primary cursor-pointer;
-  }
-  .slots-basket-row {
-    @apply flex justify-between items-center bg-white border border-border-color rounded-xl p-3 mb-2 gap-4;
-  }
-  /* meeting booked confirmation */
-  /* this is rendered in trainee booking */
-  .conf-page-div {
-    @apply flex flex-col items-center justify-center w-full h-full p-12 bg-gray-50;
-  }
-  .conf-page-div h3 {
-    @apply text-xl font-bold text-muted mb-2;
-  }
-  .confirmation-container {
-    @apply flex flex-col items-center justify-center w-full h-full p-8 gap-6;
-  }
-  .avatar-conf {
-    @apply w-24 h-24 shadow-sm;
-  }
-  .confirmation-header {
-    @apply flex flex-col items-center gap-2 mb-4 text-center;
-  }
+	.form-checkbox {
+		@apply w-5 h-5 rounded-md border-border-color text-brand-primary cursor-pointer;
+	}
+	.slots-basket-row {
+		@apply flex justify-between items-center bg-white border border-border-color rounded-xl p-3 mb-2 gap-4;
+	}
+	/* meeting booked confirmation */
+	/* this is rendered in trainee booking */
+	.conf-page-div {
+		@apply flex flex-col items-center justify-center w-full h-full p-12 bg-gray-50;
+	}
+	.conf-page-div h3 {
+		@apply text-xl font-bold text-muted mb-2;
+	}
+	.confirmation-container {
+		@apply flex flex-col items-center justify-center w-full h-full p-8 gap-6;
+	}
+	.avatar-conf {
+		@apply w-24 h-24 shadow-sm;
+	}
+	.confirmation-header {
+		@apply flex flex-col items-center gap-2 mb-4 text-center;
+	}
 
-  .confirmation-title {
-    @apply flex items-center gap-3 text-2xl font-bold text-dark;
-  }
+	.confirmation-title {
+		@apply flex items-center gap-3 text-2xl font-bold text-dark;
+	}
 
-  .confirmation-icon {
-    @apply text-brand-primary w-8 h-8;
-  }
+	.confirmation-icon {
+		@apply text-brand-primary w-8 h-8;
+	}
 
-  .confirmation-subtitle {
-    @apply text-main;
-  }
-  /* .confirmation-container span  moved to top {
+	.confirmation-subtitle {
+		@apply text-main;
+	}
+	/* .confirmation-container span  moved to top {
 		@apply text-main;
 	} */
-  .confirmation-details-card {
-    @apply flex flex-col items-start w-full max-w-[600px] border border-black/10 rounded-lg p-8 bg-white gap-4 shadow-sm;
-  }
+	.confirmation-details-card {
+		@apply flex flex-col items-start w-full max-w-[600px] border border-black/10 rounded-lg p-8 bg-white gap-4 shadow-sm;
+	}
 
-  .confirmation-detail-row {
-    @apply flex items-center gap-4 font-medium;
-  }
+	.confirmation-detail-row {
+		@apply flex items-center gap-4 font-medium;
+	}
 
-  .confirmation-detail-icon {
-    @apply w-5 h-5 text-main;
-  }
-  /* 404 page */
-  .not-found-page {
-    @apply min-h-screen flex flex-col items-center justify-center;
-  }
+	.confirmation-detail-icon {
+		@apply w-5 h-5 text-main;
+	}
+	/* 404 page */
+	.not-found-page {
+		@apply min-h-screen flex flex-col items-center justify-center;
+	}
 
-  .not-found-huge-text {
-    @apply text-8xl font-bold text-brand-primary/60;
-  }
+	.not-found-huge-text {
+		@apply text-8xl font-bold text-brand-primary/60;
+	}
 
-  .not-found-subtitle {
-    @apply text-3xl font-bold text-muted mb-4 mt-2;
-  }
+	.not-found-subtitle {
+		@apply text-3xl font-bold text-muted mb-4 mt-2;
+	}
 
-  .not-found-text {
-    @apply text-main mb-8 text-lg;
-  }
+	.not-found-text {
+		@apply text-main mb-8 text-lg;
+	}
 }

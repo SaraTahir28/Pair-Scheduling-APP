@@ -60,7 +60,7 @@ const Calendar = ({
 	const numOfEmptyFieldsBeforeFirstDay = (firstDay.getDay() + 6) % 7;
 	const today = new Date();
 	const currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-	const isPastDate = firstDay <= currentMonth;
+	const isCurrentMonth = firstDay <= currentMonth;
 
 	const emptyDaySquares = [];
 	for (let i = 0; i < numOfEmptyFieldsBeforeFirstDay; i++) {
@@ -102,8 +102,8 @@ const Calendar = ({
 			<div className="cal-buttons-and-month-div">
 				<button
 					onClick={prevMonth}
-					className={`cal-chevron ${isPastDate ? "invisible" : ""}`}
-					disabled={isPastDate}
+					className={`cal-chevron ${isCurrentMonth ? "invisible" : ""}`}
+					disabled={isCurrentMonth}
 				>
 					<ChevronLeft />
 				</button>
@@ -118,7 +118,7 @@ const Calendar = ({
 			</div>
 			<div className="cal-day-grid">
 				{dayNames.map((day) => (
-					<div key={day} className="p font-bold">
+					<div key={day} className="cal-day-name">
 						{day}
 					</div>
 				))}
