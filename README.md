@@ -1,88 +1,108 @@
-# Project Overview
+## Pair Scheduling App
 
-## CYF Volunteer–Trainee Booking System
+A full-stack scheduling application that enables CodeYourFuture trainees to book one-hour mentoring sessions with volunteers. The system simplifies availability management and scheduling, culminating in automatic Google Calendar event creation for both participants.
 
-A simple scheduling platform that allows trainees to book 1‑hour sessions with volunteers.  
-This is an early MVP designed for CodeYourFuture’s Launch project.
+## Key Features
 
----
+- Role-Based Dashboards: Separate interfaces for Trainees and Volunteers
+- Volunteer Availability Management: Volunteers can define one-off or recurring weekly time slots
+- Trainee Booking Flow: Trainees browse available slots, filter by study group, select a time,and book
+- Google OAuth2 Authentication: Secure login via Google accounts, managed by django-allauth
+- Google Calendar Integration: Creates events with Meet links and sends invites to both parties
+- Minimum Booking Window: Enforces a 24-hour notice period to prevent last-minute scheduling
 
-# Project Summary
+## Tech Stack
 
-We are building a centralised booking system where:
+- Frontend: React, Vite, Tailwind CSS
+- Backend: Django, Django REST Framework
+- Authentication: Google OAuth2 via django-allauth
+- API Integration: Google Calendar API
+- Database: SQLite (development)
+- Testing: Cypress (frontend), Pytest (backend)
+- CI/CD: GitHub Actions
 
-- **Volunteers** can offer one‑off or recurring 1‑hour time slots  
-- **Trainees** can browse available slots and book one  
-- Once booked, the slot is removed from availability  
-- A **Google Calendar invite** (with a Google Meet link) is automatically sent to both trainee and volunteer  
-- A **minimum booking notice** prevents last‑minute bookings  
+## Architecture Overview
 
-This MVP focuses on simplicity, accessibility, and ease of maintenance for CodeYourFuture volunteers.
+The application is a monorepo with distinct frontend and backend apps communicating via a REST API.
 
----
+- Frontend (React): Handles UI, user interactions, and API calls
+- Backend (Django): Manages business logic, authentication, database operations, and Google Calendar integration
 
-# Tech Stack
+## Authentication Flow
 
-## Frontend
-- HTML  
-- CSS  
-- Vue.js (lightweight components + reactivity)  
-- Fetch API for communication with the backend  
+1. User clicks "Continue with Google" on the frontend
+2. Frontend redirects to backend endpoint `/accounts/google/login/`
+3. django-allauth handles OAuth2 with Google
+4. On success, Django creates a user session
+5. User is redirected back to frontend, now authenticated
+6. Subsequent API requests include the session cookie for identification
 
-## Backend
-- Django (Python)  
-- Django views + URL routing  
-- JSON API endpoints  
-- Integration with Google Calendar API (for event creation + Meet links)
+## Environment URLs
 
-## Google Calendar Integration
+- Frontend (Development): http://127.0.0.1:5173
+- Backend (Development): http://127.0.0.1:8000
+- Frontend (Production): https://pairscheduler-frontend.hosting.codeyourfuture.io
+- Backend (Production): https://pairscheduler-backend.hosting.codeyourfuture.io
 
-The backend integrates with the Google Calendar API to automatically create meeting events when a session is booked.
+## Installation & Setup
 
-When a meeting is created, the system:
+#### Backend
 
-- Creates a Google Calendar event
-- Generates a Google Meet link
-- Sends calendar invitations to both the trainee and volunteer
+In the terminal run
+1.cd Backend
+2.python -m venv venv
+3.source venv/bin/activate
+4.pip install -r requirements.txt
+5.cp .env.example
+Fill .env with:
 
-This feature is implemented in the Django backend.
+    Code
+    GOOGLE_CLIENT_ID=<Your-Google-Client-ID>
+    GOOGLE_CLIENT_SECRET=<Your-Google-Client-Secret>
+    DJANGO_SECRET_KEY=<Your-Django-Secret-Key>
 
-### Architecture Flow
+Run migrations and start server by running these commands.
 
-Client Request
-↓
-POST /api/create-meeting/
-↓
-Django View (views.py)
-↓
-Google Calendar Service (google_calendar_service.py)
-↓
-Google Calendar API
-↓
-Calendar Event Created
-↓
-Google Meet Link Generated
-↓
-Invitations Sent to Trainee and Volunteer
-↓
-Response Returned to Client
+1.python manage.py migrate
+2.python manage.py runserver
+3.Backend runs at: http://127.0.0.1:8000
 
-### Example API Request
+### Frontend
 
-curl -X POST http://127.0.0.1:8000/api/create-meeting/ \
--H "Content-Type: application/json" \
--d '{
-  "trainee_email": "trainee@example.com",
-  "volunteer_email": "volunteer@example.com",
-  "start_time": "2026-03-10T14:00:00Z",
-  "end_time": "2026-03-10T15:00:00Z"
-}'
+cd Frontend
+npm install
+npm run dev
+Frontend runs at: http://127.0.0.1:5173
 
-### Example Response
-{
-  "message": "Meeting created successfully.",
-  "event_id": "...",
-  "meet_link": "https://meet.google.com/..."
-}
+## API Endpoints
 
-The meeting link can then be used by both participants to join the session.
+| Method | Endpoint              | Description                                    |
+| ------ | --------------------- | ---------------------------------------------- |
+| GET    | /auth/user/           | Get profile of the logged‑in user              |
+| POST   | /auth/logout/         | Log out current user                           |
+| GET    | /api/users/           | Retrieve all users                             |
+| POST   | /api/users/           | Create a new user                              |
+| GET    | /api/users/<id>/      | Retrieve details for a specific user           |
+| PATCH  | /api/users/<id>/      | Update a specific user                         |
+| DELETE | /api/users/<id>/      | Delete a specific user (if implemented)        |
+| GET    | /api/available-slots/ | Get all available booking slots (trainee)      |
+| POST   | /api/slot-rules/      | Create a new availability rule (volunteer)     |
+| POST   | /api/create-meeting/  | Book a session & create a Google-Calendarevent |
+| GET    | /api/profile/         | Get the current logged‑in user’s profile       |
+
+### Running Tests
+
+### On Backend
+
+1.cd Backend
+2.pytest
+
+### Frontend
+
+1.cd Frontend
+2.npm run cypress:open -> For E2E tests.
+3.npm run cypress:open -- --component -> for component tests.
+
+```
+
+```
