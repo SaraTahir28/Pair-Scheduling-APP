@@ -6,6 +6,7 @@ from datetime import timedelta
 import pytest
 from rest_framework.test import APIClient
 from django.contrib.auth import get_user_model
+from core.models import SlotRule
 
 User = get_user_model()
 
@@ -30,6 +31,14 @@ def auth_client(trainee_user):
     client.force_authenticate(user=trainee_user)
     return client
 
+@pytest.fixture
+def volunteer_slot_rule(db, volunteer_user):
+    return SlotRule.objects.create(
+        volunteer=volunteer_user,
+        start_time=timezone.now() + timedelta(hours=25),
+        repeat_until=None,
+        group=None,
+    )
 
 @pytest.mark.django_db
 class TestCreateMeetingView:
@@ -37,10 +46,9 @@ class TestCreateMeetingView:
         url = reverse("create_meeting")
 
         payload = {
-            "trainee_email": "trainee@example.com",
-            # volunteer_email missing
-            "start_time": (timezone.now() + timedelta(hours=25)).isoformat(),
-            "end_time": (timezone.now() + timedelta(hours=26)).isoformat(),
+            "volunteer_id": 1,
+            # slot_rule_id missing
+            "time_slot": (timezone.now() + timedelta(hours=25)).isoformat(),
         }
 
         response = auth_client.post(
@@ -48,7 +56,7 @@ class TestCreateMeetingView:
         )
 
         assert response.status_code == 400
-        assert "volunteer_email" in response.json()
+        assert "slot_rule_id" in response.json()
 
     def test_invalid_json_returns_400(self, auth_client):
         url = reverse("create_meeting")
@@ -61,7 +69,7 @@ class TestCreateMeetingView:
         assert "detail" in response.json()
 
     @patch("core.views.create_google_meeting")
-    def test_successful_meeting_creation_returns_201(self, mock_google_meeting, auth_client, volunteer_user):  
+    def test_successful_meeting_creation_returns_201(self, mock_google_meeting, auth_client, volunteer_user, volunteer_slot_rule):
         url = reverse("create_meeting")
 
         mock_google_meeting.return_value = {
@@ -76,10 +84,10 @@ class TestCreateMeetingView:
         end = start + timedelta(hours=1)
 
         payload = {
-            "trainee_email": "trainee@example.com",
-            "volunteer_email": "volunteer@example.com",
-            "start_time": start.isoformat(),
-            "end_time": end.isoformat(),
+            "volunteer_id": volunteer_user.id,
+            "slot_rule_id": volunteer_slot_rule.id,
+            "time_slot": start.isoformat(),
+            "agenda": "",
         }
 
         response = auth_client.post(
@@ -93,7 +101,7 @@ class TestCreateMeetingView:
         assert data["meet_link"] == "https://meet.google.com/xyz"
 
     @patch("core.views.create_google_meeting", side_effect=Exception("Boom"))
-    def test_unexpected_error_returns_500(self, mock_google_meeting, auth_client, volunteer_user):
+    def test_unexpected_error_returns_500(self, mock_google_meeting, auth_client, volunteer_user, volunteer_slot_rule):
         url = reverse("create_meeting")
 
         # Must be >= 24 hours ahead or serializer will block before mock triggers
@@ -101,10 +109,10 @@ class TestCreateMeetingView:
         end = start + timedelta(hours=1)
 
         payload = {
-            "trainee_email": "trainee@example.com",
-            "volunteer_email": "volunteer@example.com",
-            "start_time": start.isoformat(),
-            "end_time": end.isoformat(),
+            "volunteer_id": volunteer_user.id,
+            "slot_rule_id": volunteer_slot_rule.id,
+            "time_slot": start.isoformat(),
+            "agenda": "",
         }
 
         response = auth_client.post(
