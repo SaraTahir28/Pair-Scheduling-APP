@@ -52,11 +52,11 @@ class SlotRule(models.Model):
     class Meta:
         ordering = ["volunteer_id", "start_time"]
         constraints = [
-        models.UniqueConstraint(
-            fields=["volunteer", "start_time"],
-            name="unique_volunteer_start_time_slot_rule",
-        )
-    ]
+            models.UniqueConstraint(
+                fields=["volunteer", "start_time"],
+                name="unique_volunteer_start_time_slot_rule",
+            )
+        ]
 
     def occurrence_start_times(self):
         if self.repeat_until is None:
