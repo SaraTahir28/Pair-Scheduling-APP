@@ -23,7 +23,9 @@ describe("Trainee booking flow", () => {
 		cy.get(".cal-day-available").first().click();
 		cy.get(".timeslot-group-div button").first().click();
 
-		cy.get("input.form-input").first().clear().type("Kaska Test");
+		cy.get("textarea.form-input").type(
+			"I'd like to discuss React state management."
+		);
 		cy.get("button").contains("Book meeting").click();
 
 		cy.wait("@postBooking");
