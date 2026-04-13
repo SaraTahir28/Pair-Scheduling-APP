@@ -4,7 +4,6 @@ import SessionDetails from "../groups/SessionDetails";
 import Calendar from "../groups/Calendar";
 import TimeSlotGroup from "../groups/TimeSlotGroup";
 import BookingForm from "../groups/BookingForm";
-import { volunteersDetails } from "../../data/UserData";
 import api from "../../api/axiosClient";
 import BookingConfirmation from "../groups/BookingConfirmation";
 import { BackBtn } from "../elements/Button";
@@ -12,10 +11,13 @@ import { useAuth } from "../../AuthContext";
 
 const TraineeBookingFlow = () => {
 	const [allVolunteersData, setAllVolunteersData] = useState(null);
-	//TODO next PR remove hardcoded and show all slots from all volunteers
-	const [activeVolunteer, setActiveVolunteer] = useState(
-		volunteersDetails.find((volunteer) => volunteer.id === 1)
-	);
+	//TODO next PR show all slots from all volunteers
+	const [activeVolunteer, setActiveVolunteer] = useState({
+		id: 1,
+		name: "Getting volunteer...",
+		img: "/public/placeholder.png",
+	});
+
 	const { selectedDate, selectedTime, status } = useParams();
 	const { user } = useAuth();
 	const navigate = useNavigate();
@@ -34,10 +36,23 @@ const TraineeBookingFlow = () => {
 		availableTimes: [],
 	};
 
+	let showActiveVolunteer = activeVolunteer;
+
 	if (allVolunteersData && allVolunteersData.length > 0) {
 		const activeVolunteerSlots = allVolunteersData.filter((slot) => {
 			return slot.volunteer_id === activeVolunteer.id;
 		});
+
+		if (activeVolunteerSlots.length > 0) {
+			let firstSlot = activeVolunteerSlots[0];
+
+			displayVolunteer = {
+				id: activeVolunteer.id,
+				name: firstSlot.name,
+				img: firstSlot.img,
+			};
+		}
+
 		for (let i = 0; i < activeVolunteerSlots.length; i++) {
 			//starting str one is "2026-03-20T09:00:00Z"
 			let slotWeAreOn = activeVolunteerSlots[i];
@@ -106,7 +121,7 @@ const TraineeBookingFlow = () => {
 					<BookingConfirmation
 						selectedDateObj={selectedDateObj}
 						selectedTime={selectedTime}
-						volunteerProps={activeVolunteer}
+						volunteerProps={showActiveVolunteer}
 					/>
 				</div>
 			) : (
@@ -115,7 +130,7 @@ const TraineeBookingFlow = () => {
 						{!isConfirmationPage && (
 							<SessionDetails
 								selectedDateProps={selectedDateObj}
-								activeVolunteerProps={activeVolunteer}
+								activeVolunteerProps={showActiveVolunteer}
 							/>
 						)}
 					</div>
