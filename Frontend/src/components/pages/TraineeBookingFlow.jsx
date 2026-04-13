@@ -11,9 +11,56 @@ import { BackBtn } from "../elements/Button";
 import { useAuth } from "../../AuthContext";
 
 const TraineeBookingFlow = () => {
+	const [allVolunteersData, setAllVolunteersData] = useState(null);
+	//TODO next PR remove hardcoded and show all slots from all volunteers
+	const [activeVolunteer, setActiveVolunteer] = useState(
+		volunteersDetails.find((volunteer) => volunteer.id === 1)
+	);
 	const { selectedDate, selectedTime, status } = useParams();
 	const { user } = useAuth();
 	const navigate = useNavigate();
+
+	if (allVolunteersData === null) {
+		setAllVolunteersData([]);
+		api
+			.get("/api/available-slots/")
+			.then((res) => setAllVolunteersData(res.data))
+			.catch((err) => {
+				console.log("No api data :():", err);
+			});
+	}
+	const convertedAllVDataToFrontendFormat = {
+		availableDates: [],
+		availableTimes: [],
+	};
+
+	if (allVolunteersData && allVolunteersData.length > 0) {
+		const activeVolunteerSlots = allVolunteersData.filter((slot) => {
+			return slot.volunteer_id === activeVolunteer.id;
+		});
+		for (let i = 0; i < activeVolunteerSlots.length; i++) {
+			//starting str one is "2026-03-20T09:00:00Z"
+			let slotWeAreOn = activeVolunteerSlots[i];
+			let convertedToString = slotWeAreOn.start_time; //TODO/question - converting to str if not a str from backend, is that ever possible?
+			let dateOnlyStr = convertedToString.split("T")[0];
+			let dateBitsArr = dateOnlyStr.split("-");
+			let dayString = dateBitsArr[2];
+			let dayNumber = Number(dayString);
+
+			if (
+				convertedAllVDataToFrontendFormat.availableDates.includes(dayNumber) ===
+				false
+			) {
+				convertedAllVDataToFrontendFormat.availableDates.push(dayNumber);
+			}
+			if (selectedDate && convertedToString.includes(selectedDate)) {
+				let timeOnlyStr = convertedToString.split("T")[1];
+				let timeBitsArr = timeOnlyStr.split(":");
+				let timeInFormathhmm = timeBitsArr[0] + ":" + timeBitsArr[1];
+				convertedAllVDataToFrontendFormat.availableTimes.push(timeInFormathhmm);
+			}
+		}
+	}
 
 	const selectedDateObj = selectedDate ? new Date(selectedDate) : null;
 
@@ -31,11 +78,6 @@ const TraineeBookingFlow = () => {
 	};
 
 	const isConfirmationPage = status === "confirmation";
-	//here we select state of activeVolunteer that will be passed to session details volunteers div
-	//for now Duncan is an active volunteer
-	const [activeVolunteer, setActiveVolunteer] = useState(
-		volunteersDetails.find((volunteer) => volunteer.id === 1)
-	);
 
 	const createBookingDetailsObj = (bookingFormData) => {
 		const combinedDateAndTimeFromUrl = `${selectedDate}T${selectedTime}:00`;
@@ -84,14 +126,18 @@ const TraineeBookingFlow = () => {
 								<Calendar
 									selectedDateProps={selectedDateObj}
 									setSelectedDateProps={updateUrlWithDate}
-									availableDates={activeVolunteer.availableDates}
+									availableDates={
+										convertedAllVDataToFrontendFormat.availableDates
+									}
 								/>
 							</div>
 							<div className="timeslot-col">
 								<TimeSlotGroup
 									selectedDateProps={selectedDateObj}
 									setSelectedTimeProps={updateUrlWithTime}
-									availableTimes={activeVolunteer.availableTimes}
+									availableTimes={
+										convertedAllVDataToFrontendFormat.availableTimes
+									}
 								/>
 							</div>
 						</>
