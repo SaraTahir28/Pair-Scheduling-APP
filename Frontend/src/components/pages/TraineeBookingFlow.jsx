@@ -46,7 +46,7 @@ const TraineeBookingFlow = () => {
 		if (activeVolunteerSlots.length > 0) {
 			let firstSlot = activeVolunteerSlots[0];
 
-			displayVolunteer = {
+			showActiveVolunteer = {
 				id: activeVolunteer.id,
 				name: firstSlot.name,
 				img: firstSlot.img,
