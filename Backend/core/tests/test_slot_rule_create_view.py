@@ -91,14 +91,24 @@ class TestSlotRuleCreateView:
 
     def test_multiple_slot_rules_for_same_user(self, api_client, user):
         api_client.force_authenticate(user=user)
-        for group in ["piscine", "sdc"]:
-            payload = {
-                "start_time": "2026-04-12T10:00:00Z",
-                "repeat_until": "2026-04-15",
-                "group": group,
-            }
+
+        payloads = [
+            {
+                "start_time": "2026-08-12T10:00:00Z",
+                "repeat_until": "2026-08-15",
+                "group": "piscine",
+            },
+            {
+                "start_time": "2026-08-13T10:00:00Z",
+                "repeat_until": "2026-08-16",
+                "group": "sdc",
+            },
+        ]
+
+        for payload in payloads:
             response = api_client.post(self.get_url(), payload, format="json")
             assert response.status_code == 201
+
         assert SlotRule.objects.filter(volunteer=user).count() == 2
 
     def test_repeat_until_none(self, api_client, user):
