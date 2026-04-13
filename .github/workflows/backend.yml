@@ -26,6 +26,9 @@ jobs:
       - run: pytest core/tests/
         env:
           DJANGO_SECRET_KEY: ci-secret-key-not-used-in-prod
+<<<<<<< Feature/Testing_slot_rule_create_view
           # GOOGLE_CLIENT_ID / SECRET intentionally omitted — Google Calendar calls are mocked in tests
+=======
+>>>>>>> main
           GOOGLE_CLIENT_ID: test-client-id
           GOOGLE_CLIENT_SECRET: test-client-secret

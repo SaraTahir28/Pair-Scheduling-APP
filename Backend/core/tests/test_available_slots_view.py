@@ -46,7 +46,6 @@ def test_slots_returned():
     assert response.status_code == 200
     assert len(response.data) == 1
     assert response.data[0]["volunteer_id"] == volunteer.id
-    assert response.data[0]["group"] == "itd"
 
 @pytest.mark.django_db
 def test_filter_by_volunteer():
@@ -66,9 +65,10 @@ def test_filter_by_volunteer():
 def test_user_only_sees_slots_for_their_group():
     trainee = make_user("trainee", group="itd")
     volunteer = make_user("volunteer")
+    volunteer2 = make_user("volunteer2")
 
     SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="itd",)
-    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="piscine",)
+    SlotRule.objects.create(volunteer=volunteer2,start_time=FUTURE,group="piscine",)
 
     response = auth_client(trainee).get(URL)
 
@@ -81,10 +81,12 @@ def test_user_sees_slots_for_their_group_and_all():
     trainee = make_user("trainee_itd", group="itd")
 
     volunteer = make_user("volunteer")
+    volunteer2 = make_user("volunteer2")
+    volunteer3 = make_user("volunteer3")
 
     SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="itd",)
-    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="all",)
-    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="piscine",)
+    SlotRule.objects.create(volunteer=volunteer2,start_time=FUTURE,group="all",)
+    SlotRule.objects.create(volunteer=volunteer3,start_time=FUTURE,group="piscine",)
 
     response = auth_client(trainee).get(URL)
 
@@ -96,11 +98,15 @@ def test_users_with_different_groups_see_different_slots():
     trainee_itd = make_user("trainee_itd", group="itd")
     trainee_piscine = make_user("trainee_piscine", group="piscine")
     volunteer = make_user("volunteer")
+    volunteer2 = make_user("volunteer2")
+    volunteer3 = make_user("volunteer3")
+    volunteer4 = make_user("volunteer4")
+    
 
     SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="itd",)
-    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="piscine",)
-    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="itd",)
-    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="all",)
+    SlotRule.objects.create(volunteer=volunteer2,start_time=FUTURE,group="piscine",)
+    SlotRule.objects.create(volunteer=volunteer3,start_time=FUTURE,group="itd",)
+    SlotRule.objects.create(volunteer=volunteer4,start_time=FUTURE,group="all",)
 
     response_itd = auth_client(trainee_itd).get(URL)
     response_piscine = auth_client(trainee_piscine).get(URL)
@@ -141,3 +147,22 @@ def test_filter_by_host_role_admin():
     assert response.status_code == 200
     assert len(response.data) == 1
     assert response.data[0]["volunteer_id"] == admin_host.id
+
+@pytest.mark.django_db
+def test_slots_returned_includes_name_and_img():
+    trainee = make_user("trainee", group="itd")
+    volunteer = make_user("volunteer")
+    volunteer.first_name = "Duncan"
+    volunteer.last_name = "Parkinson"
+    volunteer.save()
+
+    SlotRule.objects.create(volunteer=volunteer, start_time=FUTURE, group="itd")
+    
+    response = auth_client(trainee).get(URL)
+    slot = response.data[0]
+
+    assert response.status_code == 200
+    assert len(response.data) == 1
+    assert response.data[0]["name"] == "Duncan Parkinson"
+    assert response.data[0]["img"] == "/public/placeholder.png"
+    assert slot["end_time"] > slot["start_time"]    

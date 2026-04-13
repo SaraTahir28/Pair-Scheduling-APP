@@ -183,20 +183,23 @@
 
 	/* BOOKING  FORM */
 	.booking-form-container {
-		@apply px-6 mt-2 mb-4 flex flex-col items-start w-full;
+		@apply flex flex-col items-start w-full;
 	}
 	.form-title {
-		@apply text-lg font-bold text-dark mb-4;
+		@apply text-xl font-bold text-dark mb-6;
 	}
 	.form-input-group {
 		@apply gap-2 flex flex-col;
 	}
-
+	.form-label {
+		@apply text-[11px] font-bold text-muted uppercase tracking-wider;
+	}
 	.form-input {
-		@apply border border-black/10 rounded-[6px] p-3 w-[350px] outline-none transition-all mb-2;
+		@apply border border-black/10 rounded-xl p-3 w-full max-w-[400px] outline-none transition-all bg-gray-50/50;
+		@apply focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/10;
 	}
 	.form-input-disabled {
-		@apply bg-border-color;
+		@apply bg-gray-100 text-muted border-transparent cursor-not-allowed;
 	}
 
 	/* here will add confirmation styling */
@@ -220,7 +223,7 @@
 	}
 	/* bookings section */
 	.bookings-col {
-		@apply flex flex-col items-center border-border-color transition-all duration-300;
+		@apply flex flex-col items-start border-border-color transition-all duration-300 p-8;
 	}
 
 	.all-cards-container {
@@ -280,7 +283,7 @@
 	}
 
 	/* offer timeslots */
-	.booking-form-container {
+	.timeslot-form-container {
 		@apply p-6 rounded-2xl shadow-sm;
 	}
 
@@ -293,7 +296,7 @@
 	}
 
 	.form-input-group-row {
-		@apply mb-6 flex flex-row items-center gap-3 p-3;
+		@apply mb-6 flex flex-row items-center gap-3;
 	}
 
 	.form-input-group-row:hover {
@@ -311,8 +314,29 @@
 	.form-checkbox {
 		@apply w-5 h-5 rounded-md border-border-color text-brand-primary cursor-pointer;
 	}
-	.slots-basket-row {
-		@apply flex justify-between items-center bg-white border border-border-color rounded-xl p-3 mb-2 gap-4;
+	.basket-container {
+		@apply mt-8 pt-6 border-t border-black/5 w-full;
+	}
+
+	.basket-title {
+		@apply text-muted mb-2 text-lg;
+	}
+
+	.basket-list {
+		@apply flex flex-col pb-3;
+	}
+
+	.basket-row {
+		@apply flex justify-between items-center py-2 border-b border-black/5 last:border-0 transition-all;
+		@apply hover:bg-black/[0.02];
+	}
+
+	.basket-delete-btn {
+		@apply w-5 h-5 hover:text-brand-blue transition-all cursor-pointer;
+	}
+
+	.basket-save-btn {
+		@apply w-full mt-6;
 	}
 	/* meeting booked confirmation */
 	/* this is rendered in trainee booking */

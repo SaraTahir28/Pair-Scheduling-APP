@@ -9,6 +9,8 @@ class AvailableSlot:
     start_time: datetime
     end_time: datetime
     group: Optional[str]
+    name:str
+    img:Optional[str]
 
 def build_available_slots(rules, beginning_of_booking_window):
     slots = []
@@ -23,6 +25,8 @@ def build_available_slots(rules, beginning_of_booking_window):
                     group=rule.group,
                     start_time=start_time,
                     end_time=start_time + timedelta(hours=1),
+                    name=rule.volunteer.get_full_name() or rule.volunteer.get_username(),
+                    img="/public/placeholder.png",
                 )
             )
     return slots

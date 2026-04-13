@@ -38,16 +38,14 @@ const TraineeBookingFlow = () => {
 	);
 
 	const createBookingDetailsObj = (bookingFormData) => {
-		const startDateTime = new Date(`${selectedDate}T${selectedTime}:00`);
-		const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000);
+		const combinedDateAndTimeFromUrl = `${selectedDate}T${selectedTime}:00`;
+		const timeSlotForBackend = `${combinedDateAndTimeFromUrl}Z`;
 
 		const bookingDetailsObj = {
-			trainee_name: bookingFormData.traineeName,
-			trainee_email: bookingFormData.traineeEmail,
-			start_time: startDateTime.toISOString(),
-			end_time: endDateTime.toISOString(),
-			volunteer_name: activeVolunteer.name,
-			volunteer_email: activeVolunteer.email,
+			volunteer_id: activeVolunteer.id,
+			slot_rule_id: 1, //TODO will be updated in the next PR
+			time_slot: timeSlotForBackend,
+			agenda: bookingFormData.agenda || "No agenda provided.",
 		};
 		api
 			.post("/api/create-meeting/", bookingDetailsObj)
