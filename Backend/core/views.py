@@ -25,6 +25,7 @@ from core.services.available_slots import build_available_slots, exclude_booked_
 from .user_serializers import UserSerializer
 from .serializers.booking_serializer import BookingSerializer
 from .serializers.slot_rule_serializer import SlotRuleSerializer
+from .serializers.available_slot_serializer import AvailableSlotSerializer
 
 
 class CreateMeetingView(APIView):
@@ -134,7 +135,8 @@ class AvailableSlotsView(APIView):
         
         slots = exclude_booked_slots(slots, booked_pairs)
 
-        return Response([dataclasses.asdict(slot) for slot in slots])
+        serializer = AvailableSlotSerializer(slots, many=True)
+        return Response(serializer.data)
    
 
 class SlotRuleCreateView(generics.CreateAPIView):

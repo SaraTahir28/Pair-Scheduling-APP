@@ -46,7 +46,6 @@ def test_slots_returned():
     assert response.status_code == 200
     assert len(response.data) == 1
     assert response.data[0]["volunteer_id"] == volunteer.id
-    assert response.data[0]["group"] == "itd"
 
 @pytest.mark.django_db
 def test_filter_by_volunteer():
@@ -148,3 +147,22 @@ def test_filter_by_host_role_admin():
     assert response.status_code == 200
     assert len(response.data) == 1
     assert response.data[0]["volunteer_id"] == admin_host.id
+
+@pytest.mark.django_db
+def test_slots_returned_includes_name_and_img():
+    trainee = make_user("trainee", group="itd")
+    volunteer = make_user("volunteer")
+    volunteer.first_name = "Duncan"
+    volunteer.last_name = "Parkinson"
+    volunteer.save()
+
+    SlotRule.objects.create(volunteer=volunteer, start_time=FUTURE, group="itd")
+    
+    response = auth_client(trainee).get(URL)
+    slot = response.data[0]
+
+    assert response.status_code == 200
+    assert len(response.data) == 1
+    assert response.data[0]["name"] == "Duncan Parkinson"
+    assert response.data[0]["img"] == "/public/placeholder.png"
+    assert slot["end_time"] > slot["start_time"]    
