@@ -192,14 +192,11 @@
 		@apply gap-2 flex flex-col;
 	}
 	.form-label {
-		@apply text-[11px] font-bold text-muted uppercase tracking-wider;
+		@apply text-[16px] font-bold text-muted uppercase tracking-wider;
 	}
 	.form-input {
 		@apply border border-black/10 rounded-xl p-3 w-full max-w-[400px] outline-none transition-all bg-gray-50/50;
 		@apply focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/10;
-	}
-	.form-input-disabled {
-		@apply bg-gray-100 text-muted border-transparent cursor-not-allowed;
 	}
 
 	/* here will add confirmation styling */

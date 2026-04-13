@@ -2,59 +2,45 @@ import React, { useState } from "react";
 import { ActionBtn } from "../elements/Button";
 
 const BookingForm = ({ whenFormSubmit, trainee }) => {
-	//set up local state that will be passed to app
-	const [name, setName] = useState(trainee?.name || "");
-	// Email is now derived directly from props to avoid stale state
-	const currentEmail = trainee?.email || "";
+	const [firstName] = useState(
+		trainee?.name
+			? trainee?.name.split(" ")[0].charAt(0).toUpperCase() +
+					trainee.name.split(" ")[0].slice(1)
+			: ""
+	);
+
+	const [agenda, setAgenda] = useState("");
 	const checkInputsValid = (e) => {
-		//stop reload
 		e.preventDefault();
-		const cleanName = name.trim().replace(/[^a-zA-Z\s]/g, "");
+		const cleanAgenda = agenda.trim();
 
-		if (cleanName.length < 2 || cleanName.length > 50) {
-			alert("Name should be between 2 and 50 chars.");
-			return;
-		}
-
-		if (!currentEmail.includes("@") || !currentEmail.includes(".")) {
-			alert("Please enter a valid email.");
+		if (cleanAgenda.length < 10 || cleanAgenda.length > 500) {
+			alert("Agenda should be between 10 and 500 chars.");
 			return;
 		}
 
 		whenFormSubmit({
-			traineeName: cleanName,
-			traineeEmail: currentEmail,
+			agenda: cleanAgenda,
 		});
 	};
 
-	{
-		/* onChange grabs keystroke and saves it to state onChange={(e) => setName(e.target.value)} */
-	}
 	return (
 		<div className="booking-form-container">
-			<h2 className="form-title">Enter your details</h2>
+			<h2 className="form-title">Your session details</h2>
 			<form>
 				<div className="form-input-group">
-					<label className="form-label">Name</label>
-					<input
+					<label className="form-label">
+						Okay {firstName}, what would you like to discuss?
+					</label>
+					<textarea
 						className="form-input"
-						type="text"
-						placeholder="Enter your name"
-						value={name}
-						onChange={(e) => setName(e.target.value)}
+						placeholder="Share the specific topic you would like to cover."
+						value={agenda}
+						rows="6"
+						onChange={(e) => setAgenda(e.target.value)}
 					/>
 				</div>
 
-				<div className="form-input-group">
-					<label className="form-label">Email</label>
-					<input
-						className="form-input form-input-disabled"
-						type="email"
-						label="Email"
-						value={currentEmail}
-						readOnly
-					/>
-				</div>
 				<br></br>
 				<ActionBtn additionalBtnClass="btn-primary" onClick={checkInputsValid}>
 					Book meeting
