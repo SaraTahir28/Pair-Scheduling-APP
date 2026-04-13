@@ -30,6 +30,17 @@ class SlotRuleSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         attrs = self.validate_repeat_until_is_after_start_time(attrs)
+        volunteer = self.instance.volunteer if self.instance else self.context["request"].user
+        start_time = attrs.get("start_time")
+        query_set = SlotRule.objects.filter(volunteer=volunteer,start_time=start_time,)
+
+        if self.instance:
+            query_set = query_set.exclude(pk=self.instance.pk)
+
+        if query_set.exists():
+            raise serializers.ValidationError({
+                "start_time": "This volunteer already has a slot rule at this time."
+            })
         return attrs
 
     def create(self, validated_data):

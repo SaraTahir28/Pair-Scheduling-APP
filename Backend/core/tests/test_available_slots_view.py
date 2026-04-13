@@ -66,9 +66,10 @@ def test_filter_by_volunteer():
 def test_user_only_sees_slots_for_their_group():
     trainee = make_user("trainee", group="itd")
     volunteer = make_user("volunteer")
+    volunteer2 = make_user("volunteer2")
 
     SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="itd",)
-    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="piscine",)
+    SlotRule.objects.create(volunteer=volunteer2,start_time=FUTURE,group="piscine",)
 
     response = auth_client(trainee).get(URL)
 
@@ -81,10 +82,12 @@ def test_user_sees_slots_for_their_group_and_all():
     trainee = make_user("trainee_itd", group="itd")
 
     volunteer = make_user("volunteer")
+    volunteer2 = make_user("volunteer2")
+    volunteer3 = make_user("volunteer3")
 
     SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="itd",)
-    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="all",)
-    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="piscine",)
+    SlotRule.objects.create(volunteer=volunteer2,start_time=FUTURE,group="all",)
+    SlotRule.objects.create(volunteer=volunteer3,start_time=FUTURE,group="piscine",)
 
     response = auth_client(trainee).get(URL)
 
@@ -96,11 +99,15 @@ def test_users_with_different_groups_see_different_slots():
     trainee_itd = make_user("trainee_itd", group="itd")
     trainee_piscine = make_user("trainee_piscine", group="piscine")
     volunteer = make_user("volunteer")
+    volunteer2 = make_user("volunteer2")
+    volunteer3 = make_user("volunteer3")
+    volunteer4 = make_user("volunteer4")
+    
 
     SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="itd",)
-    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="piscine",)
-    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="itd",)
-    SlotRule.objects.create(volunteer=volunteer,start_time=FUTURE,group="all",)
+    SlotRule.objects.create(volunteer=volunteer2,start_time=FUTURE,group="piscine",)
+    SlotRule.objects.create(volunteer=volunteer3,start_time=FUTURE,group="itd",)
+    SlotRule.objects.create(volunteer=volunteer4,start_time=FUTURE,group="all",)
 
     response_itd = auth_client(trainee_itd).get(URL)
     response_piscine = auth_client(trainee_piscine).get(URL)
