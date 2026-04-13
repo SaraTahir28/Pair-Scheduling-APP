@@ -22,12 +22,13 @@ const TraineeBookingFlow = () => {
 	const { user } = useAuth();
 	const navigate = useNavigate();
 
-	useEffect(() => {  
-    api.get("/api/available-slots/")  
-        .then((res) => setAllVolunteersData(res.data))  
-        .catch((err) => console.log(err));  
-}, []);  
-	}
+	useEffect(() => {
+		api
+			.get("/api/available-slots/")
+			.then((res) => setAllVolunteersData(res.data))
+			.catch((err) => console.log(err));
+	}, []);
+
 	const convertedAllVDataToFrontendFormat = {
 		availableDates: [],
 		availableTimes: [],
