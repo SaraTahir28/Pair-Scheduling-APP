@@ -46,7 +46,6 @@ class TestCreateMeetingView:
         url = reverse("create_meeting")
 
         payload = {
-            "volunteer_id": 1,
             # slot_rule_id missing
             "time_slot": (timezone.now() + timedelta(hours=25)).isoformat(),
         }
@@ -69,7 +68,7 @@ class TestCreateMeetingView:
         assert "detail" in response.json()
 
     @patch("core.views.create_google_meeting")
-    def test_successful_meeting_creation_returns_201(self, mock_google_meeting, auth_client, volunteer_user, volunteer_slot_rule):
+    def test_successful_meeting_creation_returns_201(self, mock_google_meeting, auth_client, volunteer_slot_rule):
         url = reverse("create_meeting")
 
         mock_google_meeting.return_value = {
@@ -81,10 +80,8 @@ class TestCreateMeetingView:
 
         # Must be >= 24 hours ahead or serializer will reject it
         start = timezone.now() + timedelta(hours=25)
-        end = start + timedelta(hours=1)
 
         payload = {
-            "volunteer_id": volunteer_user.id,
             "slot_rule_id": volunteer_slot_rule.id,
             "time_slot": start.isoformat(),
             "agenda": "",
@@ -101,15 +98,13 @@ class TestCreateMeetingView:
         assert data["meet_link"] == "https://meet.google.com/xyz"
 
     @patch("core.views.create_google_meeting", side_effect=Exception("Boom"))
-    def test_unexpected_error_returns_500(self, mock_google_meeting, auth_client, volunteer_user, volunteer_slot_rule):
+    def test_unexpected_error_returns_500(self, mock_google_meeting, auth_client, volunteer_slot_rule):
         url = reverse("create_meeting")
 
         # Must be >= 24 hours ahead or serializer will block before mock triggers
         start = timezone.now() + timedelta(hours=25)
-        end = start + timedelta(hours=1)
 
         payload = {
-            "volunteer_id": volunteer_user.id,
             "slot_rule_id": volunteer_slot_rule.id,
             "time_slot": start.isoformat(),
             "agenda": "",
