@@ -12,11 +12,7 @@ import { useAuth } from "../../AuthContext";
 const TraineeBookingFlow = () => {
 	const [allVolunteersData, setAllVolunteersData] = useState(null);
 	//TODO next PR show all slots from all volunteers
-	const [activeVolunteer, setActiveVolunteer] = useState({
-		id: 1,
-		name: "Getting volunteer...",
-		img: "/public/placeholder.png",
-	});
+	const [activeVolunteer, setActiveVolunteer] = useState(null);
 
 	const { selectedDate, selectedTime, status } = useParams();
 	const { user } = useAuth();
@@ -25,10 +21,26 @@ const TraineeBookingFlow = () => {
 	useEffect(() => {
 		api
 			.get("/api/available-slots/")
-			.then((res) => setAllVolunteersData(res.data))
+			.then((res) => {
+				setAllVolunteersData(res.data);
+				if (res.data && res.data.length > 0) {
+					setActiveVolunteer({
+						id: res.data[0].volunteer_id,
+						name: res.data[0].name,
+						img: "/public/placeholder.png",
+					});
+				}
+			})
 			.catch((err) => console.log(err));
 	}, []);
 
+	if (allVolunteersData === null || activeVolunteer === null) {
+		return (
+			<div className="booking-box">
+				<h2>Loading volunteers...</h2>
+			</div>
+		);
+	}
 	const convertedAllVDataToFrontendFormat = {
 		availableDates: [],
 		availableTimes: [],
