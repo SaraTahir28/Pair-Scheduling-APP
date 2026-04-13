@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import SessionDetails from "../groups/SessionDetails";
 import Calendar from "../groups/Calendar";
@@ -22,14 +22,11 @@ const TraineeBookingFlow = () => {
 	const { user } = useAuth();
 	const navigate = useNavigate();
 
-	if (allVolunteersData === null) {
-		setAllVolunteersData([]);
-		api
-			.get("/api/available-slots/")
-			.then((res) => setAllVolunteersData(res.data))
-			.catch((err) => {
-				console.log("No api data :():", err);
-			});
+	useEffect(() => {  
+    api.get("/api/available-slots/")  
+        .then((res) => setAllVolunteersData(res.data))  
+        .catch((err) => console.log(err));  
+}, []);  
 	}
 	const convertedAllVDataToFrontendFormat = {
 		availableDates: [],
