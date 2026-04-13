@@ -95,7 +95,7 @@ describe("Volunteer flow", () => {
 
 		cy.contains("Entries to save:").should("be.visible");
 
-		cy.contains("✕").click();
+		cy.get(".basket-delete-btn").click();
 
 		cy.contains("Entries to save:").should("not.exist");
 		cy.contains(/save all/i).should("not.exist");

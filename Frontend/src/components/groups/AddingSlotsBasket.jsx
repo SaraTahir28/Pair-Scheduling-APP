@@ -1,5 +1,6 @@
 import React from "react";
 import { ActionBtn } from "../elements/Button";
+import { X } from "lucide-react";
 
 const AddingSlotsBasket = ({ addedSlots, removeSlot, saveAll }) => {
 	if (!addedSlots || addedSlots.length === 0) {
@@ -7,38 +8,48 @@ const AddingSlotsBasket = ({ addedSlots, removeSlot, saveAll }) => {
 	}
 
 	return (
-		<div className="booking-form-container">
-			<h3 className="form-title">Entries to save:</h3>
+		<div className="basket-container">
+			<h3 className="basket-title">Entries to save:</h3>
 
-			{addedSlots.map((entry, index) => (
-				<div className="slots-basket-row" key={index}>
-					<span>Time: {entry.start_time.split("T")[1].slice(0, 5)}</span>
+			<div className="basket-list">
+				{addedSlots.map((entry, index) => (
+					<div className="basket-row" key={index}>
+						<div className="flex items-center gap-4">
+							{entry.regular ? (
+								<span>Every {entry.weekday}</span>
+							) : (
+								<span>
+									{`On ${entry.start_time
+										.split("T")[0]
+										.split("-")
+										.reverse()
+										.join("-")}
+								`}
+								</span>
+							)}
+							<span className="font-bold">
+								{`at ${entry.start_time.split("T")[1].slice(0, 5)}`}
+							</span>
 
-					{entry.regular === true ? (
-						<span>
-							<input
-								type="checkbox"
-								checked={true}
-								readOnly
-								className="form-checkbox"
-							/>
-							Recurring every {entry.weekday}
-						</span>
-					) : (
-						<span>
-							On date:
-							{entry.start_time.split("T")[0].split("-").reverse().join("-")}
-						</span>
-					)}
-
-					<ActionBtn
-						additionalBtnClass="btn-tertiary"
-						onClick={() => removeSlot(index)}
-					>
-						✕
-					</ActionBtn>
-				</div>
-			))}
+							{entry.regular && (
+								<span>
+									{`(starting on ${entry.start_time
+										.split("T")[0]
+										.split("-")
+										.reverse()
+										.join("-")})`}
+								</span>
+							)}
+						</div>
+						<ActionBtn
+							additionalBtnClass="btn-tertiary"
+							onClick={() => removeSlot(index)}
+						>
+							<X className="basket-delete-btn" />
+						</ActionBtn>
+					</div>
+				))}
+			</div>
 
 			<ActionBtn additionalBtnClass="btn-primary" onClick={saveAll}>
 				Save all
