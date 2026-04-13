@@ -1,10 +1,9 @@
 from rest_framework import serializers
-from core.models import User, Booking, SlotRule
+from core.models import Booking, SlotRule
 from core.policies.min_booking_window import MinimumBookingWindowPolicy
 from datetime import timedelta
 
 class BookingSerializer(serializers.Serializer):
-    volunteer_id = serializers.IntegerField()
     slot_rule_id = serializers.IntegerField()
     time_slot = serializers.DateTimeField()
     agenda = serializers.CharField(max_length=500, required=False, allow_blank=True)
@@ -17,25 +16,15 @@ class BookingSerializer(serializers.Serializer):
         return value
 
     def validate(self, attrs):
-        volunteer_id = attrs["volunteer_id"]
         slot_rule_id = attrs["slot_rule_id"]
         time_slot = attrs["time_slot"]
-
-        try:
-            volunteer = User.objects.get(id=volunteer_id)
-        except User.DoesNotExist:
-            raise serializers.ValidationError({"volunteer_id": "Volunteer user not found."})
 
         try:
             slot_rule = SlotRule.objects.get(id=slot_rule_id)
         except SlotRule.DoesNotExist:
             raise serializers.ValidationError({"slot_rule_id": "Slot rule not found."})
-
-        if slot_rule.volunteer_id != volunteer.id:
-            raise serializers.ValidationError(
-                {"slot_rule_id": "This slot rule does not belong to the selected volunteer."}
-            )
-
+        
+        volunteer = slot_rule.volunteer
 
         attrs["volunteer"] = volunteer
         attrs["slot_rule"] = slot_rule
