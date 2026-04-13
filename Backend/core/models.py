@@ -85,10 +85,8 @@ class Booking(models.Model):
     )
     slot_rule = models.ForeignKey(
         "SlotRule",
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name="bookings",
-        null=True,
-        blank=True,
     )
 
     start_time = models.DateTimeField()
