@@ -45,8 +45,7 @@ const TraineeBookingFlow = () => {
 			volunteer_id: activeVolunteer.id,
 			slot_rule_id: 1, //TODO will be updated in the next PR
 			time_slot: timeSlotForBackend,
-			agenda:
-				bookingFormData.agenda || "Tell the volunteer what you need help with.",
+			agenda: bookingFormData.agenda || "No agenda provided.",
 		};
 		api
 			.post("/api/create-meeting/", bookingDetailsObj)
