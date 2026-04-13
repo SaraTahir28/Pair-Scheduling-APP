@@ -2,12 +2,7 @@ import React, { useState } from "react";
 import { ActionBtn } from "../elements/Button";
 
 const BookingForm = ({ whenFormSubmit, trainee }) => {
-	const [firstName] = useState(
-		trainee?.name
-			? trainee?.name.split(" ")[0].charAt(0).toUpperCase() +
-					trainee.name.split(" ")[0].slice(1)
-			: ""
-	);
+	const name = trainee?.name;
 
 	const [agenda, setAgenda] = useState("");
 	const checkInputsValid = (e) => {
@@ -30,7 +25,9 @@ const BookingForm = ({ whenFormSubmit, trainee }) => {
 			<form>
 				<div className="form-input-group">
 					<label className="form-label">
-						Okay {firstName}, what would you like to discuss?
+						{name
+							? `Okay ${name}, what would you like to discuss?`
+							: `What would you like to discuss?`}
 					</label>
 					<textarea
 						className="form-input"
@@ -41,7 +38,6 @@ const BookingForm = ({ whenFormSubmit, trainee }) => {
 					/>
 				</div>
 
-				<br></br>
 				<ActionBtn additionalBtnClass="btn-primary" onClick={checkInputsValid}>
 					Book meeting
 				</ActionBtn>

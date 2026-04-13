@@ -8,7 +8,7 @@ describe("BookingForm Component tests", () => {
 
 		cy.get("label.form-label").should(
 			"contain",
-			"Okay Kaska, what would you like to discuss?"
+			"Okay Kaska Test, what would you like to discuss?"
 		);
 	});
 
@@ -25,6 +25,7 @@ describe("BookingForm Component tests", () => {
 
 		cy.get("textarea.form-input").type("Too short");
 		cy.get("button").contains("Book meeting").click();
+		cy.get("@testedSubmit").should("not.have.been.called");
 	});
 
 	it("allows typing in the agenda field", () => {

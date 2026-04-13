@@ -189,7 +189,7 @@
 		@apply text-xl font-bold text-dark mb-6;
 	}
 	.form-input-group {
-		@apply gap-2 flex flex-col;
+		@apply gap-2 flex flex-col mb-2;
 	}
 	.form-label {
 		@apply text-[16px] font-bold text-muted uppercase tracking-wider;
