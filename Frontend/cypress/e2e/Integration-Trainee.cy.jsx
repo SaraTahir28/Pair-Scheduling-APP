@@ -32,7 +32,7 @@ describe("Trainee booking flow", () => {
 
 	it("allows a trainee to book a session from start to finish", () => {
 		cy.visit("/trainee-booking");
-		cy.wait(["@getUser", "getSlots"]);
+		cy.wait(["@getUser", "@getSlots"]);
 
 		cy.get(".cal-day-available").first().click();
 		cy.get(".timeslot-group-div button").first().click();
