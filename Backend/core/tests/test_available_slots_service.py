@@ -10,7 +10,7 @@ NOW = timezone.now()
 FUTURE = timezone.now() + timedelta(days=1)
 
 def make_slot_rule(
-        volunteer_id=1,
+    volunteer_id=1,
     start_time=None,
     repeat_until=None,
     rule_id=1,
