@@ -67,30 +67,35 @@ const Calendar = ({
     emptyDaySquares.push(<div key={"emptyday_" + i}></div>);
   }
 
+  today.setHours(0, 0, 0, 0);
+
   const fullDaySquares = [];
   for (let i = 1; i <= daysInMonth; i++) {
-    // Build full date string in the same format as TraineeBookingFlow
-    const dateStr = new Date(year, month, i).toLocaleDateString("en-CA");
+    const fullDateObj = new Date(year, month, i);
+    const dateStr = fullDateObj.toLocaleDateString("en-CA");
 
     const isDayAvailable = availableDates.includes(dateStr);
-
     const isDaySelectedInCal =
       selectedDateProps &&
       selectedDateProps.getDate() === i &&
       selectedDateProps.getMonth() === month &&
       selectedDateProps.getFullYear() === year;
 
+    const isPastDate = fullDateObj < today;
+
     fullDaySquares.push(
       <div key={"day_" + i}>
         <DayDot
-          isAvailable={isDayAvailable}
+          isAvailable={isDayAvailable && !isPastDate}
           isSelected={isDaySelectedInCal}
+          isUnavailable={isPastDate}
           onClick={() => {
-            if (isDaySelectedInCal) {
-              setSelectedDateProps(null);
-            } else {
-              const fullDateObj = new Date(year, month, i);
-              setSelectedDateProps(fullDateObj);
+            if (!isPastDate) {
+              if (isDaySelectedInCal) {
+                setSelectedDateProps(null);
+              } else {
+                setSelectedDateProps(fullDateObj);
+              }
             }
           }}
         >
