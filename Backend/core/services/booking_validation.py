@@ -10,4 +10,6 @@ def slot_rule_covers_time(slot_rule, time_slot) -> bool:
         time_slot.time() == slot_rule.start_time.time()
         and time_slot.date() >= slot_rule.start_time.date()
         and time_slot.date() <= slot_rule.repeat_until
+        and time_slot.weekday() == slot_rule.start_time.weekday()
     )
+    
