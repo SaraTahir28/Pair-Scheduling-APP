@@ -14,7 +14,7 @@ const AddingSlotsBasket = ({ addedSlots, removeSlot, saveAll }) => {
 			<div className="basket-list">
 				{addedSlots.map((entry, index) => (
 					<div className="basket-row" key={index}>
-						<div className="flex items-center gap-4">
+						<div className="basket-entires">
 							{entry.regular ? (
 								<span>Every {entry.weekday}</span>
 							) : (
@@ -27,7 +27,7 @@ const AddingSlotsBasket = ({ addedSlots, removeSlot, saveAll }) => {
 								`}
 								</span>
 							)}
-							<span className="font-bold">
+							<span className="">
 								{`at ${entry.start_time.split("T")[1].slice(0, 5)}`}
 							</span>
 

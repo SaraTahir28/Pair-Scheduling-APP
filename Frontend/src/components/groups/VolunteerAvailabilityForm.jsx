@@ -59,6 +59,15 @@ const VolunteerAvailabilityForm = ({
 
 	return (
 		<>
+			{mode === "edit" && (
+				<AddingSlotsBasket
+					addedSlots={addedSlots}
+					removeSlot={removeSlot}
+					saveAll={saveAll}
+					layout="top"
+				/>
+			)}
+
 			<div className="booking-form-container">
 				<form onSubmit={checkInputsValid}>
 					<h2 className="form-title">Select your availability</h2>
@@ -140,13 +149,14 @@ const VolunteerAvailabilityForm = ({
 				</form>
 			</div>
 
-			<div>
+			{mode !== "edit" && (
 				<AddingSlotsBasket
 					addedSlots={addedSlots}
 					removeSlot={removeSlot}
 					saveAll={saveAll}
+					layout="bottom"
 				/>
-			</div>
+			)}
 		</>
 	);
 };
