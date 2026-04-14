@@ -1,9 +1,9 @@
 from rest_framework import serializers
 from core.models import SlotRule, User
+from django.utils import timezone
 
 
 class SlotRuleSerializer(serializers.ModelSerializer):
-   
     class Meta:
         model = SlotRule
         fields = [
@@ -13,10 +13,7 @@ class SlotRuleSerializer(serializers.ModelSerializer):
             "repeat_until",
             "group",
         ]
-        read_only_fields = [
-            "id",
-            "volunteer"
-        ]
+        read_only_fields = ["id", "volunteer"]
 
     def validate_repeat_until_is_after_start_time(self, attrs):
         start_time = attrs.get("start_time")
@@ -24,24 +21,36 @@ class SlotRuleSerializer(serializers.ModelSerializer):
         if repeat_until is not None and start_time is not None:
             if repeat_until < start_time.date():
                 raise serializers.ValidationError(
-                    {"repeat_until": "repeat_until cannot be earlier than start_time date."}
+                    {
+                        "repeat_until": "repeat_until cannot be earlier than start_time date."
+                    }
                 )
         return attrs
 
     def validate(self, attrs):
         attrs = self.validate_repeat_until_is_after_start_time(attrs)
-        volunteer = self.instance.volunteer if self.instance else self.context["request"].user
+        volunteer = (
+            self.instance.volunteer if self.instance else self.context["request"].user
+        )
         start_time = attrs.get("start_time")
-        query_set = SlotRule.objects.filter(volunteer=volunteer,start_time=start_time,)
+        query_set = SlotRule.objects.filter(
+            volunteer=volunteer,
+            start_time=start_time,
+        )
 
         if self.instance:
             query_set = query_set.exclude(pk=self.instance.pk)
 
         if query_set.exists():
-            raise serializers.ValidationError({
-                "start_time": "This volunteer already has a slot rule at this time."
-            })
+            raise serializers.ValidationError(
+                {"start_time": "This volunteer already has a slot rule at this time."}
+            )
         return attrs
+
+    def validate_start_time(self, value):
+        if value < timezone.now():
+            raise serializers.ValidationError("Cannot create a slot rule in the past.")
+        return value
 
     def create(self, validated_data):
 
