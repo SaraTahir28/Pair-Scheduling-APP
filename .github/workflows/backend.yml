@@ -13,6 +13,21 @@ jobs:
       run:
         working-directory: Backend
 
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: pairschedulingdb
+          POSTGRES_USER: pairschedulinguser
+          POSTGRES_PASSWORD: securepassword
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U pairschedulinguser -d pairschedulingdb"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       - uses: actions/checkout@v4
 
@@ -22,9 +37,14 @@ jobs:
           cache: pip
 
       - run: pip install -r requirements.txt
-
+      - run: python manage.py migrate
       - run: pytest core/tests/
         env:
           DJANGO_SECRET_KEY: ci-secret-key-not-used-in-prod
           GOOGLE_CLIENT_ID: test-client-id
           GOOGLE_CLIENT_SECRET: test-client-secret
+          POSTGRES_DB: pairschedulingdb
+          POSTGRES_USER: pairschedulinguser
+          POSTGRES_PASSWORD: securepassword
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
