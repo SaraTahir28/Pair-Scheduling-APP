@@ -68,84 +68,98 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
 
 	return (
 		<div className="availability-outer-div">
-			<div className="edit-slot-availability-top-line">
-				<h2 className="edit-form-title">
-					{isEditing && "Edit availability"}
-					{!isEditing && "My availability"}
-				</h2>
-
-				<div className="flex gap-4">
-					{isEditing && <BackBtn onClick={() => setIsEditing(false)} />}
-					{!isEditing && <BackBtn onClick={onBackToDash} />}
-				</div>
-			</div>
-
 			{isEditing && (
-				<div className="edit-mode-container">
-					<VolunteerAvailabilityForm
-						volunteerId={volunteerId}
-						mode="edit"
-						whenFormSubmit={addSlotToBasket}
-						addedSlots={slotsInBasket}
-						removeSlot={removeSlotFromBasket}
-						saveAll={sendNewSlotsToDb}
-					/>
-				</div>
-			)}
-
-			{!isEditing && (
-				<div>
-					<p>View and manage the time slots you offer for 1:1 sessions.</p>
-
-					<div className="basket-container w-full">
-						<div className="basket-list">
-							{myOldSlotsFromApi.length > 0 &&
-								myOldSlotsFromApi.map((entry, index) => (
-									<div className="basket-row" key={index}>
-										<div className="basket-entries">
-											{entry.regular && <span>Every {entry.weekday}</span>}
-											{!entry.regular && (
-												<span>
-													{`On ${entry.start_time
-														.split("T")[0]
-														.split("-")
-														.reverse()
-														.join("-")}
-                          `}
-												</span>
-											)}
-											<span className="font-bold">
-												{`at ${entry.start_time.split("T")[1].slice(0, 5)}`}
-											</span>
-
-											{entry.regular && entry.repeat_until && (
-												<span>
-													{`(until ${entry.repeat_until
-														.split("-")
-														.reverse()
-														.join("-")})`}
-												</span>
-											)}
-										</div>
-									</div>
-								))}
-
-							{myOldSlotsFromApi.length === 0 && (
-								<p>
-									No availability sessions set. You can add some by clicking
-									`Edit`.
-								</p>
-							)}
+				<>
+					<div className="availability-header-container">
+						<div className="availability-header-row">
+							<h2 className="edit-form-title">Edit my availability</h2>
+							<BackBtn onClick={() => setIsEditing(false)} />
+						</div>
+						<div>
+							<p className="edit-form-p">
+								View the time slots you offer for 1:1 sessions.
+							</p>
 						</div>
 					</div>
 
-					<ActionBtn
-						additionalBtnClass="btn-primary mt-4"
-						onClick={startEditing}
-					>
-						Edit my slots
-					</ActionBtn>
-				</div>
+					<div className="edit-mode-container">
+						<VolunteerAvailabilityForm
+							volunteerId={volunteerId}
+							mode="edit"
+							whenFormSubmit={addSlotToBasket}
+							addedSlots={slotsInBasket}
+							removeSlot={removeSlotFromBasket}
+							saveAll={sendNewSlotsToDb}
+						/>
+					</div>
+				</>
+			)}
+
+			{!isEditing && (
+				<>
+					<div className="availability-header-container">
+						<div className="availability-header-row">
+							<h2 className="edit-form-title">My availability</h2>
+							<BackBtn onClick={onBackToDash} />
+						</div>
+						<div>
+							<p className="edit-form-p">
+								Manage the time slots you offer for 1:1 sessions.
+							</p>
+						</div>
+					</div>
+
+					<div>
+						<div className="basket-container-availability">
+							<div className="basket-list">
+								{myOldSlotsFromApi.length > 0 &&
+									myOldSlotsFromApi.map((entry, index) => (
+										<div className="basket-row" key={index}>
+											<div className="basket-entries">
+												{entry.regular && <span>Every {entry.weekday}</span>}
+												{!entry.regular && (
+													<span>
+														{`On ${entry.start_time
+															.split("T")[0]
+															.split("-")
+															.reverse()
+															.join("-")}
+                          `}
+													</span>
+												)}
+												<span className="">
+													{` at ${entry.start_time.split("T")[1].slice(0, 5)}`}
+												</span>
+
+												{entry.regular && entry.repeat_until && (
+													<span>
+														{`(until ${entry.repeat_until
+															.split("-")
+															.reverse()
+															.join("-")})`}
+													</span>
+												)}
+											</div>
+										</div>
+									))}
+
+								{myOldSlotsFromApi.length === 0 && (
+									<p>
+										No availability sessions set. You can add some by clicking
+										`Edit`.
+									</p>
+								)}
+							</div>
+						</div>
+
+						<ActionBtn
+							additionalBtnClass="btn-primary mt-4"
+							onClick={startEditing}
+						>
+							Edit my slots
+						</ActionBtn>
+					</div>
+				</>
 			)}
 		</div>
 	);
