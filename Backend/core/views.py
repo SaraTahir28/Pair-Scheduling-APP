@@ -142,3 +142,19 @@ class SlotRuleCreateView(generics.CreateAPIView):
     # Always assign the slot rule to the logged-in user
     def perform_create(self, serializer):
         serializer.save(volunteer=self.request.user)
+
+class SlotRuleDeleteView(generics.DestroyAPIView):
+    queryset = SlotRule.objects.all()
+    serializer_class = SlotRuleSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return SlotRule.objects.filter(
+            volunteer=self.request.user,
+            deleted_at__isnull=True,
+        )
+
+    def perform_destroy(self, instance):
+        instance.deleted_at = timezone.now()
+        instance.save(update_fields=["deleted_at"])
+        
