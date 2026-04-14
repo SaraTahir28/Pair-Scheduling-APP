@@ -28,8 +28,6 @@ The application is a monorepo with distinct frontend and backend apps communicat
 - Frontend (React): Handles UI, user interactions, and API calls
 - Backend (Django): Manages business logic, authentication, database operations, and Google Calendar integration
 
-## Authentication Flow
-
 1. User clicks "Continue with Google" on the frontend
 2. Frontend redirects to backend endpoint `/accounts/google/login/`
 3. django-allauth handles OAuth2 with Google
@@ -63,15 +61,21 @@ Fill `.env` with:
 
 Run migrations and start server by running these commands.
 
-1.`python manage.py migrate` 2.`python manage.py runserver`
+1.`python manage.py migrate`
+
+2.`python manage.py runserver`
+
 3.Backend runs at: http://127.0.0.1:8000
 
 ### Frontend
 
-1.`cd Frontend` 2.`npm install` 3.`npm run dev`
-Frontend runs at: http://127.0.0.1:5173
+1.`cd Frontend`
 
-## API Endpoints
+2.`npm install`
+
+3.`npm run dev`
+
+Frontend runs at: http://127.0.0.1:5173
 
 ## API Endpoints
 
@@ -93,8 +97,14 @@ Frontend runs at: http://127.0.0.1:5173
 
 ### On Backend
 
-1.`cd Backend` 2.`pytest`
+1.`cd Backend`
+
+2.`pytest`
 
 ### Frontend
 
-1.`cd Frontend` 2.`npm run cypress:open` -> For E2E tests. 3.`npm run cypress:open -- --component` -> for component tests.
+1.`cd Frontend`
+
+2.`npm run cypress:open` -> For E2E tests.
+
+3.`npm run cypress:open -- --component` -> for component tests.
