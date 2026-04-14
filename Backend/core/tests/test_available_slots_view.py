@@ -165,4 +165,29 @@ def test_slots_returned_includes_name_and_img():
     assert len(response.data) == 1
     assert response.data[0]["name"] == "Duncan Parkinson"
     assert response.data[0]["img"] == "/public/placeholder.png"
-    assert slot["end_time"] > slot["start_time"]    
+    assert slot["end_time"] > slot["start_time"]
+
+@pytest.mark.django_db
+def test_soft_deleted_slot_rules_are_not_returned():
+    trainee = make_user("trainee", group="itd")
+    active_volunteer = make_user("active_volunteer")
+    deleted_volunteer = make_user("deleted_volunteer")
+
+    SlotRule.objects.create(
+        volunteer=active_volunteer,
+        start_time=FUTURE,
+        group="itd",
+    )
+    SlotRule.objects.create(
+        volunteer=deleted_volunteer,
+        start_time=FUTURE + timedelta(hours=1),
+        group="itd",
+        deleted_at=timezone.now(),
+    )
+
+    response = auth_client(trainee).get(URL)
+
+    assert response.status_code == 200
+    assert len(response.data) == 1
+    assert response.data[0]["volunteer_id"] == active_volunteer.id
+    
