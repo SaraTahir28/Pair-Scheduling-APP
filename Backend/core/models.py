@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from datetime import timedelta
+from django.db.models import Q
 
 class User(AbstractUser):
     ROLE_CHOICES = [
@@ -49,11 +50,14 @@ class SlotRule(models.Model):
     group = models.CharField(max_length=20,choices=User.GROUP_CHOICES,null=True,blank=True,
     )
 
+    deleted_at = models.DateTimeField(null=True, blank=True, default=None)
+
     class Meta:
         ordering = ["volunteer_id", "start_time"]
         constraints = [
             models.UniqueConstraint(
                 fields=["volunteer", "start_time"],
+                condition=Q(deleted_at__isnull=True),
                 name="unique_volunteer_start_time_slot_rule",
             )
         ]
@@ -69,7 +73,8 @@ class SlotRule(models.Model):
         return result
 
     def __str__(self):
-        return f"{self.volunteer} | {self.start_time}"
+        status = "deleted" if self.deleted_at else "active"
+        return f"{self.volunteer} | {self.start_time} | {status}"
 
 
 class Booking(models.Model):
