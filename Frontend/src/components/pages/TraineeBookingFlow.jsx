@@ -41,27 +41,24 @@ const TraineeBookingFlow = () => {
 			</div>
 		);
 	}
+
+	if (allVolunteersData.length === 0) {
+		return (
+			<div className="booking-box">
+				<h2>No volunteers are available at this time.</h2>
+			</div>
+		);
+	}
+
 	const convertedAllVDataToFrontendFormat = {
 		availableDates: [],
 		availableTimes: [],
 	};
 
-	let showActiveVolunteer = activeVolunteer;
-
 	if (allVolunteersData && allVolunteersData.length > 0) {
 		const activeVolunteerSlots = allVolunteersData.filter((slot) => {
 			return slot.volunteer_id === activeVolunteer.id;
 		});
-
-		if (activeVolunteerSlots.length > 0) {
-			let firstSlot = activeVolunteerSlots[0];
-
-			showActiveVolunteer = {
-				id: activeVolunteer.id,
-				name: firstSlot.name,
-				img: firstSlot.img,
-			};
-		}
 
 		for (let i = 0; i < activeVolunteerSlots.length; i++) {
 			//starting str one is "2026-03-20T09:00:00Z"
@@ -131,7 +128,7 @@ const TraineeBookingFlow = () => {
 					<BookingConfirmation
 						selectedDateObj={selectedDateObj}
 						selectedTime={selectedTime}
-						volunteerProps={showActiveVolunteer}
+						volunteerProps={activeVolunteer}
 					/>
 				</div>
 			) : (
@@ -140,7 +137,7 @@ const TraineeBookingFlow = () => {
 						{!isConfirmationPage && (
 							<SessionDetails
 								selectedDateProps={selectedDateObj}
-								activeVolunteerProps={showActiveVolunteer}
+								activeVolunteerProps={activeVolunteer}
 							/>
 						)}
 					</div>
