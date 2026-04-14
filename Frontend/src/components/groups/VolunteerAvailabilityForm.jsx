@@ -16,13 +16,12 @@ const VolunteerAvailabilityForm = ({
 		});
 	};
 
-	//this is with repeated date initially set to off
 	const [isRecurring, setIsRecurring] = useState(false);
 	const [specificDate, setSpecificDate] = useState(
 		new Date().toISOString().split("T")[0]
 	);
 	const [startTime, setStartTime] = useState("09:00");
-	// const [endTime, setEndTime] = useState(""); //TODO nice to haves
+	const [repeatUntil, setRepeatUntil] = useState("");
 
 	const checkInputsValid = (e) => {
 		e.preventDefault();
@@ -37,28 +36,21 @@ const VolunteerAvailabilityForm = ({
 			return;
 		}
 
-		const timeWithDate = `${specificDate}T${startTime}:00`;
+		if (isRecurring && !repeatUntil) {
+			alert("Please select a 'Repeat until' date.");
+			return;
+		}
 
-		// TODO - nice to haves
-		// for now no tim limit
-		// const futureDate = new Date();
-		// futureDate.setMonth(today.getMonth() + 3);
-		// const endDateStr = isRecurring
-		// 	? futureDate.toISOString().split("T")[0]
-		// 	: startDateStr;
+		const timeWithDate = `${specificDate}T${startTime}:00Z`;
 
-		// build slotsObj
 		const slotsObj = {
-			volunteer_id: volunteerId,
+			volunteer: volunteerId,
 			regular: isRecurring,
 			weekday: isRecurring ? getDayName(specificDate) : null,
 			start_time: timeWithDate,
-			repeat_until: null,
-			// TODO repeat_until: isRecurring ? futureDate.toISOString() : null,
-			// endTime: endTime, // this is for future now no end
-			group: null,
+			repeat_until: isRecurring ? repeatUntil : null,
+			group: "all",
 		};
-		console.log("obj for db", slotsObj);
 		whenFormSubmit(slotsObj);
 
 		setStartTime("09:00");
@@ -87,7 +79,6 @@ const VolunteerAvailabilityForm = ({
 								className="form-input"
 								type="date"
 								disabled={mode === "view"}
-								//TODO admin view later and view selected availability
 								value={specificDate}
 								onChange={(e) => setSpecificDate(e.target.value)}
 							/>
@@ -108,6 +99,19 @@ const VolunteerAvailabilityForm = ({
 									}}
 								/>
 							</div>
+
+							<div className="form-input-group">
+								<label className="form-label">Repeat until</label>
+								<input
+									className="form-input"
+									type="date"
+									disabled={mode === "view"}
+									min={specificDate}
+									value={repeatUntil}
+									onChange={(e) => setRepeatUntil(e.target.value)}
+								/>
+							</div>
+
 							<div className="form-input-group">
 								<span>
 									This session will repeat every{" "}

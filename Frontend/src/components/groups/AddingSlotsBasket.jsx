@@ -37,6 +37,9 @@ const AddingSlotsBasket = ({ addedSlots, removeSlot, saveAll }) => {
 										.split("T")[0]
 										.split("-")
 										.reverse()
+										.join("-")} until ${entry.repeat_until
+										.split("-")
+										.reverse()
 										.join("-")})`}
 								</span>
 							)}

@@ -8,9 +8,9 @@ import VolunteerEditSession from "../groups/VolunteerEditSession";
 import VolunteerViewSession from "../groups/VolunteerViewSession";
 
 import VolunteerAvailabilityForm from "../groups/VolunteerAvailabilityForm";
-import { ActionBtn } from "../elements/Button";
 import { useAuth } from "../../AuthContext";
 import duncanImg from "../../assets/duncan.png";
+import api from "../../api/axiosClient";
 
 const VolunteerDash = () => {
 	const { id } = useParams();
@@ -36,12 +36,30 @@ const VolunteerDash = () => {
 
 	const sendVolunteerSlotsToDb = () => {
 		console.log("Ready to send to db", temporaryAddedSlotsStorage);
-		alert("Availability is saved.");
+		for (let i = 0; i < temporaryAddedSlotsStorage.length; i++) {
+			let slotWeAreOn = temporaryAddedSlotsStorage[i];
 
+			let objectToSendToBackend = {
+				volunteer: slotWeAreOn.volunteer,
+				start_time: slotWeAreOn.start_time,
+				repeat_until: slotWeAreOn.repeat_until,
+				group: "all",
+			};
+
+			api
+				.post("/api/slot-rules/", objectToSendToBackend)
+				.then(() => {
+					console.log("Slot zapisany w bazie!");
+					setHasUserSetAvailability(true);
+					setTemporaryAddedSlotsStorage([]);
+				})
+				.catch((error) => console.log("Error:", error));
+		}
+
+		alert("Availability is saved.");
 		setHasUserSetAvailability(true);
 	};
 
-	// grab all sessions for active user
 	const activeVolunteerSessions = allBookedSessionsForAllUsers.filter(
 		(session) => session.volunteerId === activeVolunteer.id
 	);
@@ -113,10 +131,8 @@ const VolunteerDash = () => {
 				/>
 			</div>
 			<div className="bookings-col">
-				{/* onboarding if slots are not selected - form shows */}
 				{!hasUserSetAvailability && (
 					<div className="">
-						{/* <h1 className="form-title">Welcome {activeVolunteer.name}!</h1> */}
 						<p className="">
 							Let's start by selecting your availability for 1:1 sessions.
 						</p>
