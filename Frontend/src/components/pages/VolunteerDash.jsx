@@ -6,6 +6,7 @@ import BookingCard from "../groups/BookingCard";
 import SessionDetails from "../groups/SessionDetails";
 import VolunteerEditSession from "../groups/VolunteerEditSession";
 import VolunteerViewSession from "../groups/VolunteerViewSession";
+import VolunteerAvailabilityManager from "../groups/VolunteerAvailabilityManager";
 
 import VolunteerAvailabilityForm from "../groups/VolunteerAvailabilityForm";
 import { useAuth } from "../../AuthContext";
@@ -33,6 +34,7 @@ const VolunteerDash = () => {
 	const volunteerSubmitedFormWithSlots = (newSlotObj) => {
 		setTemporaryAddedSlotsStorage([...temporaryAddedSlotsStorage, newSlotObj]);
 	};
+	const [showManager, setShowManager] = useState(false);
 
 	const sendVolunteerSlotsToDb = () => {
 		Promise.all(
@@ -134,7 +136,7 @@ const VolunteerDash = () => {
 
 						<VolunteerAvailabilityForm
 							volunteerId={activeVolunteer.id}
-							mode="edit"
+							mode="onboarding"
 							whenFormSubmit={volunteerSubmitedFormWithSlots}
 							addedSlots={temporaryAddedSlotsStorage}
 							removeSlot={removeSlotFromTemporaryStorage}
@@ -143,32 +145,37 @@ const VolunteerDash = () => {
 					</div>
 				)}
 
-				{hasUserSetAvailability && (
+				{hasUserSetAvailability && !showManager && (
 					<>
-						{id ? (
-							editSessionMode ? (
-								<VolunteerEditSession
-									sessions={allBookedSessionsForAllUsers}
-									onSave={saveEditedSession}
-								/>
-							) : (
-								<VolunteerViewSession sessions={allBookedSessionsForAllUsers} />
-							)
-						) : (
-							<>
-								<div className="all-cards-container">
-									<h2 className="bookings-heading-selectdt">
-										Upcoming sessions
-									</h2>
-									{renderedSessions.length > 0 ? (
-										renderedSessions
-									) : (
-										<p>You do not have any booked sessions.</p>
-									)}
-								</div>
-							</>
+						{id && editSessionMode && (
+							<VolunteerEditSession
+								sessions={allBookedSessionsForAllUsers}
+								onSave={saveEditedSession}
+							/>
+						)}
+
+						{id && !editSessionMode && (
+							<VolunteerViewSession sessions={allBookedSessionsForAllUsers} />
+						)}
+
+						{!id && (
+							<div className="all-cards-container">
+								<h2 className="bookings-heading-selectdt">Upcoming sessions</h2>
+								{renderedSessions.length > 0 ? (
+									renderedSessions
+								) : (
+									<p>You do not have any booked sessions.</p>
+								)}
+							</div>
 						)}
 					</>
+				)}
+
+				{!hasUserSetAvailability && showManager && (
+					<VolunteerAvailabilityManager
+						volunteerId={activeVolunteer.id}
+						onBackToDash={() => setHasUserSetAvailability(true)}
+					/>
 				)}
 			</div>
 		</div>
