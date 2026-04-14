@@ -1,0 +1,165 @@
+diff --git c/.env.example i/.env.example
+new file mode 100644
+index 0000000..27ff048
+--- /dev/null
++++ i/.env.example
+@@ -0,0 +1,4 @@
++# Docker Compose — copy to .env and fill in values before running docker compose up
++POSTGRES_DB=
++POSTGRES_USER=
++POSTGRES_PASSWORD=
+diff --git c/Backend/Dockerfile i/Backend/Dockerfile
+new file mode 100644
+index 0000000..1eab6cd
+--- /dev/null
++++ i/Backend/Dockerfile
+@@ -0,0 +1,13 @@
++FROM python:3.13-slim
++
++ENV PYTHONDONTWRITEBYTECODE=1 \
++    PYTHONUNBUFFERED=1
++
++WORKDIR /app
++
++COPY requirements.txt .
++RUN pip install --no-cache-dir -r requirements.txt
++
++COPY . .
++
++CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+diff --git c/Backend/booking_system/settings.py i/Backend/booking_system/settings.py
+index 937c52a..d908a6a 100644
+--- c/Backend/booking_system/settings.py
++++ i/Backend/booking_system/settings.py
+@@ -25,7 +25,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+ # Then overlay environment-specific URLs
+ DJANGO_ENV = os.getenv("DJANGO_ENV", "development")
+ env_file = ".env.production" if DJANGO_ENV == "production" else ".env.development"
+-environ.Env.read_env(os.path.join(BASE_DIR, env_file))
++env_file_path = os.path.join(BASE_DIR, env_file)
++if os.path.exists(env_file_path):
++    environ.Env.read_env(env_file_path)
+ 
+ FRONTEND_URL = env("FRONTEND_URL")
+ BASE_API_URL = env("VITE_API_URL")
+@@ -43,6 +45,7 @@ ALLOWED_HOSTS = [
+     "pairscheduler-backend.hosting.codeyourfuture.io",
+     "localhost",
+     "127.0.0.1",
++    "backend",
+ ]
+ 
+ 
+@@ -155,12 +158,24 @@ WSGI_APPLICATION = "booking_system.wsgi.application"
+ # Database
+ # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+ 
+-DATABASES = {
+-    "default": {
+-        "ENGINE": "django.db.backends.sqlite3",
+-        "NAME": BASE_DIR / "db.sqlite3",
++if os.getenv("POSTGRES_HOST"):
++    DATABASES = {
++        "default": {
++            "ENGINE": "django.db.backends.postgresql",
++            "NAME": os.getenv("POSTGRES_DB"),
++            "USER": os.getenv("POSTGRES_USER"),
++            "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
++            "HOST": os.getenv("POSTGRES_HOST"),
++            "PORT": os.getenv("POSTGRES_PORT", "5432"),
++        }
++    }
++else:
++    DATABASES = {
++        "default": {
++            "ENGINE": "django.db.backends.sqlite3",
++            "NAME": BASE_DIR / "db.sqlite3",
++        }
+     }
+-}
+ 
+ # To stop using the default user and look at ours instead
+ AUTH_USER_MODEL = "core.User"
+diff --git c/Backend/requirements.txt i/Backend/requirements.txt
+index 3ebf79a..d6f46fa 100644
+--- c/Backend/requirements.txt
++++ i/Backend/requirements.txt
+@@ -21,6 +21,7 @@ iniconfig==2.3.0
+ oauthlib==3.3.1
+ packaging==26.0
+ pluggy==1.6.0
++psycopg2-binary==2.9.10
+ proto-plus==1.27.1
+ protobuf==6.33.5
+ pyasn1==0.6.2
+diff --git c/Frontend/Dockerfile i/Frontend/Dockerfile
+new file mode 100644
+index 0000000..3718c12
+--- /dev/null
++++ i/Frontend/Dockerfile
+@@ -0,0 +1,8 @@
++FROM node:24-slim
++
++WORKDIR /app
++
++COPY package*.json .
++RUN npm install
++
++CMD ["npx", "vite", "--host", "0.0.0.0"]
+diff --git c/docker-compose.yml i/docker-compose.yml
+new file mode 100644
+index 0000000..4d35d2c
+--- /dev/null
++++ i/docker-compose.yml
+@@ -0,0 +1,51 @@
++services:
++  db:
++    image: postgres:15
++    environment:
++      POSTGRES_DB: ${POSTGRES_DB}
++      POSTGRES_USER: ${POSTGRES_USER}
++      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
++    ports:
++      - "5432:5432"
++    volumes:
++      - postgres_data:/var/lib/postgresql/data
++    healthcheck:
++      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
++      interval: 5s
++      timeout: 5s
++      retries: 5
++
++  backend:
++    build: ./Backend
++    command: >
++      sh -c "python manage.py migrate &&
++             python manage.py runserver 0.0.0.0:8000"
++    ports:
++      - "8000:8000"
++    volumes:
++      - ./Backend:/app
++    env_file:
++      - ./Backend/.env
++    environment:
++      POSTGRES_HOST: db
++      POSTGRES_DB: ${POSTGRES_DB}
++      POSTGRES_USER: ${POSTGRES_USER}
++      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
++      FRONTEND_URL: http://localhost:5173
++      VITE_API_URL: http://localhost:8000
++    depends_on:
++      db:
++        condition: service_healthy
++
++  frontend:
++    build: ./Frontend
++    ports:
++      - "5173:5173"
++    volumes:
++      - ./Frontend:/app
++      - /app/node_modules
++    depends_on:
++      - backend
++
++volumes:
++  postgres_data:
