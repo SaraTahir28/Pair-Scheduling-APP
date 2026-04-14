@@ -77,7 +77,7 @@ class TestSlotRuleDeleteView:
 
         response = api_client.delete(self.get_url(slot_rule.id))
 
-        assert response.status_code in [401, 403]
+        assert response.status_code in [401]
 
         slot_rule.refresh_from_db()
         assert slot_rule.deleted_at is None
