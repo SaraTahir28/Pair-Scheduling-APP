@@ -2,6 +2,7 @@ from rest_framework import serializers
 from core.models import Booking, SlotRule
 from core.policies.min_booking_window import MinimumBookingWindowPolicy
 from datetime import timedelta
+from core.services.booking_validation import slot_rule_covers_time
 
 class BookingSerializer(serializers.Serializer):
     slot_rule_id = serializers.IntegerField()
@@ -24,9 +25,12 @@ class BookingSerializer(serializers.Serializer):
         except SlotRule.DoesNotExist:
             raise serializers.ValidationError({"slot_rule_id": "Slot rule not found."})
         
-        volunteer = slot_rule.volunteer
+        if not slot_rule_covers_time(slot_rule, time_slot):
+            raise serializers.ValidationError(
+                {"time_slot": "This time is not available for the selected slot rule."}
+            )
 
-        attrs["volunteer"] = volunteer
+        attrs["volunteer"] = slot_rule.volunteer
         attrs["slot_rule"] = slot_rule
         attrs["start_time"] = time_slot
         return attrs
