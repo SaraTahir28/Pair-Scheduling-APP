@@ -35,29 +35,24 @@ const VolunteerDash = () => {
 	};
 
 	const sendVolunteerSlotsToDb = () => {
-		console.log("Ready to send to db", temporaryAddedSlotsStorage);
-		for (let i = 0; i < temporaryAddedSlotsStorage.length; i++) {
-			let slotWeAreOn = temporaryAddedSlotsStorage[i];
-
-			let objectToSendToBackend = {
-				volunteer: slotWeAreOn.volunteer,
-				start_time: slotWeAreOn.start_time,
-				repeat_until: slotWeAreOn.repeat_until,
-				group: "all",
-			};
-
-			api
-				.post("/api/slot-rules/", objectToSendToBackend)
-				.then(() => {
-					console.log("Slot zapisany w bazie!");
-					setHasUserSetAvailability(true);
-					setTemporaryAddedSlotsStorage([]);
+		Promise.all(
+			temporaryAddedSlotsStorage.map((slot) =>
+				api.post("/api/slot-rules/", {
+					start_time: slot.start_time,
+					repeat_until: slot.repeat_until,
+					group: "all",
 				})
-				.catch((error) => console.log("Error:", error));
-		}
-
-		alert("Availability is saved.");
-		setHasUserSetAvailability(true);
+			)
+		)
+			.then(() => {
+				setHasUserSetAvailability(true);
+				setTemporaryAddedSlotsStorage([]);
+				alert("Availability is saved.");
+			})
+			.catch((error) => {
+				console.error("Error saving slots:", error);
+				alert("Failed to save availability. Please try again.");
+			});
 	};
 
 	const activeVolunteerSessions = allBookedSessionsForAllUsers.filter(
