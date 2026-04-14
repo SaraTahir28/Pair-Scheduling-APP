@@ -2,8 +2,22 @@ describe("Trainee booking flow", () => {
 	beforeEach(() => {
 		cy.intercept("GET", "**/auth/user/", {
 			statusCode: 200,
-			body: { id: 1, name: "Duncan Parkinson", email: "duncan@example.com" },
+			body: { id: 100, name: "Kaska", email: "kaska@example.com" },
 		}).as("getUser");
+
+		cy.intercept("GET", "**/api/available-slots/", {
+			statusCode: 200,
+			body: [
+				{
+					start_time: "2026-04-20T09:00:00Z",
+					end_time: "2026-04-20T10:00:00Z",
+					volunteer_id: 1,
+					slot_rule_id: 1,
+					name: "Duncan Parkinson",
+					img: "/public/placeholder.png",
+				},
+			],
+		}).as("getSlots");
 
 		cy.intercept("GET", "**/auth/csrf/", {
 			statusCode: 200,
@@ -18,7 +32,7 @@ describe("Trainee booking flow", () => {
 
 	it("allows a trainee to book a session from start to finish", () => {
 		cy.visit("/trainee-booking");
-		cy.wait("@getUser");
+		cy.wait(["@getUser", "@getSlots"]);
 
 		cy.get(".cal-day-available").first().click();
 		cy.get(".timeslot-group-div button").first().click();
