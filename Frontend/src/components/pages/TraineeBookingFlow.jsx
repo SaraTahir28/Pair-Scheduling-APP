@@ -27,7 +27,7 @@ const TraineeBookingFlow = () => {
 					setActiveVolunteer({
 						id: res.data[0].volunteer_id,
 						name: res.data[0].name,
-						img: "/public/placeholder.png",
+						img: res.data[0].img,
 					});
 				}
 			})
