@@ -78,12 +78,9 @@ class TestCreateMeetingView:
             "end": "2025-01-01T11:00:00Z",
         }
 
-        # Must be >= 24 hours ahead or serializer will reject it
-        start = timezone.now() + timedelta(hours=25)
-
         payload = {
             "slot_rule_id": volunteer_slot_rule.id,
-            "time_slot": start.isoformat(),
+            "time_slot": volunteer_slot_rule.start_time.isoformat(),
             "agenda": "",
         }
 
@@ -101,12 +98,9 @@ class TestCreateMeetingView:
     def test_unexpected_error_returns_500(self, mock_google_meeting, auth_client, volunteer_slot_rule):
         url = reverse("create_meeting")
 
-        # Must be >= 24 hours ahead or serializer will block before mock triggers
-        start = timezone.now() + timedelta(hours=25)
-
         payload = {
             "slot_rule_id": volunteer_slot_rule.id,
-            "time_slot": start.isoformat(),
+            "time_slot": volunteer_slot_rule.start_time.isoformat(),
             "agenda": "",
         }
 
