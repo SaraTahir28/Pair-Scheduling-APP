@@ -327,7 +327,9 @@
 		@apply flex justify-between items-center py-2 border-b border-black/5 last:border-0 transition-all;
 		@apply hover:bg-black/[0.02];
 	}
-
+	.basket-entries {
+		@apply flex items-center gap-4;
+	}
 	.basket-delete-btn {
 		@apply w-5 h-5 hover:text-brand-blue transition-all cursor-pointer;
 	}
@@ -335,6 +337,19 @@
 	.basket-save-btn {
 		@apply w-full mt-6;
 	}
+
+	/* edit availablity slots */
+	.availability-outer-div {
+		@apply w-full flex flex-col gap-6 p-6;
+	}
+
+	.edit-slot-availability-top-line {
+		@apply flex justify-between items-center w-full pb-4;
+	}
+	.edit-form-title {
+		@apply text-xl font-bold text-dark;
+	}
+
 	/* meeting booked confirmation */
 	/* this is rendered in trainee booking */
 	.conf-page-div {

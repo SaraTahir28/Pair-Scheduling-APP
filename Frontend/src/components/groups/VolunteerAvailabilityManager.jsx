@@ -68,8 +68,8 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
 
 	return (
 		<div className="availability-outer-div">
-			<div className="edit-slot-availability-header">
-				<h2>
+			<div className="edit-slot-availability-top-line">
+				<h2 className="edit-form-title">
 					{isEditing && "Edit availability"}
 					{!isEditing && "My availability"}
 				</h2>
@@ -94,7 +94,7 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
 			)}
 
 			{!isEditing && (
-				<div className="availability-outer-div">
+				<div>
 					<p>View and manage the time slots you offer for 1:1 sessions.</p>
 
 					<div className="basket-container w-full">
