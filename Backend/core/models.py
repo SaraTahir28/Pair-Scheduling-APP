@@ -83,6 +83,11 @@ class Booking(models.Model):
         on_delete=models.CASCADE,
         related_name="bookings_as_volunteer",
     )
+    slot_rule = models.ForeignKey(
+        "SlotRule",
+        on_delete=models.PROTECT,
+        related_name="bookings",
+    )
 
     start_time = models.DateTimeField()
 
@@ -107,6 +112,11 @@ class Booking(models.Model):
 
         if self.trainee_id and self.volunteer_id and self.trainee_id == self.volunteer_id:
             errors["volunteer"] = "A user cannot book a session with themselves."
+
+        if self.slot_rule_id and self.volunteer_id:
+            if self.slot_rule.volunteer_id != self.volunteer_id:
+                errors["slot_rule"] = "Selected slot rule does not belong to the selected volunteer."
+
         if errors:
             raise ValidationError(errors)
 

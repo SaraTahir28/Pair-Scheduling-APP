@@ -39,12 +39,6 @@ class CreateMeetingView(APIView):
 
         validated = serializer.validated_data
 
-        if validated["trainee_email"] != request.user.email:
-            return Response(
-                {"detail": "Users can only create bookings for themselves."},
-                status=status.HTTP_403_FORBIDDEN,
-            )
-
         try:
             start_time = validated["start_time"]
             end_time = start_time + timedelta(hours=1)
@@ -52,11 +46,12 @@ class CreateMeetingView(APIView):
             result = create_google_meeting(
                 start_time=start_time,
                 end_time=end_time,
-                trainee_email=validated["trainee_email"],
-                volunteer_email=validated["volunteer_email"],
+                trainee_email=request.user.email,
+                volunteer_email=validated["volunteer"].email,
             )
 
             booking = serializer.save(
+                trainee=request.user,
                 google_meet_link=result["meet_link"]
             )
 
