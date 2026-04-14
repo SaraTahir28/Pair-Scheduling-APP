@@ -25,7 +25,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 # Then overlay environment-specific URLs
 DJANGO_ENV = os.getenv("DJANGO_ENV", "development")
 env_file = ".env.production" if DJANGO_ENV == "production" else ".env.development"
-environ.Env.read_env(os.path.join(BASE_DIR, env_file))
+env_file_path = os.path.join(BASE_DIR, env_file)
+if os.path.exists(env_file_path):
+    environ.Env.read_env(env_file_path)
 
 FRONTEND_URL = env("FRONTEND_URL")
 BASE_API_URL = env("VITE_API_URL")
@@ -43,6 +45,7 @@ ALLOWED_HOSTS = [
     "pairscheduler-backend.hosting.codeyourfuture.io",
     "localhost",
     "127.0.0.1",
+    "backend",
 ]
 
 
@@ -155,16 +158,24 @@ WSGI_APPLICATION = "booking_system.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("POSTGRES_DB"),
-        "USER": env("POSTGRES_USER"),
-        "PASSWORD": env("POSTGRES_PASSWORD"),
-        "HOST": env("POSTGRES_HOST"),
-        "PORT": env("POSTGRES_PORT"),
+if os.getenv("POSTGRES_HOST"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("POSTGRES_DB"),
+            "USER": os.getenv("POSTGRES_USER"),
+            "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+            "HOST": os.getenv("POSTGRES_HOST"),
+            "PORT": os.getenv("POSTGRES_PORT", "5432"),
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 # To stop using the default user and look at ours instead
 AUTH_USER_MODEL = "core.User"
