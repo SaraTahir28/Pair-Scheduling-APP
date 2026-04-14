@@ -48,13 +48,13 @@ The application is a monorepo with distinct frontend and backend apps communicat
 
 #### Backend
 
-In the terminal run
-1.cd Backend
-2.python -m venv venv
-3.source venv/bin/activate
-4.pip install -r requirements.txt
-5.cp .env.example
-Fill .env with:
+1. `cd Backend`
+2. `python -m venv venv`
+3. `source venv/bin/activate`
+4. `pip install -r requirements.txt`
+5. `cp .env.example`
+
+Fill `.env` with:
 
     Code
     GOOGLE_CLIENT_ID=<Your-Google-Client-ID>
@@ -63,46 +63,38 @@ Fill .env with:
 
 Run migrations and start server by running these commands.
 
-1.python manage.py migrate
-2.python manage.py runserver
+1.`python manage.py migrate` 2.`python manage.py runserver`
 3.Backend runs at: http://127.0.0.1:8000
 
 ### Frontend
 
-cd Frontend
-npm install
-npm run dev
+1.`cd Frontend` 2.`npm install` 3.`npm run dev`
 Frontend runs at: http://127.0.0.1:5173
 
 ## API Endpoints
 
-| Method | Endpoint              | Description                                    |
-| ------ | --------------------- | ---------------------------------------------- |
-| GET    | /auth/user/           | Get profile of the logged‑in user              |
-| POST   | /auth/logout/         | Log out current user                           |
-| GET    | /api/users/           | Retrieve all users                             |
-| POST   | /api/users/           | Create a new user                              |
-| GET    | /api/users/<id>/      | Retrieve details for a specific user           |
-| PATCH  | /api/users/<id>/      | Update a specific user                         |
-| DELETE | /api/users/<id>/      | Delete a specific user (if implemented)        |
-| GET    | /api/available-slots/ | Get all available booking slots (trainee)      |
-| POST   | /api/slot-rules/      | Create a new availability rule (volunteer)     |
-| POST   | /api/create-meeting/  | Book a session & create a Google-Calendarevent |
-| GET    | /api/profile/         | Get the current logged‑in user’s profile       |
+## API Endpoints
+
+| Method | Endpoint                | Description                                     |
+| ------ | ----------------------- | ----------------------------------------------- |
+| GET    | `/auth/user/`           | Get profile of the logged‑in user               |
+| POST   | `/auth/logout/`         | Log out current user                            |
+| GET    | `/api/users/`           | Retrieve all users                              |
+| POST   | `/api/users/`           | Create a new user                               |
+| GET    | `/api/users/:id/`       | Retrieve details for a specific user            |
+| PATCH  | `/api/users/:id/`       | Update a specific user                          |
+| DELETE | `/api/users/:id/`       | Delete a specific user (if implemented)         |
+| GET    | `/api/available-slots/` | Get all available booking slots (trainee)       |
+| POST   | `/api/slot-rules/`      | Create a new availability rule (volunteer)      |
+| POST   | `/api/create-meeting/`  | Book a session & create a Google‑Calendar event |
+| GET    | `/api/profile/`         | Get the current logged‑in user’s profile        |
 
 ### Running Tests
 
 ### On Backend
 
-1.cd Backend
-2.pytest
+1.`cd Backend` 2.`pytest`
 
 ### Frontend
 
-1.cd Frontend
-2.npm run cypress:open -> For E2E tests.
-3.npm run cypress:open -- --component -> for component tests.
-
-```
-
-```
+1.`cd Frontend` 2.`npm run cypress:open` -> For E2E tests. 3.`npm run cypress:open -- --component` -> for component tests.
