@@ -13,6 +13,7 @@ from django.views.decorators.http import require_POST
 # Django Rest Framework
 from rest_framework import generics, permissions, status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -98,7 +99,7 @@ class AvailableSlotsView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        rules = SlotRule.objects.select_related("volunteer").all()
+        rules = SlotRule.objects.select_related("volunteer").filter(deleted_at__isnull=True)
 
         user_group = request.user.group
         if user_group:
@@ -142,3 +143,16 @@ class SlotRuleCreateView(generics.CreateAPIView):
     # Always assign the slot rule to the logged-in user
     def perform_create(self, serializer):
         serializer.save(volunteer=self.request.user)
+
+class SlotRuleDeleteView(generics.DestroyAPIView):
+    queryset = SlotRule.objects.filter(deleted_at__isnull=True)
+    serializer_class = SlotRuleSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_destroy(self, instance):
+        if instance.volunteer != self.request.user:
+            raise PermissionDenied("You do not have permission to delete this slot rule.")
+
+        instance.deleted_at = timezone.now()
+        instance.save(update_fields=["deleted_at"])
+        
