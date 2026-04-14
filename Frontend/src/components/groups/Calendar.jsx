@@ -2,131 +2,135 @@ import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const monthNames = [
-	"January",
-	"February",
-	"March",
-	"April",
-	"May",
-	"June",
-	"July",
-	"August",
-	"September",
-	"October",
-	"November",
-	"December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 const dayNames = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
 const DayDot = ({
-	children,
-	isSelected,
-	isAvailable,
-	isUnavailable,
-	onClick,
+  children,
+  isSelected,
+  isAvailable,
+  isUnavailable,
+  onClick,
 }) => {
-	let className = "cal-day";
-	if (isSelected) className += " cal-day-selected";
-	else if (isAvailable) className += " cal-day-available";
-	else if (isUnavailable) className += " cal-day-unavailable";
+  let className = "cal-day";
+  if (isSelected) className += " cal-day-selected";
+  else if (isAvailable) className += " cal-day-available";
+  else if (isUnavailable) className += " cal-day-unavailable";
 
-	return (
-		<button onClick={onClick} className={className}>
-			{children}
-		</button>
-	);
+  return (
+    <button onClick={onClick} className={className}>
+      {children}
+    </button>
+  );
 };
 
 const Calendar = ({
-	selectedDateProps,
-	setSelectedDateProps,
-	availableDates = [],
+  selectedDateProps,
+  setSelectedDateProps,
+  availableDates = [],
 }) => {
-	const setDefaultMonthView = new Date();
+  const setDefaultMonthView = new Date();
 
-	const [currentDate, funcToChangeMonth] = useState(setDefaultMonthView);
+  const [currentDate, funcToChangeMonth] = useState(setDefaultMonthView);
 
-	const month = currentDate.getMonth();
-	const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const year = currentDate.getFullYear();
 
-	const nextMonth = () => {
-		funcToChangeMonth(new Date(year, month + 1, 1));
-	};
-	const prevMonth = () => {
-		funcToChangeMonth(new Date(year, month - 1, 1));
-	};
+  const nextMonth = () => {
+    funcToChangeMonth(new Date(year, month + 1, 1));
+  };
+  const prevMonth = () => {
+    funcToChangeMonth(new Date(year, month - 1, 1));
+  };
 
-	const firstDay = new Date(year, month, 1);
-	const daysInMonth = new Date(year, month + 1, 0).getDate();
-	const numOfEmptyFieldsBeforeFirstDay = (firstDay.getDay() + 6) % 7;
-	const today = new Date();
-	const currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-	const isCurrentMonth = firstDay <= currentMonth;
+  const firstDay = new Date(year, month, 1);
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const numOfEmptyFieldsBeforeFirstDay = (firstDay.getDay() + 6) % 7;
+  const today = new Date();
+  const currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const isCurrentMonth = firstDay <= currentMonth;
 
-	const emptyDaySquares = [];
-	for (let i = 0; i < numOfEmptyFieldsBeforeFirstDay; i++) {
-		emptyDaySquares.push(<div key={"emptyday_" + i}></div>);
-	}
+  const emptyDaySquares = [];
+  for (let i = 0; i < numOfEmptyFieldsBeforeFirstDay; i++) {
+    emptyDaySquares.push(<div key={"emptyday_" + i}></div>);
+  }
 
-	const fullDaySquares = [];
-	for (let i = 1; i <= daysInMonth; i++) {
-		const isDayAvailable = availableDates.includes(i);
+  const fullDaySquares = [];
+  for (let i = 1; i <= daysInMonth; i++) {
+    // Build full date string in the same format as TraineeBookingFlow
+    const dateStr = new Date(year, month, i).toLocaleDateString("en-CA");
 
-		const isDaySelectedInCal =
-			selectedDateProps &&
-			selectedDateProps.getDate() === i &&
-			selectedDateProps.getMonth() === month;
+    const isDayAvailable = availableDates.includes(dateStr);
 
-		fullDaySquares.push(
-			<div key={"day_" + i}>
-				<DayDot
-					isAvailable={isDayAvailable}
-					isSelected={isDaySelectedInCal}
-					onClick={() => {
-						if (isDaySelectedInCal) {
-							setSelectedDateProps(null);
-						} else {
-							const fullDateObj = new Date(year, month, i);
-							setSelectedDateProps(fullDateObj);
-						}
-					}}
-				>
-					{i}
-				</DayDot>
-			</div>
-		);
-	}
+    const isDaySelectedInCal =
+      selectedDateProps &&
+      selectedDateProps.getDate() === i &&
+      selectedDateProps.getMonth() === month &&
+      selectedDateProps.getFullYear() === year;
 
-	return (
-		<div className="cal-div">
-			<h2 className="cal-heading-selectdt">Select Date & Time</h2>
-			<div className="cal-buttons-and-month-div">
-				<button
-					onClick={prevMonth}
-					className={`cal-chevron ${isCurrentMonth ? "invisible" : ""}`}
-					disabled={isCurrentMonth}
-				>
-					<ChevronLeft />
-				</button>
+    fullDaySquares.push(
+      <div key={"day_" + i}>
+        <DayDot
+          isAvailable={isDayAvailable}
+          isSelected={isDaySelectedInCal}
+          onClick={() => {
+            if (isDaySelectedInCal) {
+              setSelectedDateProps(null);
+            } else {
+              const fullDateObj = new Date(year, month, i);
+              setSelectedDateProps(fullDateObj);
+            }
+          }}
+        >
+          {i}
+        </DayDot>
+      </div>
+    );
+  }
 
-				<p className="cal-month-year-heading">
-					{monthNames[month]} {year}
-				</p>
+  return (
+    <div className="cal-div">
+      <h2 className="cal-heading-selectdt">Select Date & Time</h2>
+      <div className="cal-buttons-and-month-div">
+        <button
+          onClick={prevMonth}
+          className={`cal-chevron ${isCurrentMonth ? "invisible" : ""}`}
+          disabled={isCurrentMonth}
+        >
+          <ChevronLeft />
+        </button>
 
-				<button onClick={nextMonth} className="cal-chevron">
-					<ChevronRight />
-				</button>
-			</div>
-			<div className="cal-day-grid">
-				{dayNames.map((day) => (
-					<div key={day} className="cal-day-name">
-						{day}
-					</div>
-				))}
-				{emptyDaySquares}
-				{fullDaySquares}
-			</div>
-		</div>
-	);
+        <p className="cal-month-year-heading">
+          {monthNames[month]} {year}
+        </p>
+
+        <button onClick={nextMonth} className="cal-chevron">
+          <ChevronRight />
+        </button>
+      </div>
+      <div className="cal-day-grid">
+        {dayNames.map((day) => (
+          <div key={day} className="cal-day-name">
+            {day}
+          </div>
+        ))}
+        {emptyDaySquares}
+        {fullDaySquares}
+      </div>
+    </div>
+  );
 };
 
 export default Calendar;
