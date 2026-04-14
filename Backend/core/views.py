@@ -98,7 +98,7 @@ class AvailableSlotsView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        rules = SlotRule.objects.select_related("volunteer").all()
+        rules = SlotRule.objects.select_related("volunteer").filter(deleted_at__isnull=True)
 
         user_group = request.user.group
         if user_group:
