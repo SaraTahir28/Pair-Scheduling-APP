@@ -66,6 +66,9 @@ describe("Volunteer flow", () => {
 		cy.get(".form-checkbox").check();
 		cy.get(".form-checkbox").should("be.checked");
 
+		cy.get('input[type="date"]').eq(1).clear().type("2026-06-15");
+		cy.get('input[type="date"]').eq(1).should("have.value", "2026-06-15");
+
 		cy.contains("Select date").should("not.exist");
 		cy.contains("label", "Starting on").should("be.visible");
 		cy.contains("This session will repeat every Friday").should("be.visible");
