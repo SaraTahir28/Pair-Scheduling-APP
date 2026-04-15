@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from core.models import SlotRule, User
+from core.models import SlotRule
 
 
 class SlotRuleSerializer(serializers.ModelSerializer):
@@ -15,7 +15,7 @@ class SlotRuleSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             "id",
-            "volunteer"
+            "volunteer",
         ]
 
     def validate_repeat_until_is_after_start_time(self, attrs):
@@ -32,15 +32,18 @@ class SlotRuleSerializer(serializers.ModelSerializer):
         attrs = self.validate_repeat_until_is_after_start_time(attrs)
         volunteer = self.instance.volunteer if self.instance else self.context["request"].user
         start_time = attrs.get("start_time")
-        query_set = SlotRule.objects.filter(volunteer=volunteer,start_time=start_time,)
+        
+        if start_time is not None:
+            query_set = SlotRule.objects.filter(volunteer=volunteer,start_time=start_time,deleted_at__isnull=True,)
 
-        if self.instance:
-            query_set = query_set.exclude(pk=self.instance.pk)
+            if self.instance:
+                query_set = query_set.exclude(pk=self.instance.pk)
 
-        if query_set.exists():
-            raise serializers.ValidationError({
-                "start_time": "This volunteer already has a slot rule at this time."
-            })
+            if query_set.exists():
+                raise serializers.ValidationError({
+                    "start_time": "This volunteer already has a slot rule at this time."
+                })
+            
         return attrs
 
     def create(self, validated_data):
@@ -49,3 +52,4 @@ class SlotRuleSerializer(serializers.ModelSerializer):
         slot_rule.full_clean()
         slot_rule.save()
         return slot_rule
+    
