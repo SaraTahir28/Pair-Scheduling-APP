@@ -7,7 +7,6 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 # Django Rest Framework
@@ -52,8 +51,7 @@ class CreateMeetingView(APIView):
             )
 
             booking = serializer.save(
-                trainee=request.user,
-                google_meet_link=result["meet_link"]
+                trainee=request.user, google_meet_link=result["meet_link"]
             )
 
         except Exception as error:
@@ -77,14 +75,14 @@ class CreateMeetingView(APIView):
 
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = User.objects.all().order_by("id")
-
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
-
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class CurrentProfileView(generics.RetrieveUpdateAPIView):
@@ -99,18 +97,20 @@ class AvailableSlotsView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        rules = SlotRule.objects.select_related("volunteer").filter(deleted_at__isnull=True)
+        rules = SlotRule.objects.select_related("volunteer").filter(
+            deleted_at__isnull=True
+        )
 
         user_group = request.user.group
         if user_group:
-            rules = rules.filter(Q(group=user_group) | Q(group='all'))
+            rules = rules.filter(Q(group=user_group) | Q(group="all"))
         else:
             rules = rules.filter(group="all")
 
         volunteer_id = request.query_params.get("volunteer_id")
         if volunteer_id:
             rules = rules.filter(volunteer_id=volunteer_id)
-        
+
         group = request.query_params.get("group")
         if group:
             rules = rules.filter(group=group)
@@ -119,21 +119,21 @@ class AvailableSlotsView(APIView):
         role = request.query_params.get("role")
         if role:
             rules = rules.filter(volunteer__role=role)
-        
+
         slots = build_available_slots(rules, timezone.now())
 
         booked_pairs = set(
             Booking.objects.filter(
-                volunteer_id__in= [slot.volunteer_id for slot in slots],
-                start_time__in= [slot.start_time for slot in slots],
+                volunteer_id__in=[slot.volunteer_id for slot in slots],
+                start_time__in=[slot.start_time for slot in slots],
             ).values_list("volunteer_id", "start_time")
         )
-        
+
         slots = exclude_booked_slots(slots, booked_pairs)
 
         serializer = AvailableSlotSerializer(slots, many=True)
         return Response(serializer.data)
-   
+
 
 class SlotRuleCreateView(generics.CreateAPIView):
     queryset = SlotRule.objects.all()
@@ -144,6 +144,7 @@ class SlotRuleCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(volunteer=self.request.user)
 
+
 class SlotRuleDeleteView(generics.DestroyAPIView):
     queryset = SlotRule.objects.filter(deleted_at__isnull=True)
     serializer_class = SlotRuleSerializer
@@ -151,8 +152,9 @@ class SlotRuleDeleteView(generics.DestroyAPIView):
 
     def perform_destroy(self, instance):
         if instance.volunteer != self.request.user:
-            raise PermissionDenied("You do not have permission to delete this slot rule.")
+            raise PermissionDenied(
+                "You do not have permission to delete this slot rule."
+            )
 
         instance.deleted_at = timezone.now()
         instance.save(update_fields=["deleted_at"])
-        
