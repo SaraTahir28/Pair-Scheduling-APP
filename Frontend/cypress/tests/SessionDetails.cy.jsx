@@ -1,5 +1,6 @@
 import SessionDetails from "../../src/components/groups/SessionDetails";
 import duncanImage from "../../src/assets/duncan.png";
+import * as AuthContext from "../../src/AuthContext";
 
 describe("SessionDetails Component tests", () => {
 	const testedVolunteer = {
@@ -8,7 +9,6 @@ describe("SessionDetails Component tests", () => {
 	};
 
 	beforeEach(() => {
-		// eslint-disable-next-line no-undef
 		cy.stub(AuthContext, "useAuth").returns({
 			user: {
 				name: "Test Volunteer",
