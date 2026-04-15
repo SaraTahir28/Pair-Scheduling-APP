@@ -30,6 +30,17 @@ describe("TraineeBookingFlow URL validation", () => {
     cy.get("[role='alert']").should("be.visible");
   });
 
+  it("hides the booking flow for an invalid date", () => {
+    mountAtRoute("/trainee-booking/2026-04-50");
+    cy.get(".cal-div").should("not.exist");
+    cy.get(".timeslot-group-div").should("not.exist");
+  });
+
+  it("hides the booking flow for an invalid time", () => {
+    mountAtRoute("/trainee-booking/2026-04-01/25:67");
+    cy.get(".booking-form-container").should("not.exist");
+  });
+
   it("renders normally for a valid date", () => {
     mountAtRoute("/trainee-booking/2026-04-01");
     cy.get("[role='alert']").should("not.exist");

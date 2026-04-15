@@ -123,15 +123,17 @@ const TraineeBookingFlow = () => {
       .catch((error) => console.log("Error:", error));
   };
 
+  if (isInvalidDate || isInvalidTime) {
+    return (
+      <div className="booking-box">
+        {isInvalidDate && <div role="alert">Invalid Date</div>}
+        {isInvalidTime && <div role="alert">Invalid Time</div>}
+      </div>
+    );
+  }
+
   return (
     <div className="booking-box">
-      {isInvalidDate && (
-        <div role="alert">Invalid Date</div>
-      )}
-      {isInvalidTime && (
-        <div role="alert">Invalid Time</div>
-      )}
-
       {isConfirmationPage ? (
         <div className="conf-page-div">
           <BookingConfirmation
