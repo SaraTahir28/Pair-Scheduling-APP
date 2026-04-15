@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ActionBtn } from "../elements/Button";
 import AddingSlotsBasket from "./AddingSlotsBasket";
-import { toDayOfWeekName, formatLocalDate } from "../../utilities/dateTime";
+import { toDayOfWeekName, formatLocalDate, parseLocalDateTime } from "../../utilities/dateTime";
 
 const VolunteerAvailabilityForm = ({
 	whenFormSubmit,
@@ -35,7 +35,7 @@ const VolunteerAvailabilityForm = ({
 			return;
 		}
 
-		const timeWithDate = `${specificDate}T${startTime}:00Z`;
+		const timeWithDate = parseLocalDateTime(specificDate, startTime).toISOString();
 
 		const slotsObj = {
 			volunteer: volunteerId,
