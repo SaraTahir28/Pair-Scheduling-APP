@@ -1,7 +1,15 @@
-import React from "react";
+/* eslint-disable react/prop-types */
 import { Clock, Video } from "lucide-react";
+import { useAuth } from "../../AuthContext";
 
-const SessionDetails = ({ activeVolunteerProps, volunteerView }) => {
+const SessionDetails = ({
+	activeVolunteerProps,
+	volunteerView,
+	traineeView,
+	onManageAvailabilityClick,
+}) => {
+	const { user } = useAuth();
+
 	if (volunteerView) {
 		return (
 			<div className="session-details-div">
@@ -9,50 +17,68 @@ const SessionDetails = ({ activeVolunteerProps, volunteerView }) => {
 				<div className="availableVolunteersDiv">
 					<div className="avatar-row">
 						<img
-							src={activeVolunteerProps.img}
+							src={user?.img || "/default-avatar.png"}
 							className="avatar"
 							alt="Profile"
 						/>
 					</div>
 					<p>
 						You are logged in as <br />
-						<strong>{activeVolunteerProps.name}</strong>
+						<strong>{user?.name || "Volunteer"}</strong>
 					</p>
+					{onManageAvailabilityClick && (
+						<button
+							className="btn-secondary mt-4"
+							onClick={onManageAvailabilityClick}
+						>
+							Manage my availability
+						</button>
+					)}
 				</div>
 			</div>
 		);
 	}
 
-	return (
-		<>
-			<div className="session-details-div">
-				<h1>Book 1:1 session</h1>
+	if (traineeView || !volunteerView) {
+		return (
+			<>
+				<div className="session-details-div">
+					<h1>Book 1:1 session</h1>
 
-				<div className="session-icon-text">
-					<div className="session-icon-text-line">
-						<Clock className="session-icon" />
-						<p>1 hour</p>
-					</div>
+					<div className="session-icon-text">
+						<div className="session-icon-text-line">
+							<Clock className="session-icon" />
+							<p>1 hour</p>
+						</div>
 
-					<div className="session-icon-text-line">
-						<Video className="session-icon" />
-						<p>Google Meet link provided upon confirmation.</p>
+						<div className="session-icon-text-line">
+							<Video className="session-icon" />
+							<p>Google Meet link provided upon confirmation.</p>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<div className="availableVolunteersDiv">
-				<div className="avatar-row">
-					<img src={activeVolunteerProps.img} className="avatar" />
-				</div>
+				{activeVolunteerProps && (
+					<div className="availableVolunteersDiv">
+						<div className="avatar-row">
+							<img
+								src={activeVolunteerProps.img}
+								className="avatar"
+								alt="profile avatar"
+							/>
+						</div>
 
-				<p>
-					Your session is with <br></br>
-					<strong>{activeVolunteerProps.name}</strong>
-				</p>
-			</div>
-		</>
-	);
+						<p>
+							Your session is with <br></br>
+							<strong>{activeVolunteerProps.name}</strong>
+						</p>
+					</div>
+				)}
+			</>
+		);
+	}
+
+	return null;
 };
 
 export default SessionDetails;
