@@ -1,0 +1,127 @@
+import { isValidDate, isValidTime, toDayOfWeekName, parseLocalDate, parseLocalDateTime, formatLocalDate, formatLocalTime } from "../../src/utilities/dateTime";
+
+describe("isValidDate", () => {
+  it("accepts valid dates", () => {
+    expect(isValidDate("2026-01-01")).to.be.true;
+    expect(isValidDate("2024-02-29")).to.be.true;
+  });
+
+  it("rejects incorrectly formatted dates", () => {
+    expect(isValidDate("2026-01-001")).to.be.false;
+  });
+
+  it("rejects dates that very obviously don't exist", () => {
+    expect(isValidDate("2026-01-50")).to.be.false;
+  });
+
+  it("rejects dates that more subtly don't exist", () => {
+    expect(isValidDate("2026-02-31")).to.be.false;
+    expect(isValidDate("2026-02-29")).to.be.false;
+  });
+
+  it("rejects undefined", () => {
+    expect(isValidDate(undefined)).to.be.false;
+  });
+});
+
+describe("isValidTime", () => {
+  it("accepts valid times", () => {
+    expect(isValidTime("09:00")).to.be.true;
+    expect(isValidTime("00:00")).to.be.true;
+    expect(isValidTime("23:59")).to.be.true;
+  });
+
+  it("rejects incorrectly formatted times", () => {
+    expect(isValidTime("003219:03219800")).to.be.false;
+  });
+
+  it("rejects invalid hours", () => {
+    expect(isValidTime("25:00")).to.be.false;
+  });
+
+  it("rejects invalid minutes", () => {
+    expect(isValidTime("00:75")).to.be.false;
+  });
+
+  it("rejects negative time", () => {
+    expect(isValidTime("-05:-75")).to.be.false;
+  });
+
+  it("rejects undefined", () => {
+    expect(isValidTime(undefined)).to.be.false;
+  });
+});
+
+describe("parseLocalDate", () => {
+  it("returns a Date at local midnight", () => {
+    const date = parseLocalDate("2026-04-15");
+    expect(date.getFullYear()).to.equal(2026);
+    expect(date.getMonth()).to.equal(3);
+    expect(date.getDate()).to.equal(15);
+    expect(date.getHours()).to.equal(0);
+  });
+
+  it("throws on invalid input", () => {
+    expect(() => parseLocalDate("2026-02-31")).to.throw();
+    expect(() => parseLocalDate(undefined)).to.throw();
+  });
+});
+
+describe("parseLocalDateTime", () => {
+  it("combines a date and time as local wall-clock", () => {
+    const date = parseLocalDateTime("2026-04-15", "09:30");
+    expect(date.getHours()).to.equal(9);
+    expect(date.getMinutes()).to.equal(30);
+    expect(date.getDate()).to.equal(15);
+  });
+
+  it("converts to UTC via toISOString", () => {
+    const date = parseLocalDateTime("2026-04-15", "09:30");
+    const expected = new Date(2026, 3, 15, 9, 30).toISOString();
+    expect(date.toISOString()).to.equal(expected);
+  });
+
+  it("throws on invalid input", () => {
+    expect(() => parseLocalDateTime("2026-02-31", "09:00")).to.throw();
+    expect(() => parseLocalDateTime("2026-04-15", "25:00")).to.throw();
+  });
+});
+
+describe("formatLocalDate", () => {
+  it("formats a Date as YYYY-MM-DD using local components", () => {
+    expect(formatLocalDate(new Date(2026, 0, 1))).to.equal("2026-01-01");
+    expect(formatLocalDate(new Date(2026, 11, 31))).to.equal("2026-12-31");
+  });
+
+  it("pads single-digit months and days", () => {
+    expect(formatLocalDate(new Date(2026, 3, 5))).to.equal("2026-04-05");
+  });
+
+  it("uses local wall-clock, not UTC", () => {
+    const date = new Date(2026, 3, 15, 23, 30);
+    expect(formatLocalDate(date)).to.equal("2026-04-15");
+  });
+});
+
+describe("formatLocalTime", () => {
+  it("formats a Date as HH:MM using local components", () => {
+    expect(formatLocalTime(new Date(2026, 3, 15, 9, 30))).to.equal("09:30");
+    expect(formatLocalTime(new Date(2026, 3, 15, 23, 5))).to.equal("23:05");
+  });
+
+  it("pads single-digit hours and minutes", () => {
+    expect(formatLocalTime(new Date(2026, 3, 15, 0, 0))).to.equal("00:00");
+    expect(formatLocalTime(new Date(2026, 3, 15, 7, 3))).to.equal("07:03");
+  });
+
+  it("uses local wall-clock, not UTC", () => {
+    const date = new Date(2026, 3, 15, 10, 0);
+    expect(formatLocalTime(date)).to.equal("10:00");
+  });
+});
+
+describe("toDayOfWeekName", () => {
+  it("return the correct day of the week", () => {
+    expect(toDayOfWeekName("2026-01-01")).to.equal("Thursday");
+  });
+});

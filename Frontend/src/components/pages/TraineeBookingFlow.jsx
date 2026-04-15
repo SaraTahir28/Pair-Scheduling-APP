@@ -8,6 +8,7 @@ import api from "../../api/axiosClient";
 import BookingConfirmation from "../groups/BookingConfirmation";
 import { BackBtn } from "../elements/Button";
 import { useAuth } from "../../AuthContext";
+import { isValidDate, isValidTime, parseLocalDate, parseLocalDateTime, formatLocalDate } from "../../utilities/dateTime";
 
 const TraineeBookingFlow = () => {
   const [allVolunteersData, setAllVolunteersData] = useState(null);
@@ -17,6 +18,10 @@ const TraineeBookingFlow = () => {
   const { selectedDate, selectedTime, status } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  const isInvalidDate = selectedDate !== undefined && !isValidDate(selectedDate);
+  const isInvalidTime = selectedTime !== undefined && !isValidTime(selectedTime);
+  const selectedDateObj = selectedDate && !isInvalidDate ? parseLocalDate(selectedDate) : null;
 
   useEffect(() => {
     api
@@ -33,6 +38,15 @@ const TraineeBookingFlow = () => {
       })
       .catch((err) => console.log(err));
   }, []);
+
+  if (isInvalidDate || isInvalidTime) {
+    return (
+      <div className="booking-box">
+        {isInvalidDate && <div role="alert">Invalid Date</div>}
+        {isInvalidTime && <div role="alert">Invalid Time</div>}
+      </div>
+    );
+  }
 
   if (allVolunteersData === null || activeVolunteer === null) {
     return (
@@ -84,11 +98,8 @@ const TraineeBookingFlow = () => {
     }
   }
 
-  const selectedDateObj = selectedDate ? new Date(selectedDate) : null;
-
   const updateUrlWithDate = (newDate) => {
-    const dateString = newDate.toLocaleDateString("en-CA");
-    navigate(`/trainee-booking/${dateString}`);
+    navigate(`/trainee-booking/${formatLocalDate(newDate)}`);
   };
 
   const updateUrlWithTime = (newTime) => {
@@ -102,8 +113,7 @@ const TraineeBookingFlow = () => {
   const isConfirmationPage = status === "confirmation";
 
   const createBookingDetailsObj = (bookingFormData) => {
-    const combinedDateAndTimeFromUrl = `${selectedDate}T${selectedTime}:00`;
-    const timeSlotForBackend = `${combinedDateAndTimeFromUrl}Z`;
+    const timeSlotForBackend = parseLocalDateTime(selectedDate, selectedTime).toISOString();
 
     const bookingDetailsObj = {
       volunteer_id: activeVolunteer.id,

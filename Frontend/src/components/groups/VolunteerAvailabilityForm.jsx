@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ActionBtn } from "../elements/Button";
 import AddingSlotsBasket from "./AddingSlotsBasket";
+import { toDayOfWeekName, formatLocalDate, parseLocalDateTime } from "../../utilities/dateTime";
 
 const VolunteerAvailabilityForm = ({
 	whenFormSubmit,
@@ -10,16 +11,9 @@ const VolunteerAvailabilityForm = ({
 	removeSlot,
 	saveAll,
 }) => {
-	const getDayName = (dateStr) => {
-		return new Date(dateStr + "T00:00:00").toLocaleDateString("en-CA", {
-			weekday: "long",
-		});
-	};
-
+	//this is with repeated date initially set to off
 	const [isRecurring, setIsRecurring] = useState(false);
-	const [specificDate, setSpecificDate] = useState(
-		new Date().toISOString().split("T")[0]
-	);
+	const [specificDate, setSpecificDate] = useState(formatLocalDate(new Date()));
 	const [startTime, setStartTime] = useState("09:00");
 	const [repeatUntil, setRepeatUntil] = useState("");
 
@@ -41,12 +35,12 @@ const VolunteerAvailabilityForm = ({
 			return;
 		}
 
-		const timeWithDate = `${specificDate}T${startTime}:00Z`;
+		const timeWithDate = parseLocalDateTime(specificDate, startTime).toISOString();
 
 		const slotsObj = {
 			volunteer: volunteerId,
 			regular: isRecurring,
-			weekday: isRecurring ? getDayName(specificDate) : null,
+			weekday: isRecurring ? toDayOfWeekName(specificDate) : null,
 			start_time: timeWithDate,
 			repeat_until: isRecurring ? repeatUntil : null,
 			group: "all",
@@ -115,7 +109,7 @@ const VolunteerAvailabilityForm = ({
 							<div className="form-input-group">
 								<span>
 									This session will repeat every{" "}
-									<strong>{getDayName(specificDate)}</strong>
+									<strong>{toDayOfWeekName(specificDate)}</strong>
 								</span>
 							</div>
 						</>

@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import environ
 import os
+import base64
+import json as _json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,10 +27,11 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 # Then overlay environment-specific URLs
 DJANGO_ENV = os.getenv("DJANGO_ENV", "development")
 env_file = ".env.production" if DJANGO_ENV == "production" else ".env.development"
-environ.Env.read_env(os.path.join(BASE_DIR, env_file))
+env_file_path = os.path.join(BASE_DIR, env_file)
+if os.path.exists(env_file_path):
+    environ.Env.read_env(env_file_path)
 
 FRONTEND_URL = env("FRONTEND_URL")
-BASE_API_URL = env("VITE_API_URL")
 GOOGLE_OAUTH2_CLIENT_ID = env("GOOGLE_CLIENT_ID")
 GOOGLE_OAUTH2_CLIENT_SECRET = env("GOOGLE_CLIENT_SECRET")
 
@@ -43,6 +46,7 @@ ALLOWED_HOSTS = [
     "pairscheduler-backend.hosting.codeyourfuture.io",
     "localhost",
     "127.0.0.1",
+    "backend",
 ]
 
 
@@ -114,12 +118,13 @@ SOCIALACCOUNT_QUERY_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "none"  # for dev
 
-# skip the “social login confirmation” djnago default page
+# skip the "social login confirmation" djnago default page
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -155,12 +160,24 @@ WSGI_APPLICATION = "booking_system.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+if os.getenv("POSTGRES_HOST"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("POSTGRES_DB"),
+            "USER": os.getenv("POSTGRES_USER"),
+            "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+            "HOST": os.getenv("POSTGRES_HOST"),
+            "PORT": os.getenv("POSTGRES_PORT", "5432"),
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 # To stop using the default user and look at ours instead
 AUTH_USER_MODEL = "core.User"
@@ -201,21 +218,32 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Google Calendar integration settings with cyf service account
-# "primary" means “use the service account’s main calendar”
+# "primary" means "use the service account's main calendar"
 GOOGLE_CALENDAR_ID = "primary"
 GOOGLE_SERVICE_ACCOUNT_FILE = BASE_DIR / "secrets/cyf-service-account.json"
 
+# If GOOGLE_SERVICE_ACCOUNT_JSON is set (base64-encoded JSON), use it directly.
+# Otherwise fall back to reading the file above (dev/Docker with file mount).
+_sa_json_b64 = os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON")
+GOOGLE_SERVICE_ACCOUNT_INFO = _json.loads(base64.b64decode(_sa_json_b64)) if _sa_json_b64 else None
+
 
 # Adding cors settings
-CORS_ALLOWED_ORIGINS = [
+CORS_ALLOWED_ORIGINS = list({
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:5174",
     "http://127.0.0.1:5174",
-    "https://pairscheduler-frontend.hosting.codeyourfuture.io",  # production frontend
-]
+    FRONTEND_URL,
+})
 CORS_ALLOW_CREDENTIALS = True
 
 # send logs to the console
@@ -249,13 +277,20 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",  # Needed for allauth(Google to work)
 ]
 
-CSRF_TRUSTED_ORIGINS = [
+CSRF_TRUSTED_ORIGINS = list({
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:5174",
     "http://127.0.0.1:5174",
-    "https://pairscheduler-frontend.hosting.codeyourfuture.io",
-]
+    FRONTEND_URL,
+})
+
+if DJANGO_ENV == "production":
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
