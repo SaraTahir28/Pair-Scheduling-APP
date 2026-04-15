@@ -8,7 +8,7 @@ import api from "../../api/axiosClient";
 import BookingConfirmation from "../groups/BookingConfirmation";
 import { BackBtn } from "../elements/Button";
 import { useAuth } from "../../AuthContext";
-import { isValidDate, isValidTime } from "../../utilities/dateTime";
+import { isValidDate, isValidTime, toUtcDateString } from "../../utilities/dateTime";
 
 const TraineeBookingFlow = () => {
   const [allVolunteersData, setAllVolunteersData] = useState(null);
@@ -106,7 +106,7 @@ const TraineeBookingFlow = () => {
   const isConfirmationPage = status === "confirmation";
 
   const createBookingDetailsObj = (bookingFormData) => {
-    const combinedDateAndTimeFromUrl = `${selectedDate}T${selectedTime}:00`;
+    const combinedDateAndTimeFromUrl = `${toUtcDateString(selectedDate)}T${selectedTime}:00`;
     const timeSlotForBackend = `${combinedDateAndTimeFromUrl}Z`;
 
     const bookingDetailsObj = {
