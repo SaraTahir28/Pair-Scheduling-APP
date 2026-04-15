@@ -92,6 +92,10 @@ const TraineeBookingFlow = () => {
   const isConfirmationPage = status === "confirmation";
 
   const createBookingDetailsObj = (bookingFormData) => {
+    if (!activeVolunteer) {
+      console.error("No volunteer selected");
+      return;
+    }
     const combinedDateAndTimeFromUrl = `${selectedDate}T${selectedTime}:00`;
     const timeSlotForBackend = `${combinedDateAndTimeFromUrl}Z`;
 
