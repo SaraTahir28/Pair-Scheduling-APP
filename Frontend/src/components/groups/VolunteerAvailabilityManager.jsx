@@ -6,38 +6,56 @@ import AddingSlotsBasket from "./AddingSlotsBasket";
 
 const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
 	const [isEditing, setIsEditing] = useState(false);
-	const [myOldSlotsFromApi, setMyOldSlotsFromApi] = useState([]);
-	const [slotsInBasket, setSlotsInBasket] = useState([]);
+	const [myOldSlotRulesFromApi, setMyOldSlotRulesFromApi] = useState([]);
+	const [slotRulesInBasketDraft, setSlotRulesInBasketDraft] = useState([]);
 
 	useEffect(() => {
 		api
-			.get("/api/available-slots/")
+			.get("/api/slot-rules/")
 			.then((res) => {
 				const mySlots = res.data.filter(
 					(slot) => slot.volunteer_id === volunteerId
 				);
-				setMyOldSlotsFromApi(mySlots);
+				setMyOldSlotRulesFromApi(mySlots);
 			})
 			.catch((err) => console.log("Error fetching slots:", err));
 	}, [volunteerId]);
 
 	const startEditing = () => {
-		setSlotsInBasket(myOldSlotsFromApi);
+		setSlotRulesInBasketDraft(myOldSlotRulesFromApi);
 		setIsEditing(true);
 	};
 
 	const addSlotToBasket = (newSlotObj) => {
-		setSlotsInBasket([...slotsInBasket, newSlotObj]);
+		setSlotRulesInBasketDraft([...slotRulesInBasketDraft, newSlotObj]);
 	};
 
 	const removeSlotFromBasket = (indexToRemove) => {
-		setSlotsInBasket(
-			slotsInBasket.filter((_, index) => index !== indexToRemove)
-		);
+		const slotRuleToRemoveFromApiOrUi = slotRulesInBasketDraft[indexToRemove];
+		if (slotRuleToRemoveFromApiOrUi.id) {
+			api
+				.delete(`/api/slot-rules/${slotRuleToRemoveFromApiOrUi.id}/`)
+				.then(() => {
+					const updatedSlotRuleBasketNotYetSent = slotRulesInBasketDraft.filter(
+						(_, i) => i !== indexToRemove
+					);
+					setSlotRulesInBasketDraft(updatedSlotRuleBasketNotYetSent);
+					setMyOldSlotRulesFromApi(updatedSlotRuleBasketNotYetSent);
+				})
+				.catch((err) => {
+					console.error("Failed to delete slot rule:", err);
+					alert("Could not delete the slot. Please try again.");
+				});
+		} else {
+			const updatedSlotRuleBasketNotYetSent = slotRulesInBasketDraft.filter(
+				(_, i) => i !== indexToRemove
+			);
+			setSlotRulesInBasketDraft(updatedSlotRuleBasketNotYetSent);
+		}
 	};
 
 	const sendNewSlotsToDb = () => {
-		const onlyNewSlots = slotsInBasket.filter((slot) => !slot.slot_rule_id);
+		const onlyNewSlots = slotRulesInBasketDraft.filter((slot) => !slot.id);
 
 		if (onlyNewSlots.length === 0) {
 			alert("No new slots added.");
@@ -55,9 +73,12 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
 			)
 		)
 			.then(() => {
-				const updatedSlotsCollection = [...myOldSlotsFromApi, ...onlyNewSlots];
-				setMyOldSlotsFromApi(updatedSlotsCollection);
-				setSlotsInBasket([]);
+				const updatedSlotsCollection = [
+					...myOldSlotRulesFromApi,
+					...onlyNewSlots,
+				];
+				setMyOldSlotRulesFromApi(updatedSlotsCollection);
+				setSlotRulesInBasketDraft([]);
 				alert("Availability updated successfully!");
 				setIsEditing(false);
 			})
@@ -88,7 +109,7 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
 							volunteerId={volunteerId}
 							mode="edit"
 							whenFormSubmit={addSlotToBasket}
-							addedSlots={slotsInBasket}
+							addedSlots={slotRulesInBasketDraft}
 							removeSlot={removeSlotFromBasket}
 							saveAll={sendNewSlotsToDb}
 						/>
@@ -111,13 +132,13 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
 					</div>
 
 					<div>
-						{myOldSlotsFromApi.length > 0 && (
+						{myOldSlotRulesFromApi.length > 0 && (
 							<AddingSlotsBasket
-								addedSlots={myOldSlotsFromApi}
+								addedSlots={myOldSlotRulesFromApi}
 								title="Current availability"
 							/>
 						)}
-						{myOldSlotsFromApi.length === 0 && (
+						{myOldSlotRulesFromApi.length === 0 && (
 							<div className="basket-container">
 								<h3 className="basket-title">Current availability</h3>
 								<div className="basket-list">

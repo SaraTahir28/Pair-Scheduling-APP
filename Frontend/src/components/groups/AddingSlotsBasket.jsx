@@ -20,7 +20,7 @@ const AddingSlotsBasket = ({
 			<div className="basket-list">
 				{addedSlots.map((entry, index) => (
 					<div className="basket-row" key={index}>
-						<div className="basket-entires">
+						<div className="basket-entries">
 							{entry.regular ? (
 								<span>Every {entry.weekday} </span>
 							) : (
