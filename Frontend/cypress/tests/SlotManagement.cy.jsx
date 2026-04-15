@@ -5,7 +5,15 @@ describe("Volunteer Availability Manager - Simple Flow", () => {
 	beforeEach(() => {
 		cy.intercept("POST", "**/api/slot-rules/", {
 			statusCode: 201,
-			body: { message: "Success" },
+			body: {
+				id: 999,
+				volunteer_id: 1,
+				regular: false,
+				weekday: null,
+				start_time: "2026-05-20T12:00:00Z",
+				repeat_until: null,
+				group: "all",
+			},
 		}).as("saveAction");
 
 		cy.intercept("GET", "**/api/slot-rules/", {
@@ -37,7 +45,7 @@ describe("Volunteer Availability Manager - Simple Flow", () => {
 
 		cy.contains("Edit my slots").click();
 
-		cy.get('input[type="time"]').type("12:00");
+		cy.get('input[type="time"]').clear().type("12:00");
 		cy.contains("Add to list").click();
 
 		cy.contains("Save all").click();
