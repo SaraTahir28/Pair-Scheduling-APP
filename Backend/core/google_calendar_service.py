@@ -35,9 +35,12 @@ This service is intentionally isolated from Django views so that:
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
 def _get_service_account_credentials():
-    # Load the service account JSON key file specified in settings
-    with open(settings.GOOGLE_SERVICE_ACCOUNT_FILE) as f:
-        json_data = json.load(f)
+    # Use env var JSON if available (Coolify/prod), otherwise read from file (dev)
+    if settings.GOOGLE_SERVICE_ACCOUNT_INFO:
+        json_data = settings.GOOGLE_SERVICE_ACCOUNT_INFO
+    else:
+        with open(settings.GOOGLE_SERVICE_ACCOUNT_FILE) as f:
+            json_data = json.load(f)
 
     # Create a Credentials object from the service account info
     # This represents the service account itself (robot account)

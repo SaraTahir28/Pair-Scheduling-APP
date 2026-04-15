@@ -1,6 +1,12 @@
 import React from "react";
 import { ActionBtn } from "../elements/Button";
 import { X } from "lucide-react";
+import { formatLocalDate, formatLocalTime } from "../../utilities/dateTime";
+
+const toDisplayDate = (isoString) =>
+	formatLocalDate(new Date(isoString)).split("-").reverse().join("-");
+
+const toDisplayTime = (isoString) => formatLocalTime(new Date(isoString));
 
 const AddingSlotsBasket = ({
 	addedSlots,
@@ -24,26 +30,15 @@ const AddingSlotsBasket = ({
 							{entry.regular ? (
 								<span>Every {entry.weekday} </span>
 							) : (
-								<span>
-									{`On ${entry.start_time
-										.split("T")[0]
-										.split("-")
-										.reverse()
-										.join("-")}
-								`}
-								</span>
+								<span>{`On ${toDisplayDate(entry.start_time)} `}</span>
 							)}
-							<span className="">
-								{`at ${entry.start_time.split("T")[1].slice(0, 5)}`}
+							<span className="font-bold">
+								{`at ${toDisplayTime(entry.start_time)}`}
 							</span>
 
 							{entry.regular && (
 								<span>
-									{`(starting on ${entry.start_time
-										.split("T")[0]
-										.split("-")
-										.reverse()
-										.join("-")} until ${entry.repeat_until
+									{`(starting on ${toDisplayDate(entry.start_time)} until ${entry.repeat_until
 										.split("-")
 										.reverse()
 										.join("-")})`}
