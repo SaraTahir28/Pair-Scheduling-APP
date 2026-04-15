@@ -1,4 +1,4 @@
-import { isValidDate, isValidTime, toDayOfWeekName, parseLocalDate, parseLocalDateTime } from "../../src/utilities/dateTime";
+import { isValidDate, isValidTime, toDayOfWeekName, parseLocalDate, parseLocalDateTime, formatLocalDate } from "../../src/utilities/dateTime";
 
 describe("isValidDate", () => {
   it("accepts valid dates", () => {
@@ -84,6 +84,22 @@ describe("parseLocalDateTime", () => {
   it("throws on invalid input", () => {
     expect(() => parseLocalDateTime("2026-02-31", "09:00")).to.throw();
     expect(() => parseLocalDateTime("2026-04-15", "25:00")).to.throw();
+  });
+});
+
+describe("formatLocalDate", () => {
+  it("formats a Date as YYYY-MM-DD using local components", () => {
+    expect(formatLocalDate(new Date(2026, 0, 1))).to.equal("2026-01-01");
+    expect(formatLocalDate(new Date(2026, 11, 31))).to.equal("2026-12-31");
+  });
+
+  it("pads single-digit months and days", () => {
+    expect(formatLocalDate(new Date(2026, 3, 5))).to.equal("2026-04-05");
+  });
+
+  it("uses local wall-clock, not UTC", () => {
+    const date = new Date(2026, 3, 15, 23, 30);
+    expect(formatLocalDate(date)).to.equal("2026-04-15");
   });
 });
 

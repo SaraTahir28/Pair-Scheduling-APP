@@ -32,6 +32,13 @@ export const parseLocalDateTime = (dateStr, timeStr) => {
   return new Date(year, month - 1, day, hours, minutes);
 };
 
+export const formatLocalDate = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 export const toDayOfWeekName = (dateStr) => {
   return parseLocalDate(dateStr).toLocaleDateString(undefined, {
     weekday: "long",
