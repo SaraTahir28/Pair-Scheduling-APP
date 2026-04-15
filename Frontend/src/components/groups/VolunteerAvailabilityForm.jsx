@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ActionBtn } from "../elements/Button";
 import AddingSlotsBasket from "./AddingSlotsBasket";
-import { toDayOfWeekName } from "../../utilities/dateTime";
+import { toDayOfWeekName, formatLocalDate } from "../../utilities/dateTime";
 
 const VolunteerAvailabilityForm = ({
 	whenFormSubmit,
@@ -13,9 +13,7 @@ const VolunteerAvailabilityForm = ({
 }) => {
 	//this is with repeated date initially set to off
 	const [isRecurring, setIsRecurring] = useState(false);
-	const [specificDate, setSpecificDate] = useState(
-		new Date().toISOString().split("T")[0]
-	);
+	const [specificDate, setSpecificDate] = useState(formatLocalDate(new Date()));
 	const [startTime, setStartTime] = useState("09:00");
 	const [repeatUntil, setRepeatUntil] = useState("");
 
