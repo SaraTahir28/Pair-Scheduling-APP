@@ -1,4 +1,4 @@
-import { isValidDate, isValidTime, toUtcDateString } from "../../src/utilities/dateTime";
+import { isValidDate, isValidTime, toUtcDateString, toDayOfWeekName } from "../../src/utilities/dateTime";
 
 describe("isValidDate", () => {
   it("accepts valid dates", () => {
@@ -61,5 +61,12 @@ describe("toUtcDateString", () => {
   it("maintains the correct day when local time is offset from UTC", () => {
     const date = new Date("2026-01-01T00:00:00Z");
     expect(toUtcDateString(date)).to.equal("2026-01-01");
+  });
+});
+
+describe("toDayOfWeekName", () => {
+  it("return the correct day of the week", () => {
+    const date = new Date("2026-01-01T00:00:00Z");
+    expect(toDayOfWeekName(date)).to.equal("Thursday");
   });
 });

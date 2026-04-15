@@ -24,3 +24,10 @@ export const toUtcDateString = (date) => {
   const day = String(date.getUTCDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
+
+export const toDayOfWeekName = (dateStr) => {
+  return new Date(dateStr).toLocaleDateString(undefined, {
+    weekday: "long",
+  });
+};
+
