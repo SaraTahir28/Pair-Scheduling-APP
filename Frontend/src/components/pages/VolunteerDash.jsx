@@ -39,7 +39,7 @@ const VolunteerDash = () => {
 	useEffect(() => {
 		if (activeVolunteer?.id) {
 			api
-				.get("/api/available-slots/")
+				.get("/api/slot-rules/")
 				.then((res) => {
 					const mySlots = res.data.filter(
 						(slot) => slot.volunteer_id === activeVolunteer.id
