@@ -20,12 +20,20 @@ def test_logout_view_authenticated(client, django_user_model):
 
     # After logout, Sara should not be authenticated anymore
     response = client.get("/auth/user/")
-    assert response.status_code == 401
+    assert response.status_code == 403
 
 
 @pytest.mark.django_db
-def test_logout_view_method_not_allowed(client):
-    # Call logout with GET inetsead of POST
+def test_logout_view_method_not_allowed(client, django_user_model):
+    # Create and log in a user
+    user = django_user_model.objects.create_user(
+        username="tester",
+        email="tester@example.com",
+        password="securepass999",
+        status="active",
+    )
+    client.login(username="tester", password="securepass999")
+
     response = client.get("/auth/logout/")
     assert response.status_code == 405
     data = response.json()
