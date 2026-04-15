@@ -72,10 +72,11 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
 				})
 			)
 		)
-			.then(() => {
+			.then((responses) => {
+				const newlyCreatedSlots = responses.map((res) => res.data);
 				const updatedSlotsCollection = [
 					...myOldSlotRulesFromApi,
-					...onlyNewSlots,
+					...newlyCreatedSlots,
 				];
 				setMyOldSlotRulesFromApi(updatedSlotsCollection);
 				setSlotRulesInBasketDraft([]);
