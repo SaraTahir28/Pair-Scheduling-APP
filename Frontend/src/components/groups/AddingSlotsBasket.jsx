@@ -7,6 +7,7 @@ const AddingSlotsBasket = ({
 	removeSlot,
 	saveAll,
 	layout = "bottom",
+	title = "Current selection to save",
 }) => {
 	if (!addedSlots || addedSlots.length === 0) {
 		return null;
@@ -14,14 +15,14 @@ const AddingSlotsBasket = ({
 
 	return (
 		<div className="basket-container">
-			<h3 className="basket-title">Current selection to save</h3>
+			<h3 className="basket-title">{title}</h3>
 
 			<div className="basket-list">
 				{addedSlots.map((entry, index) => (
 					<div className="basket-row" key={index}>
 						<div className="basket-entires">
 							{entry.regular ? (
-								<span>Every {entry.weekday}</span>
+								<span>Every {entry.weekday} </span>
 							) : (
 								<span>
 									{`On ${entry.start_time
@@ -49,19 +50,23 @@ const AddingSlotsBasket = ({
 								</span>
 							)}
 						</div>
-						<ActionBtn
-							additionalBtnClass="btn-tertiary"
-							onClick={() => removeSlot(index)}
-						>
-							<X className="basket-delete-btn" />
-						</ActionBtn>
+						{removeSlot && (
+							<ActionBtn
+								additionalBtnClass="btn-tertiary"
+								onClick={() => removeSlot(index)}
+							>
+								<X className="basket-delete-btn" />
+							</ActionBtn>
+						)}
 					</div>
 				))}
 			</div>
 
-			<ActionBtn additionalBtnClass="btn-primary" onClick={saveAll}>
-				Save all
-			</ActionBtn>
+			{saveAll && (
+				<ActionBtn additionalBtnClass="btn-primary" onClick={saveAll}>
+					Save all
+				</ActionBtn>
+			)}
 		</div>
 	);
 };

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ActionBtn, BackBtn } from "../elements/Button";
 import VolunteerAvailabilityForm from "./VolunteerAvailabilityForm";
 import api from "../../api/axiosClient";
+import AddingSlotsBasket from "./AddingSlotsBasket";
 
 const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
 	const [isEditing, setIsEditing] = useState(false);
@@ -36,7 +37,7 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
 	};
 
 	const sendNewSlotsToDb = () => {
-		const onlyNewSlots = slotsInBasket.filter((slot) => !slot.id);
+		const onlyNewSlots = slotsInBasket.filter((slot) => !slot.slot_rule_id);
 
 		if (onlyNewSlots.length === 0) {
 			alert("No new slots added.");
@@ -110,48 +111,23 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
 					</div>
 
 					<div>
-						<div className="basket-container">
-							<h3 className="basket-title">Current availability</h3>
-							<div className="basket-list">
-								{myOldSlotsFromApi.length > 0 &&
-									myOldSlotsFromApi.map((entry, index) => (
-										<div className="basket-row" key={index}>
-											<div className="basket-entries">
-												{entry.regular && <span>Every {entry.weekday} </span>}
-												{!entry.regular && (
-													<span>
-														{`On ${entry.start_time
-															.split("T")[0]
-															.split("-")
-															.reverse()
-															.join("-")}
-                           `}
-													</span>
-												)}
-												<span className="">
-													{`at ${entry.start_time.split("T")[1].slice(0, 5)}`}
-												</span>
-
-												{entry.regular && entry.repeat_until && (
-													<span>
-														{`(until ${entry.repeat_until
-															.split("-")
-															.reverse()
-															.join("-")})`}
-													</span>
-												)}
-											</div>
-										</div>
-									))}
-
-								{myOldSlotsFromApi.length === 0 && (
+						{myOldSlotsFromApi.length > 0 && (
+							<AddingSlotsBasket
+								addedSlots={myOldSlotsFromApi}
+								title="Current availability"
+							/>
+						)}
+						{myOldSlotsFromApi.length === 0 && (
+							<div className="basket-container">
+								<h3 className="basket-title">Current availability</h3>
+								<div className="basket-list">
 									<p>
 										No availability sessions set. You can add some by clicking
 										`Edit`.
 									</p>
-								)}
+								</div>
 							</div>
-						</div>
+						)}
 
 						<ActionBtn
 							additionalBtnClass="btn-primary mt-4"
