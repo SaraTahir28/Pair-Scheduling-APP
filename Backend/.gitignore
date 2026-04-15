@@ -8,6 +8,7 @@ oauth_token.json
 secrets/*.json   
 # Django
 db.sqlite3
+staticfiles/
 # macOS
 
 
