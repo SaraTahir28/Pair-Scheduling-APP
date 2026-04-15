@@ -8,7 +8,7 @@ import api from "../../api/axiosClient";
 import BookingConfirmation from "../groups/BookingConfirmation";
 import { BackBtn } from "../elements/Button";
 import { useAuth } from "../../AuthContext";
-import { isValidDate, isValidTime, parseLocalDate, parseLocalDateTime } from "../../utilities/dateTime";
+import { isValidDate, isValidTime, parseLocalDate, parseLocalDateTime, formatLocalDate } from "../../utilities/dateTime";
 
 const TraineeBookingFlow = () => {
   const [allVolunteersData, setAllVolunteersData] = useState(null);
@@ -90,8 +90,7 @@ const TraineeBookingFlow = () => {
   }
 
   const updateUrlWithDate = (newDate) => {
-    const dateString = newDate.toLocaleDateString("en-CA");
-    navigate(`/trainee-booking/${dateString}`);
+    navigate(`/trainee-booking/${formatLocalDate(newDate)}`);
   };
 
   const updateUrlWithTime = (newTime) => {
