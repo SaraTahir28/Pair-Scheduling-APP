@@ -2,14 +2,19 @@ import React from "react";
 import { ActionBtn } from "../elements/Button";
 import { X } from "lucide-react";
 
-const AddingSlotsBasket = ({ addedSlots, removeSlot, saveAll }) => {
+const AddingSlotsBasket = ({
+	addedSlots,
+	removeSlot,
+	saveAll,
+	layout = "bottom",
+}) => {
 	if (!addedSlots || addedSlots.length === 0) {
 		return null;
 	}
 
 	return (
 		<div className="basket-container">
-			<h3 className="basket-title">Entries to save:</h3>
+			<h3 className="basket-title">Current selection to save</h3>
 
 			<div className="basket-list">
 				{addedSlots.map((entry, index) => (

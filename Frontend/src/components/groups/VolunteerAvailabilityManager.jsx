@@ -110,13 +110,14 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
 					</div>
 
 					<div>
-						<div className="basket-container-availability">
+						<div className="basket-container">
+							<h3 className="basket-title">Current availability</h3>
 							<div className="basket-list">
 								{myOldSlotsFromApi.length > 0 &&
 									myOldSlotsFromApi.map((entry, index) => (
 										<div className="basket-row" key={index}>
 											<div className="basket-entries">
-												{entry.regular && <span>Every {entry.weekday}</span>}
+												{entry.regular && <span>Every {entry.weekday} </span>}
 												{!entry.regular && (
 													<span>
 														{`On ${entry.start_time
@@ -124,11 +125,11 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
 															.split("-")
 															.reverse()
 															.join("-")}
-                          `}
+                           `}
 													</span>
 												)}
 												<span className="">
-													{` at ${entry.start_time.split("T")[1].slice(0, 5)}`}
+													{`at ${entry.start_time.split("T")[1].slice(0, 5)}`}
 												</span>
 
 												{entry.regular && entry.repeat_until && (
