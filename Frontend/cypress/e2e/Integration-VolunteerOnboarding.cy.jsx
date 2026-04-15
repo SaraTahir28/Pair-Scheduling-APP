@@ -29,7 +29,7 @@ describe("Volunteer flow", () => {
 				group: "all",
 			},
 		}).as("postApi");
-		cy.intercept("DELETE", "**/api/api-slot-rules/**", {
+		cy.intercept("DELETE", "**/api/slot-rules/**", {
 			statusCode: 200,
 			body: { message: "OK" },
 		}).as("deleteApi");
