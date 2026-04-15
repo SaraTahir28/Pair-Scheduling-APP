@@ -8,7 +8,7 @@ describe("Volunteer Availability Manager - Simple Flow", () => {
 			body: { message: "Success" },
 		}).as("saveAction");
 
-		cy.intercept("GET", "**/api/available-slots/**", {
+		cy.intercept("GET", "**/api/slot-rules/", {
 			statusCode: 200,
 			body: [
 				{
