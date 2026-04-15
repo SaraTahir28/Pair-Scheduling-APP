@@ -33,7 +33,7 @@ describe("Basic Calendar Component Tests", () => {
       <Calendar
         selectedDateProps={null}
         setSelectedDateProps={() => {}}
-        availableDates={[15, 20]}
+        availableDates={["2026-04-15", "2026-04-20"]}
       />
     );
 
@@ -46,7 +46,7 @@ describe("Basic Calendar Component Tests", () => {
       <Calendar
         selectedDateProps={null}
         setSelectedDateProps={() => {}}
-        availableDates={[15, 20]}
+        availableDates={["2026-04-15", "2026-04-20"]}
       />
     );
 
