@@ -30,7 +30,6 @@ if os.path.exists(env_file_path):
     environ.Env.read_env(env_file_path)
 
 FRONTEND_URL = env("FRONTEND_URL")
-BASE_API_URL = env("VITE_API_URL")
 GOOGLE_OAUTH2_CLIENT_ID = env("GOOGLE_CLIENT_ID")
 GOOGLE_OAUTH2_CLIENT_SECRET = env("GOOGLE_CLIENT_SECRET")
 
@@ -123,6 +122,7 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -216,6 +216,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Google Calendar integration settings with cyf service account
 # "primary" means “use the service account’s main calendar”
@@ -224,13 +230,13 @@ GOOGLE_SERVICE_ACCOUNT_FILE = BASE_DIR / "secrets/cyf-service-account.json"
 
 
 # Adding cors settings
-CORS_ALLOWED_ORIGINS = [
+CORS_ALLOWED_ORIGINS = list({
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:5174",
     "http://127.0.0.1:5174",
-    "https://pairscheduler-frontend.hosting.codeyourfuture.io",  # production frontend
-]
+    FRONTEND_URL,
+})
 CORS_ALLOW_CREDENTIALS = True
 
 # send logs to the console
@@ -264,10 +270,17 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",  # Needed for allauth(Google to work)
 ]
 
-CSRF_TRUSTED_ORIGINS = [
+CSRF_TRUSTED_ORIGINS = list({
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:5174",
     "http://127.0.0.1:5174",
-    "https://pairscheduler-frontend.hosting.codeyourfuture.io",
-]
+    FRONTEND_URL,
+})
+
+if DJANGO_ENV == "production":
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

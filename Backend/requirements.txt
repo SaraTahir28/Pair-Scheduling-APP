@@ -24,9 +24,6 @@ pluggy==1.6.0
 psycopg2-binary==2.9.10
 proto-plus==1.27.1
 protobuf==6.33.5
-psycopg==3.3.3
-psycopg-binary==3.3.3
-psycopg2-binary==2.9.11
 pyasn1==0.6.2
 pyasn1_modules==0.4.2
 pycparser==3.0
@@ -42,5 +39,7 @@ rsa==4.9.1
 six==1.17.0
 sqlparse==0.5.5
 typing_extensions==4.15.0
+gunicorn==21.2.0
+whitenoise==6.7.0
 uritemplate==4.2.0
 urllib3==2.6.3
