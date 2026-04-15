@@ -19,4 +19,7 @@ down-prod:
 logs:
 	docker compose logs -f
 
-.PHONY: dev dev-build prod prod-build down down-prod logs
+clean:
+	docker compose down -v
+
+.PHONY: dev dev-build prod prod-build down down-prod logs clean
