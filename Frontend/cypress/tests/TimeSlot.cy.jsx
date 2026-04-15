@@ -41,7 +41,6 @@ describe("TimeSlotGroup component tests", () => {
 				availableTimes={testedTimes}
 			/>
 		);
-
 		cy.contains("16:00").should("not.exist");
 	});
 });
