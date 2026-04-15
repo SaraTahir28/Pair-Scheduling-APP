@@ -1,30 +1,35 @@
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
+from django.middleware.csrf import get_token
 from django.contrib.auth import logout
-from functools import wraps
+from django.contrib.auth import logout
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 
 
-def login_required_json(view_func):
-    @wraps(view_func)
-    def wrapper(request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return JsonResponse({"error": "Unauthorized"}, status=401)
-        return view_func(request, *args, **kwargs)
-    return wrapper
+class UserView(APIView):
+    permission_classes = [IsAuthenticated]
 
-@login_required_json
-def user_view(request):
-   
-    return JsonResponse({
-        "id": request.user.id,
-        "email": request.user.email or "",
-        "name": request.user.get_full_name() or request.user.username,
-        "role": request.user.role,
-        "status": request.user.status,
-    })
+    def get(self, request):
+        return Response(
+            {
+                "id": request.user.id,
+                "email": request.user.email or "",
+                "name": request.user.get_full_name() or request.user.username,
+                "role": getattr(request.user, "role", None),
+                "status": getattr(request.user, "status", None),
+            }
+        )
 
-def logout_view(request):
-    if request.method == "POST":
+
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
         logout(request)  # clears session
-        return JsonResponse({"message": "Logged out"})
-    return JsonResponse({"error": "Method not allowed"}, status=405)
+        return Response({"message": "Logged out"}, status=status.HTTP_200_OK)
+
+    def get(self, request):
+        return Response(
+            {"error": "Method not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
