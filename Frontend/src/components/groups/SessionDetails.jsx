@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { Clock, Video } from "lucide-react";
 import { useAuth } from "../../AuthContext";
 
@@ -39,7 +38,7 @@ const SessionDetails = ({
 		);
 	}
 
-	if (traineeView || !volunteerView) {
+	if (traineeView) {
 		return (
 			<>
 				<div className="session-details-div">
@@ -69,7 +68,7 @@ const SessionDetails = ({
 						</div>
 
 						<p>
-							Your session is with <br></br>
+							You are booking a session with <br />
 							<strong>{activeVolunteerProps.name}</strong>
 						</p>
 					</div>
