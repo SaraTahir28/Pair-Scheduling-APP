@@ -57,6 +57,17 @@ describe("TraineeBookingFlow URL validation", () => {
   });
 
   it("submits the booking time as UTC", () => {
+    cy.intercept("GET", "**/api/available-slots/", {
+      statusCode: 200,
+      body: [
+        {
+          volunteer_id: 1,
+          name: "Test Volunteer",
+          img: "",
+          start_time: "2026-04-01T09:00:00Z",
+        },
+      ],
+    }).as("availableSlots");
     cy.intercept("POST", "**/api/create-meeting/", { statusCode: 200, body: {} }).as("createMeeting");
     mountAtRoute("/trainee-booking/2026-04-01/09:00");
     cy.get("textarea").type("discuss promises in javascript");

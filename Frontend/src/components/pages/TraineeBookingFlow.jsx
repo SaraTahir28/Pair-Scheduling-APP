@@ -39,6 +39,15 @@ const TraineeBookingFlow = () => {
       .catch((err) => console.log(err));
   }, []);
 
+  if (isInvalidDate || isInvalidTime) {
+    return (
+      <div className="booking-box">
+        {isInvalidDate && <div role="alert">Invalid Date</div>}
+        {isInvalidTime && <div role="alert">Invalid Time</div>}
+      </div>
+    );
+  }
+
   if (allVolunteersData === null || activeVolunteer === null) {
     return (
       <div className="booking-box">
@@ -121,15 +130,6 @@ const TraineeBookingFlow = () => {
       })
       .catch((error) => console.log("Error:", error));
   };
-
-  if (isInvalidDate || isInvalidTime) {
-    return (
-      <div className="booking-box">
-        {isInvalidDate && <div role="alert">Invalid Date</div>}
-        {isInvalidTime && <div role="alert">Invalid Time</div>}
-      </div>
-    );
-  }
 
   return (
     <div className="booking-box">
