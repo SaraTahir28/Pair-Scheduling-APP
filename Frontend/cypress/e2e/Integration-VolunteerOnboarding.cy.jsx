@@ -1,6 +1,6 @@
 describe("Volunteer flow", () => {
 	beforeEach(() => {
-		cy.intercept("GET", "**/api/available-slots/", {
+		cy.intercept("GET", "**/api/slot-rules/", {
 			statusCode: 200,
 			body: [],
 		}).as("getSlots");
@@ -19,11 +19,17 @@ describe("Volunteer flow", () => {
 			body: { detail: "CSRF cookie set" },
 		}).as("getCsrf");
 
-		cy.intercept("POST", "**/api/**", {
-			statusCode: 200,
-			body: { message: "OK" },
+		cy.intercept("POST", "**/api/slot-rules/", {
+			statusCode: 201,
+			body: {
+				id: 999,
+				start_time: "2026-05-20T10:00:00Z",
+				repeat_until: null,
+				volunteer_id: 1,
+				group: "all",
+			},
 		}).as("postApi");
-		cy.intercept("DELETE", "**/api/**", {
+		cy.intercept("DELETE", "**/api/api-slot-rules/**", {
 			statusCode: 200,
 			body: { message: "OK" },
 		}).as("deleteApi");
