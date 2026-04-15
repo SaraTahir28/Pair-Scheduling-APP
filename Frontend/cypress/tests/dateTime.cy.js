@@ -1,4 +1,4 @@
-import { isValidDate, isValidTime, toUtcDateString, toDayOfWeekName } from "../../src/utilities/dateTime";
+import { isValidDate, isValidTime, toUtcDateString, toDayOfWeekName, parseLocalDate } from "../../src/utilities/dateTime";
 
 describe("isValidDate", () => {
   it("accepts valid dates", () => {
@@ -61,6 +61,21 @@ describe("toUtcDateString", () => {
   it("maintains the correct day when local time is offset from UTC", () => {
     const date = new Date("2026-01-01T00:00:00Z");
     expect(toUtcDateString(date)).to.equal("2026-01-01");
+  });
+});
+
+describe("parseLocalDate", () => {
+  it("returns a Date at local midnight", () => {
+    const date = parseLocalDate("2026-04-15");
+    expect(date.getFullYear()).to.equal(2026);
+    expect(date.getMonth()).to.equal(3);
+    expect(date.getDate()).to.equal(15);
+    expect(date.getHours()).to.equal(0);
+  });
+
+  it("throws on invalid input", () => {
+    expect(() => parseLocalDate("2026-02-31")).to.throw();
+    expect(() => parseLocalDate(undefined)).to.throw();
   });
 });
 

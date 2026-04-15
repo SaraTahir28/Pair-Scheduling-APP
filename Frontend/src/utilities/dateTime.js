@@ -18,6 +18,12 @@ export const isValidTime = (strTime) => {
     minutes >= 0 && minutes <= 59);
 };
 
+export const parseLocalDate = (dateStr) => {
+  if (!isValidDate(dateStr)) throw new Error(`Invalid date: ${dateStr}`);
+  const [year, month, day] = dateStr.split("-").map(Number);
+  return new Date(year, month - 1, day);
+};
+
 export const toUtcDateString = (date) => {
   const year = date.getUTCFullYear();
   const month = String(date.getUTCMonth() + 1).padStart(2, "0");
