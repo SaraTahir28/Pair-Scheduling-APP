@@ -7,6 +7,16 @@ describe("SessionDetails Component tests", () => {
 		img: duncanImage,
 	};
 
+	beforeEach(() => {
+		// eslint-disable-next-line no-undef
+		cy.stub(AuthContext, "useAuth").returns({
+			user: {
+				name: "Test Volunteer",
+				img: "/default-avatar.png",
+			},
+		});
+	});
+
 	it("shows trainee view when traineeView is true", () => {
 		cy.mount(
 			<SessionDetails
