@@ -1,5 +1,10 @@
 describe("Volunteer flow", () => {
 	beforeEach(() => {
+		cy.intercept("GET", "**/api/available-slots/", {
+			statusCode: 200,
+			body: [],
+		}).as("getSlots");
+
 		cy.intercept("GET", "**/auth/user/", {
 			statusCode: 200,
 			body: {
@@ -22,12 +27,13 @@ describe("Volunteer flow", () => {
 			statusCode: 200,
 			body: { message: "OK" },
 		}).as("deleteApi");
+
+		cy.visit("/volunteer-dash");
+		cy.wait("@getUser");
+		cy.wait("@getSlots");
 	});
 
 	it("allows volunteer to save a single date availability", () => {
-		cy.visit("/volunteer-dash");
-		cy.wait("@getUser");
-
 		cy.contains(
 			"Let's start by selecting your availability for 1:1 sessions."
 		).should("be.visible");
@@ -50,9 +56,6 @@ describe("Volunteer flow", () => {
 	});
 
 	it("allows volunteer to save a recurring availability", () => {
-		cy.visit("/volunteer-dash");
-		cy.wait("@getUser");
-
 		cy.contains(
 			"Let's start by selecting your availability for 1:1 sessions."
 		).should("be.visible");
@@ -86,9 +89,6 @@ describe("Volunteer flow", () => {
 	});
 
 	it("allows volunteer to remove an item from the basket", () => {
-		cy.visit("/volunteer-dash");
-		cy.wait("@getUser");
-
 		cy.get('input[type="date"]').clear().type("2026-05-20");
 		cy.get('input[type="date"]').should("have.value", "2026-05-20");
 		cy.get('input[type="time"]').clear().type("10:00");
@@ -105,9 +105,6 @@ describe("Volunteer flow", () => {
 	});
 
 	it("hides onboarding after successful slots save", () => {
-		cy.visit("/volunteer-dash");
-		cy.wait("@getUser");
-
 		cy.get('input[type="date"]').clear().type("2026-05-20");
 		cy.get('input[type="date"]').should("have.value", "2026-05-20");
 		cy.contains("button", "Add to list").click();
