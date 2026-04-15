@@ -13,6 +13,6 @@ urlpatterns = [
     path("users/<int:pk>/", UserDetailView.as_view(), name="user-detail"),
     path("available-slots/", AvailableSlotsView.as_view(), name="available-slots"),
     path("profile/", CurrentProfileView.as_view(), name="current-profile"),
-    path("slot-rules-create/", SlotRuleCreateView.as_view(), name="slot-rule-create"),
-    path("slot-rules-delete/<int:pk>/", SlotRuleDeleteView.as_view(), name="slot-rule-delete"),
+    path("slot-rules/", SlotRuleCreateView.as_view(), name="slot-rule-create"),
+    path("slot-rules/<int:pk>/", SlotRuleDeleteView.as_view(), name="slot-rule-delete"),
 ]
