@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { volunteersDetails, traineeDetails } from "../../data/UserData";
 import { bookedSessions } from "../../data/BookedSessions";
@@ -35,6 +35,22 @@ const VolunteerDash = () => {
 		setTemporaryAddedSlotsStorage([...temporaryAddedSlotsStorage, newSlotObj]);
 	};
 	const [showManager, setShowManager] = useState(false);
+
+	useEffect(() => {
+		if (activeVolunteer?.id) {
+			api
+				.get("/api/available-slots/")
+				.then((res) => {
+					const mySlots = res.data.filter(
+						(slot) => slot.volunteer_id === activeVolunteer.id
+					);
+					if (mySlots.length > 0) {
+						setHasUserSetAvailability(true);
+					}
+				})
+				.catch((err) => console.log("Error checking API:", err));
+		}
+	}, [activeVolunteer?.id]);
 
 	const sendVolunteerSlotsToDb = () => {
 		Promise.all(
@@ -125,6 +141,7 @@ const VolunteerDash = () => {
 				<SessionDetails
 					activeVolunteerProps={activeVolunteer}
 					volunteerView={true}
+					onManageAvailabilityClick={() => setShowManager(true)}
 				/>
 			</div>
 			<div className="bookings-col">
@@ -171,10 +188,10 @@ const VolunteerDash = () => {
 					</>
 				)}
 
-				{!hasUserSetAvailability && showManager && (
+				{hasUserSetAvailability && showManager && (
 					<VolunteerAvailabilityManager
 						volunteerId={activeVolunteer.id}
-						onBackToDash={() => setHasUserSetAvailability(true)}
+						onBackToDash={() => setShowManager(false)}
 					/>
 				)}
 			</div>
