@@ -8,6 +8,7 @@ import api from "../../api/axiosClient";
 import BookingConfirmation from "../groups/BookingConfirmation";
 import { BackBtn } from "../elements/Button";
 import { useAuth } from "../../AuthContext";
+import { isValidDate, isValidTime } from "../../utilities/dateTime";
 
 const TraineeBookingFlow = () => {
   const [allVolunteersData, setAllVolunteersData] = useState(null);
@@ -17,6 +18,9 @@ const TraineeBookingFlow = () => {
   const { selectedDate, selectedTime, status } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  const isInvalidDate = selectedDate !== undefined && !isValidDate(selectedDate);
+  const isInvalidTime = selectedTime !== undefined && !isValidTime(selectedTime);
 
   useEffect(() => {
     api
@@ -123,6 +127,13 @@ const TraineeBookingFlow = () => {
 
   return (
     <div className="booking-box">
+      {isInvalidDate && (
+        <div role="alert">Invalid Date</div>
+      )}
+      {isInvalidTime && (
+        <div role="alert">Invalid Time</div>
+      )}
+
       {isConfirmationPage ? (
         <div className="conf-page-div">
           <BookingConfirmation
