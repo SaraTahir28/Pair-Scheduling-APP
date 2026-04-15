@@ -1,4 +1,4 @@
-import { isValidDate, isValidTime } from "../../src/utilities/dateTime";
+import { isValidDate, isValidTime, toUtcDateString } from "../../src/utilities/dateTime";
 
 describe("isValidDate", () => {
   it("accepts valid dates", () => {
@@ -49,5 +49,17 @@ describe("isValidTime", () => {
 
   it("rejects undefined", () => {
     expect(isValidTime(undefined)).to.be.false;
+  });
+});
+
+describe("toUtcDateString", () => {
+  it("formats a UTC date correctly", () => {
+    const date = new Date("2026-01-01T09:00:00Z");
+    expect(toUtcDateString(date)).to.equal("2026-01-01");
+  });
+
+  it("maintains the correct day when local time is offset from UTC", () => {
+    const date = new Date("2026-01-01T00:00:00Z");
+    expect(toUtcDateString(date)).to.equal("2026-01-01");
   });
 });
