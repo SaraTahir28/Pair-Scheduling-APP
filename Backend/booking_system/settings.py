@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import environ
 import os
+import base64
+import json as _json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -116,7 +118,7 @@ SOCIALACCOUNT_QUERY_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "none"  # for dev
 
-# skip the “social login confirmation” djnago default page
+# skip the "social login confirmation" djnago default page
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
@@ -224,9 +226,14 @@ STORAGES = {
 }
 
 # Google Calendar integration settings with cyf service account
-# "primary" means “use the service account’s main calendar”
+# "primary" means "use the service account's main calendar"
 GOOGLE_CALENDAR_ID = "primary"
 GOOGLE_SERVICE_ACCOUNT_FILE = BASE_DIR / "secrets/cyf-service-account.json"
+
+# If GOOGLE_SERVICE_ACCOUNT_JSON is set (base64-encoded JSON), use it directly.
+# Otherwise fall back to reading the file above (dev/Docker with file mount).
+_sa_json_b64 = os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON")
+GOOGLE_SERVICE_ACCOUNT_INFO = _json.loads(base64.b64decode(_sa_json_b64)) if _sa_json_b64 else None
 
 
 # Adding cors settings
