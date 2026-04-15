@@ -40,7 +40,7 @@ export const toUtcDateString = (date) => {
 }
 
 export const toDayOfWeekName = (dateStr) => {
-  return new Date(dateStr).toLocaleDateString(undefined, {
+  return parseLocalDate(dateStr).toLocaleDateString(undefined, {
     weekday: "long",
   });
 };

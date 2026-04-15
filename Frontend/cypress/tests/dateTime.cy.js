@@ -101,7 +101,6 @@ describe("parseLocalDateTime", () => {
 
 describe("toDayOfWeekName", () => {
   it("return the correct day of the week", () => {
-    const date = new Date("2026-01-01T00:00:00Z");
-    expect(toDayOfWeekName(date)).to.equal("Thursday");
+    expect(toDayOfWeekName("2026-01-01")).to.equal("Thursday");
   });
 });
