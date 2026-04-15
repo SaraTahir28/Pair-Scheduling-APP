@@ -7,7 +7,7 @@ const SessionDetails = ({
 	traineeView,
 	onManageAvailabilityClick,
 }) => {
-	const { user } = useAuth();
+	const { user } = useAuth() || {};
 
 	if (volunteerView) {
 		return (
