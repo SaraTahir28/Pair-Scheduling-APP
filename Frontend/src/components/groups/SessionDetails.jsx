@@ -3,6 +3,8 @@ import { useAuth } from "../../AuthContext";
 
 const SessionDetails = ({
 	activeVolunteerProps,
+	volunteers = [],
+	onVolunteerSelect,
 	volunteerView,
 	traineeView,
 	onManageAvailabilityClick,
@@ -15,11 +17,7 @@ const SessionDetails = ({
 				<h1>Welcome back</h1>
 				<div className="availableVolunteersDiv">
 					<div className="avatar-row">
-						<img
-							src={user?.img || "/default-avatar.png"}
-							className="avatar"
-							alt="Profile"
-						/>
+						<img src={user?.img} className="avatar" alt="profile avatar" />
 					</div>
 					<p>
 						You are logged in as <br />
@@ -71,6 +69,23 @@ const SessionDetails = ({
 							You are booking a session with <br />
 							<strong>{activeVolunteerProps.name}</strong>
 						</p>
+					</div>
+				)}
+
+				{!activeVolunteerProps && volunteers.length > 0 && (
+					<div className="availableVolunteersDiv">
+						<div className="avatar-row">
+							{volunteers.map((volunteer) => (
+								<img
+									key={volunteer.id}
+									src={volunteer.img}
+									className="avatar"
+									alt={volunteer.name}
+									onClick={() => onVolunteerSelect?.(volunteer)}
+									style={{ cursor: "pointer" }}
+								/>
+							))}
+						</div>
 					</div>
 				)}
 			</>
