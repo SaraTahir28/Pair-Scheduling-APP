@@ -1,6 +1,6 @@
 import SessionDetails from "../../src/components/groups/SessionDetails";
 import duncanImage from "../../src/assets/duncan.png";
-import * as AuthContext from "../../src/AuthContext";
+import { AuthProvider } from "../../src/AuthContext";
 
 describe("SessionDetails Component tests", () => {
 	const testedVolunteer = {
@@ -8,21 +8,19 @@ describe("SessionDetails Component tests", () => {
 		img: duncanImage,
 	};
 
-	beforeEach(() => {
-		cy.stub(AuthContext, "useAuth").returns({
-			user: {
-				name: "Test Volunteer",
-				img: "/default-avatar.png",
-			},
-		});
-	});
+	const mockUser = {
+		name: "Test Volunteer",
+		img: "/default-avatar.png",
+	};
 
 	it("shows trainee view when traineeView is true", () => {
 		cy.mount(
-			<SessionDetails
-				activeVolunteerProps={testedVolunteer}
-				traineeView={true}
-			/>
+			<AuthProvider value={{ user: mockUser }}>
+				<SessionDetails
+					activeVolunteerProps={testedVolunteer}
+					traineeView={true}
+				/>
+			</AuthProvider>
 		);
 
 		cy.contains("Book 1:1 session").should("be.visible");
@@ -31,7 +29,11 @@ describe("SessionDetails Component tests", () => {
 	});
 
 	it("shows volunteer view when volunteerView is true", () => {
-		cy.mount(<SessionDetails volunteerView={true} />);
+		cy.mount(
+			<AuthProvider value={{ user: mockUser }}>
+				<SessionDetails volunteerView={true} />
+			</AuthProvider>
+		);
 
 		cy.contains("Welcome back").should("be.visible");
 		cy.contains("You are logged in as").should("be.visible");
