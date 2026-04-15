@@ -1,4 +1,4 @@
-import { isValidDate, isValidTime, toUtcDateString, toDayOfWeekName, parseLocalDate } from "../../src/utilities/dateTime";
+import { isValidDate, isValidTime, toUtcDateString, toDayOfWeekName, parseLocalDate, parseLocalDateTime } from "../../src/utilities/dateTime";
 
 describe("isValidDate", () => {
   it("accepts valid dates", () => {
@@ -76,6 +76,26 @@ describe("parseLocalDate", () => {
   it("throws on invalid input", () => {
     expect(() => parseLocalDate("2026-02-31")).to.throw();
     expect(() => parseLocalDate(undefined)).to.throw();
+  });
+});
+
+describe("parseLocalDateTime", () => {
+  it("combines a date and time as local wall-clock", () => {
+    const date = parseLocalDateTime("2026-04-15", "09:30");
+    expect(date.getHours()).to.equal(9);
+    expect(date.getMinutes()).to.equal(30);
+    expect(date.getDate()).to.equal(15);
+  });
+
+  it("converts to UTC via toISOString", () => {
+    const date = parseLocalDateTime("2026-04-15", "09:30");
+    const expected = new Date(2026, 3, 15, 9, 30).toISOString();
+    expect(date.toISOString()).to.equal(expected);
+  });
+
+  it("throws on invalid input", () => {
+    expect(() => parseLocalDateTime("2026-02-31", "09:00")).to.throw();
+    expect(() => parseLocalDateTime("2026-04-15", "25:00")).to.throw();
   });
 });
 

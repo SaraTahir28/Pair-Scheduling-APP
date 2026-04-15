@@ -24,6 +24,14 @@ export const parseLocalDate = (dateStr) => {
   return new Date(year, month - 1, day);
 };
 
+export const parseLocalDateTime = (dateStr, timeStr) => {
+  if (!isValidDate(dateStr)) throw new Error(`Invalid date: ${dateStr}`);
+  if (!isValidTime(timeStr)) throw new Error(`Invalid time: ${timeStr}`);
+  const [year, month, day] = dateStr.split("-").map(Number);
+  const [hours, minutes] = timeStr.split(":").map(Number);
+  return new Date(year, month - 1, day, hours, minutes);
+};
+
 export const toUtcDateString = (date) => {
   const year = date.getUTCFullYear();
   const month = String(date.getUTCMonth() + 1).padStart(2, "0");
