@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ActionBtn, BackBtn } from "../elements/Button";
 import VolunteerAvailabilityForm from "./VolunteerAvailabilityForm";
 import api from "../../api/axiosClient";
@@ -145,7 +145,7 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
 								<div className="basket-list">
 									<p>
 										No availability sessions set. You can add some by clicking
-										`Edit`.
+										&apos;Edit&apos; below.
 									</p>
 								</div>
 							</div>
