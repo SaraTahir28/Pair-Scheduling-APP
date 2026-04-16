@@ -11,7 +11,6 @@ const AddingSlotsBasket = ({
 	addedSlots,
 	removeSlot,
 	saveAll,
-	layout = "bottom",
 	title = "Current selection to save",
 }) => {
 	if (!addedSlots || addedSlots.length === 0) {

@@ -14,7 +14,6 @@ const VolunteerAvailabilityForm = ({
 	removeSlot,
 	saveAll,
 }) => {
-	//this is with repeated date initially set to off
 	const [isRecurring, setIsRecurring] = useState(false);
 	const [specificDate, setSpecificDate] = useState(formatLocalDate(new Date()));
 	const [startTime, setStartTime] = useState("09:00");
@@ -44,7 +43,7 @@ const VolunteerAvailabilityForm = ({
 		).toISOString();
 
 		const slotsObj = {
-			volunteer: volunteerId,
+			volunteer_id: volunteerId,
 			regular: isRecurring,
 			weekday: isRecurring ? toDayOfWeekName(specificDate) : null,
 			start_time: timeWithDate,
@@ -55,6 +54,7 @@ const VolunteerAvailabilityForm = ({
 
 		setStartTime("09:00");
 		setIsRecurring(false);
+		setRepeatUntil("");
 	};
 
 	return (
@@ -64,7 +64,6 @@ const VolunteerAvailabilityForm = ({
 					addedSlots={addedSlots}
 					removeSlot={removeSlot}
 					saveAll={saveAll}
-					layout="top"
 				/>
 			)}
 
@@ -154,7 +153,6 @@ const VolunteerAvailabilityForm = ({
 					addedSlots={addedSlots}
 					removeSlot={removeSlot}
 					saveAll={saveAll}
-					layout="bottom"
 				/>
 			)}
 		</>

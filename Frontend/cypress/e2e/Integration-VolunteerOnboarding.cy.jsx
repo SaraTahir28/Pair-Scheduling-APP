@@ -1,8 +1,14 @@
+/* eslint-disable no-undef */
 describe("Volunteer flow", () => {
+	let mockSlots = [];
 	beforeEach(() => {
-		cy.intercept("GET", "**/api/slot-rules/", {
-			statusCode: 200,
-			body: [],
+		mockSlots = [];
+
+		cy.intercept("GET", "**/api/slot-rules/", (req) => {
+			req.reply({
+				statusCode: 200,
+				body: mockSlots,
+			});
 		}).as("getSlots");
 
 		cy.intercept("GET", "**/auth/user/", {
@@ -19,15 +25,21 @@ describe("Volunteer flow", () => {
 			body: { detail: "CSRF cookie set" },
 		}).as("getCsrf");
 
-		cy.intercept("POST", "**/api/slot-rules/", {
-			statusCode: 201,
-			body: {
+		cy.intercept("POST", "**/api/slot-rules/", (req) => {
+			const newSlot = {
 				id: 999,
-				start_time: "2026-05-20T10:00:00Z",
-				repeat_until: null,
-				volunteer_id: 1,
-				group: "all",
-			},
+				start_time: req.body.start_time,
+				repeat_until: req.body.repeat_until,
+				volunteer_id: req.body.volunteer,
+				group: req.body.group,
+			};
+
+			mockSlots.push(newSlot);
+
+			req.reply({
+				statusCode: 201,
+				body: newSlot,
+			});
 		}).as("postApi");
 		cy.intercept("DELETE", "**/api/slot-rules/**", {
 			statusCode: 200,

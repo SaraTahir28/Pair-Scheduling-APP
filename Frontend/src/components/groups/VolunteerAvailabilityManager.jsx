@@ -6,85 +6,80 @@ import AddingSlotsBasket from "./AddingSlotsBasket";
 
 const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
 	const [isEditing, setIsEditing] = useState(false);
-	const [myOldSlotRulesFromApi, setMyOldSlotRulesFromApi] = useState([]);
-	const [slotRulesInBasketDraft, setSlotRulesInBasketDraft] = useState([]);
+	const [originalSlotRulesFromApi, setOriginalSlotRulesFromApi] = useState([]);
+	const [slotRulesInBasket, setSlotRulesInBasket] = useState([]);
 
 	useEffect(() => {
 		api
 			.get("/api/slot-rules/")
 			.then((res) => {
-				const mySlots = res.data.filter(
+				const specificVolunteerSlots = res.data.filter(
 					(slot) => slot.volunteer_id === volunteerId
 				);
-				setMyOldSlotRulesFromApi(mySlots);
+				setOriginalSlotRulesFromApi(specificVolunteerSlots);
 			})
 			.catch((err) => console.log("Error fetching slots:", err));
 	}, [volunteerId]);
 
 	const startEditing = () => {
-		setSlotRulesInBasketDraft(myOldSlotRulesFromApi);
+		setSlotRulesInBasket(originalSlotRulesFromApi);
 		setIsEditing(true);
 	};
 
-	const addSlotToBasket = (newSlotObj) => {
-		setSlotRulesInBasketDraft([...slotRulesInBasketDraft, newSlotObj]);
+	const addSlotToBasket = (newSlot) => {
+		const updatedBasket = [...slotRulesInBasket, newSlot];
+		setSlotRulesInBasket(updatedBasket);
 	};
 
 	const removeSlotFromBasket = (indexToRemove) => {
-		const slotRuleToRemoveFromApiOrUi = slotRulesInBasketDraft[indexToRemove];
-		if (slotRuleToRemoveFromApiOrUi.id) {
-			api
-				.delete(`/api/slot-rules/${slotRuleToRemoveFromApiOrUi.id}/`)
-				.then(() => {
-					const updatedSlotRuleBasketNotYetSent = slotRulesInBasketDraft.filter(
-						(_, i) => i !== indexToRemove
-					);
-					setSlotRulesInBasketDraft(updatedSlotRuleBasketNotYetSent);
-					setMyOldSlotRulesFromApi(updatedSlotRuleBasketNotYetSent);
-				})
-				.catch((err) => {
-					console.error("Failed to delete slot rule:", err);
-					alert("Could not delete the slot. Please try again.");
-				});
-		} else {
-			const updatedSlotRuleBasketNotYetSent = slotRulesInBasketDraft.filter(
-				(_, i) => i !== indexToRemove
-			);
-			setSlotRulesInBasketDraft(updatedSlotRuleBasketNotYetSent);
-		}
+		const updatedBasket = slotRulesInBasket.filter(
+			(_, i) => i !== indexToRemove
+		);
+		setSlotRulesInBasket(updatedBasket);
 	};
 
-	const sendNewSlotsToDb = () => {
-		const onlyNewSlots = slotRulesInBasketDraft.filter((slot) => !slot.id);
+	const sendNewSlotRulesToDb = () => {
+		const onlyNewSlots = slotRulesInBasket.filter((slot) => !slot.id);
 
-		if (onlyNewSlots.length === 0) {
-			alert("No new slots added.");
-			setIsEditing(false);
+		const slotsFromApiToDelete = originalSlotRulesFromApi.filter(
+			(ogSlot) =>
+				!slotRulesInBasket.some((slotInBasket) => slotInBasket.id === ogSlot.id)
+		);
+		const deleteRequests = slotsFromApiToDelete.map((slot) =>
+			api.delete(`/api/slot-rules/${slot.id}/`)
+		);
+
+		const postRequests = onlyNewSlots.map((slot) => {
+			return api.post("/api/slot-rules/", {
+				volunteer: volunteerId,
+				start_time: slot.start_time,
+				repeat_until: slot.repeat_until,
+				group: "all",
+			});
+		});
+
+		if (deleteRequests.length === 0 && postRequests.length === 0) {
+			alert("No changes to save.");
 			return;
 		}
 
-		Promise.all(
-			onlyNewSlots.map((slot) =>
-				api.post("/api/slot-rules/", {
-					start_time: slot.start_time,
-					repeat_until: slot.repeat_until,
-					group: "all",
-				})
-			)
-		)
-			.then((responses) => {
-				const newlyCreatedSlots = responses.map((res) => res.data);
-				const updatedSlotsCollection = [
-					...myOldSlotRulesFromApi,
-					...newlyCreatedSlots,
-				];
-				setMyOldSlotRulesFromApi(updatedSlotsCollection);
-				setSlotRulesInBasketDraft([]);
-				alert("Availability updated successfully!");
+		const allRequestsForApi = [...deleteRequests, ...postRequests];
+
+		Promise.all(allRequestsForApi)
+			.then(() => {
+				return api.get("/api/slot-rules/");
+			})
+			.then((res) => {
+				const specificVolunteerSlots = res.data.filter((slot) => {
+					return slot.volunteer_id === volunteerId;
+				});
+				setOriginalSlotRulesFromApi(specificVolunteerSlots);
+				setSlotRulesInBasket([]);
+				alert("Your availability has been updated.");
 				setIsEditing(false);
 			})
 			.catch((error) => {
-				console.error("Error saving slots:", error);
+				console.error("Error saving availability:", error);
 				alert("Failed to save availability. Please try again.");
 			});
 	};
@@ -110,9 +105,9 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
 							volunteerId={volunteerId}
 							mode="edit"
 							whenFormSubmit={addSlotToBasket}
-							addedSlots={slotRulesInBasketDraft}
+							addedSlots={slotRulesInBasket}
 							removeSlot={removeSlotFromBasket}
-							saveAll={sendNewSlotsToDb}
+							saveAll={sendNewSlotRulesToDb}
 						/>
 					</div>
 				</>
@@ -133,13 +128,13 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
 					</div>
 
 					<div>
-						{myOldSlotRulesFromApi.length > 0 && (
+						{originalSlotRulesFromApi.length > 0 && (
 							<AddingSlotsBasket
-								addedSlots={myOldSlotRulesFromApi}
+								addedSlots={originalSlotRulesFromApi}
 								title="Current availability"
 							/>
 						)}
-						{myOldSlotRulesFromApi.length === 0 && (
+						{originalSlotRulesFromApi.length === 0 && (
 							<div className="basket-container">
 								<h3 className="basket-title">Current availability</h3>
 								<div className="basket-list">

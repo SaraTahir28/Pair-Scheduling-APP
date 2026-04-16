@@ -1,34 +1,37 @@
-import React from "react";
+/* eslint-disable no-undef */
 import VolunteerAvailabilityManager from "../../src/components/groups/VolunteerAvailabilityManager";
 
 describe("Volunteer Availability Manager - Simple Flow", () => {
+	let mockSlots = [];
+
 	beforeEach(() => {
-		cy.intercept("POST", "**/api/slot-rules/", {
-			statusCode: 201,
-			body: {
-				id: 999,
+		mockSlots = [
+			{
+				id: 101,
 				volunteer_id: 1,
-				regular: false,
-				weekday: null,
-				start_time: "2026-05-20T12:00:00Z",
-				repeat_until: null,
+				regular: true,
+				weekday: "Monday",
+				start_time: "2026-04-13T16:00:00Z",
+				repeat_until: "2026-05-11",
 				group: "all",
 			},
+		];
+		cy.intercept("POST", "**/api/slot-rules/", (req) => {
+			const newSlot = {
+				id: 999,
+				volunteer_id: req.body.volunteer,
+				regular: false,
+				weekday: null,
+				start_time: req.body.start_time,
+				repeat_until: req.body.repeat_until,
+				group: req.body.group,
+			};
+			mockSlots.push(newSlot);
+			req.reply({ statusCode: 201, body: newSlot });
 		}).as("saveAction");
 
-		cy.intercept("GET", "**/api/slot-rules/", {
-			statusCode: 200,
-			body: [
-				{
-					id: 101,
-					volunteer_id: 1,
-					regular: true,
-					weekday: "Monday",
-					start_time: "2026-04-13T16:00:00Z",
-					repeat_until: "2026-05-11",
-					group: "all",
-				},
-			],
+		cy.intercept("GET", "**/api/slot-rules/", (req) => {
+			req.reply({ statusCode: 200, body: mockSlots });
 		}).as("loadAction");
 	});
 
@@ -54,3 +57,5 @@ describe("Volunteer Availability Manager - Simple Flow", () => {
 		cy.contains("My availability").should("be.visible");
 	});
 });
+
+export default VolunteerAvailabilityManager;
