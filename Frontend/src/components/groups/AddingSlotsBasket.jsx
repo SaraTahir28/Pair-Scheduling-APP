@@ -1,4 +1,3 @@
-import React from "react";
 import { ActionBtn } from "../elements/Button";
 import { X } from "lucide-react";
 import { formatLocalDate, formatLocalTime } from "../../utilities/dateTime";
@@ -38,7 +37,9 @@ const AddingSlotsBasket = ({
 
 							{entry.regular && (
 								<span>
-									{`(starting on ${toDisplayDate(entry.start_time)} until ${entry.repeat_until
+									{`(starting on ${toDisplayDate(
+										entry.start_time
+									)} until ${entry.repeat_until
 										.split("-")
 										.reverse()
 										.join("-")})`}
