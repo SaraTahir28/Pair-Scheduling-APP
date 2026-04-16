@@ -312,11 +312,11 @@
 		@apply w-5 h-5 rounded-md border-border-color text-brand-primary cursor-pointer;
 	}
 	.basket-container {
-		@apply mt-8 pt-6 border-t border-black/5 w-full;
+		@apply mt-0 pt-0 w-full;
 	}
 
 	.basket-title {
-		@apply text-muted mb-2 text-lg;
+		@apply text-muted mb-4 text-lg;
 	}
 
 	.basket-list {
@@ -327,7 +327,9 @@
 		@apply flex justify-between items-center py-2 border-b border-black/5 last:border-0 transition-all;
 		@apply hover:bg-black/[0.02];
 	}
-
+	.basket-entries {
+		@apply flex items-center gap-2;
+	}
 	.basket-delete-btn {
 		@apply w-5 h-5 hover:text-brand-blue transition-all cursor-pointer;
 	}
@@ -335,6 +337,28 @@
 	.basket-save-btn {
 		@apply w-full mt-6;
 	}
+
+	/* edit availablity slots volunteer*/
+	.availability-outer-div {
+		@apply flex flex-col p-2;
+	}
+
+	.availability-header-container {
+		@apply max-w-[600px] border-b border-black/10 pb-4 mb-4;
+	}
+	.availability-header-row {
+		@apply flex justify-between items-center w-full;
+	}
+	.edit-form-title {
+		@apply text-xl font-bold text-dark;
+	}
+	.edit-form-p {
+		@apply text-main mt-2;
+	}
+	.back-btn {
+		@apply mt-2;
+	}
+
 	/* meeting booked confirmation */
 	/* this is rendered in trainee booking */
 	.conf-page-div {

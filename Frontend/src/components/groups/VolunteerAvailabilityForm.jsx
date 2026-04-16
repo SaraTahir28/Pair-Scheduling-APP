@@ -1,7 +1,10 @@
-import React, { useState } from "react";
-import { ActionBtn } from "../elements/Button";
+import { useState } from "react";
 import AddingSlotsBasket from "./AddingSlotsBasket";
-import { toDayOfWeekName, formatLocalDate, parseLocalDateTime } from "../../utilities/dateTime";
+import {
+	toDayOfWeekName,
+	formatLocalDate,
+	parseLocalDateTime,
+} from "../../utilities/dateTime";
 
 const VolunteerAvailabilityForm = ({
 	whenFormSubmit,
@@ -11,7 +14,6 @@ const VolunteerAvailabilityForm = ({
 	removeSlot,
 	saveAll,
 }) => {
-	//this is with repeated date initially set to off
 	const [isRecurring, setIsRecurring] = useState(false);
 	const [specificDate, setSpecificDate] = useState(formatLocalDate(new Date()));
 	const [startTime, setStartTime] = useState("09:00");
@@ -35,10 +37,13 @@ const VolunteerAvailabilityForm = ({
 			return;
 		}
 
-		const timeWithDate = parseLocalDateTime(specificDate, startTime).toISOString();
+		const timeWithDate = parseLocalDateTime(
+			specificDate,
+			startTime
+		).toISOString();
 
 		const slotsObj = {
-			volunteer: volunteerId,
+			volunteer_id: volunteerId,
 			regular: isRecurring,
 			weekday: isRecurring ? toDayOfWeekName(specificDate) : null,
 			start_time: timeWithDate,
@@ -49,10 +54,19 @@ const VolunteerAvailabilityForm = ({
 
 		setStartTime("09:00");
 		setIsRecurring(false);
+		setRepeatUntil("");
 	};
 
 	return (
 		<>
+			{mode === "edit" && (
+				<AddingSlotsBasket
+					addedSlots={addedSlots}
+					removeSlot={removeSlot}
+					saveAll={saveAll}
+				/>
+			)}
+
 			<div className="booking-form-container">
 				<form onSubmit={checkInputsValid}>
 					<h2 className="form-title">Select your availability</h2>
@@ -134,13 +148,13 @@ const VolunteerAvailabilityForm = ({
 				</form>
 			</div>
 
-			<div>
+			{mode !== "edit" && (
 				<AddingSlotsBasket
 					addedSlots={addedSlots}
 					removeSlot={removeSlot}
 					saveAll={saveAll}
 				/>
-			</div>
+			)}
 		</>
 	);
 };

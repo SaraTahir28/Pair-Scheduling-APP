@@ -1,4 +1,3 @@
-import React from "react";
 import { ActionBtn } from "../elements/Button";
 import { X } from "lucide-react";
 import { formatLocalDate, formatLocalTime } from "../../utilities/dateTime";
@@ -8,50 +7,76 @@ const toDisplayDate = (isoString) =>
 
 const toDisplayTime = (isoString) => formatLocalTime(new Date(isoString));
 
-const AddingSlotsBasket = ({ addedSlots, removeSlot, saveAll }) => {
+const AddingSlotsBasket = ({
+	addedSlots,
+	removeSlot,
+	saveAll,
+	title = "Current selection to save",
+}) => {
 	if (!addedSlots || addedSlots.length === 0) {
 		return null;
 	}
 
 	return (
 		<div className="basket-container">
-			<h3 className="basket-title">Entries to save:</h3>
+			<h3 className="basket-title">{title}</h3>
 
 			<div className="basket-list">
-				{addedSlots.map((entry, index) => (
-					<div className="basket-row" key={index}>
-						<div className="flex items-center gap-4">
-							{entry.regular ? (
-								<span>Every {entry.weekday}</span>
-							) : (
-								<span>{`On ${toDisplayDate(entry.start_time)} `}</span>
-							)}
-							<span className="font-bold">
-								{`at ${toDisplayTime(entry.start_time)}`}
-							</span>
+				{addedSlots.map((entry, index) => {
+					const isRecurring =
+						entry.regular !== undefined
+							? entry.regular
+							: entry.repeat_until != null;
 
-							{entry.regular && (
-								<span>
-									{`(starting on ${toDisplayDate(entry.start_time)} until ${entry.repeat_until
-										.split("-")
-										.reverse()
-										.join("-")})`}
+					const weekday =
+						entry.weekday ||
+						new Date(entry.start_time).toLocaleDateString(undefined, {
+							weekday: "long",
+						});
+
+					return (
+						<div className="basket-row" key={index}>
+							<div className="basket-entries">
+								{isRecurring ? (
+									<span>Every {weekday} </span>
+								) : (
+									<span>{`On ${toDisplayDate(entry.start_time)} `}</span>
+								)}
+
+								<span className="font-bold">
+									{`at ${toDisplayTime(entry.start_time)}`}
 								</span>
+
+								{isRecurring && entry.repeat_until && (
+									<span>
+										{`(starting on ${toDisplayDate(
+											entry.start_time
+										)} until ${entry.repeat_until
+											.split("-")
+											.reverse()
+											.join("-")})`}
+									</span>
+								)}
+							</div>
+
+							{removeSlot && (
+								<ActionBtn
+									additionalBtnClass="btn-tertiary"
+									onClick={() => removeSlot(index)}
+								>
+									<X className="basket-delete-btn" />
+								</ActionBtn>
 							)}
 						</div>
-						<ActionBtn
-							additionalBtnClass="btn-tertiary"
-							onClick={() => removeSlot(index)}
-						>
-							<X className="basket-delete-btn" />
-						</ActionBtn>
-					</div>
-				))}
+					);
+				})}
 			</div>
 
-			<ActionBtn additionalBtnClass="btn-primary" onClick={saveAll}>
-				Save all
-			</ActionBtn>
+			{saveAll && (
+				<ActionBtn additionalBtnClass="btn-primary" onClick={saveAll}>
+					Save all
+				</ActionBtn>
+			)}
 		</div>
 	);
 };
