@@ -1,5 +1,26 @@
+const buildDynamicSlot = () => {
+  const now = new Date();
+
+  const year = now.getUTCFullYear();
+  const month = now.getUTCMonth();
+
+  const appNow = new Date(Date.UTC(year, month, 15, 8, 0, 0));
+  const start = new Date(Date.UTC(year, month, 20, 9, 0, 0));
+  const end = new Date(Date.UTC(year, month, 20, 10, 0, 0));
+
+  return {
+    appNow,
+    start_time: start.toISOString(),
+    end_time: end.toISOString(),
+  };
+};
+
 describe("Trainee booking flow", () => {
   beforeEach(() => {
+    const { appNow, start_time, end_time } = buildDynamicSlot();
+
+    cy.clock(appNow.getTime(), ["Date"]);
+
     cy.intercept("GET", "**/auth/user/", {
       statusCode: 200,
       body: { id: 100, name: "Kaska", email: "kaska@example.com" },
@@ -9,8 +30,8 @@ describe("Trainee booking flow", () => {
       statusCode: 200,
       body: [
         {
-          start_time: "2026-04-20T09:00:00Z",
-          end_time: "2026-04-20T10:00:00Z",
+          start_time,
+          end_time,
           volunteer_id: 1,
           slot_rule_id: 1,
           name: "Duncan Parkinson",
@@ -36,7 +57,6 @@ describe("Trainee booking flow", () => {
     cy.wait(["@getUser", "@getSlots"]);
 
     cy.get(".cal-day-available").first().click();
-
     cy.get(".timeslot-group-div button").first().click();
 
     cy.get("textarea.form-input").type(
