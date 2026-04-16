@@ -84,7 +84,10 @@ const TraineeBookingFlow = () => {
       )
     : allVolunteersData;
 
-  for (let slot of slotsToProcess) {
+  const sortedSlots = [...slotsToProcess].sort(
+    (a, b) => new Date(a.start_time) - new Date(b.start_time)
+  );
+  for (let slot of sortedSlots) {
     const convertedToString = slot.start_time;
     const dateOnlyStr = new Date(convertedToString).toLocaleDateString("en-CA");
 
@@ -140,7 +143,7 @@ const TraineeBookingFlow = () => {
 
   const createBookingDetailsObj = (bookingFormData) => {
     if (!volunteerId || !slotRuleId) {
-      console.error("Missing volunteerId or slotRuleId");
+      alert("Missing volunteerId or slotRuleId");
       return;
     }
 
