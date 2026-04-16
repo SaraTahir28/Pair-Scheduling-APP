@@ -26,14 +26,14 @@ const TimeSlotGroup = ({
 
   availableTimes.forEach((slot, index) => {
     availableTimeSlotsInDivs.push(
-      <div
+      <TimeSlotBtn
         key={`${slot.time}-${slot.volunteerId}-${slot.slotRuleId}-${index}`}
+        time={slot.time}
+        name={slot.name}
         onClick={() =>
           setSelectedTimeProps(slot.time, slot.volunteerId, slot.slotRuleId)
         }
-      >
-        <TimeSlotBtn time={slot.time} name={slot.name} />
-      </div>
+      />
     );
   });
 
