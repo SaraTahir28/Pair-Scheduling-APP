@@ -1,34 +1,41 @@
 import { TimeSlotBtn } from "../elements/Button.jsx";
+
 const TimeSlotGroup = ({
-	selectedDateProps,
-	setSelectedTimeProps,
-	availableTimes,
+  selectedDateProps,
+  setSelectedTimeProps,
+  availableTimes,
 }) => {
-	if (!selectedDateProps) {
-		return (
-			<div className="timeslot-group-div">
-				<div className="timeslot-group-div">
-					<p>Select a date to see available times.</p>
-				</div>
-			</div>
-		);
-	}
+  if (!selectedDateProps) {
+    return (
+      <div className="timeslot-group-div">
+        <div className="timeslot-group-div">
+          <p>Select a date to see available times.</p>
+        </div>
+      </div>
+    );
+  }
 
-	const availableTimeSlotsInDivs = [];
+  const availableTimeSlotsInDivs = [];
 
-	availableTimes.forEach((time, index) => {
-		availableTimeSlotsInDivs.push(
-			<div key={index} onClick={() => setSelectedTimeProps(time)}>
-				<TimeSlotBtn time={time} />
-			</div>
-		);
-	});
-	return (
-		<div className="timeslot-group-div">
-			<p>{selectedDateProps.toDateString()}</p>
-			{availableTimeSlotsInDivs}
-		</div>
-	);
+  availableTimes.forEach((slot, index) => {
+    availableTimeSlotsInDivs.push(
+      <div
+        key={`${slot.time}-${slot.volunteerId}-${slot.slotRuleId}-${index}`}
+        onClick={() =>
+          setSelectedTimeProps(slot.time, slot.volunteerId, slot.slotRuleId)
+        }
+      >
+        <TimeSlotBtn time={slot.time} />
+      </div>
+    );
+  });
+
+  return (
+    <div className="timeslot-group-div">
+      <p>{selectedDateProps.toDateString()}</p>
+      {availableTimeSlotsInDivs}
+    </div>
+  );
 };
 
 export default TimeSlotGroup;
