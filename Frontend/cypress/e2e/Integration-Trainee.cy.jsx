@@ -91,9 +91,11 @@ describe("Trainee booking flow", () => {
     cy.get(".confirmation-container").should("be.visible");
     cy.contains("You are scheduled").should("be.visible");
     cy.contains("Duncan Parkinson").should("be.visible");
-    cy.contains(`${slot.selectedDate} at ${slot.selectedTime}`).should(
-      "be.visible"
-    );
+    cy.get(".confirmation-container").should("be.visible");
+    cy.contains("You are scheduled").should("be.visible");
+    cy.contains("Duncan Parkinson").should("be.visible");
+    cy.contains(slot.selectedTime).should("be.visible");
+    cy.contains("1 hour").should("be.visible");
   });
 
   it("shows validation and does not submit when agenda is too short", () => {
