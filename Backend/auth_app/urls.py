@@ -1,10 +1,9 @@
 from django.urls import path
-from .views.loginlogout import  user_view,logout_view
-from .views.csrf import csrf_token_view
+from .views.loginlogout import UserView, LogoutView
+from .views.csrf import CsrfTokenView
 
 urlpatterns = [
-    path("user/", user_view),
-    path("logout/", logout_view),  
-    path("csrf/", csrf_token_view),
-   
+    path("user/", UserView.as_view(), name="user"),
+    path("logout/", LogoutView.as_view(), name="logout"),
+    path("csrf/", CsrfTokenView.as_view(), name="csrf-token"),
 ]
