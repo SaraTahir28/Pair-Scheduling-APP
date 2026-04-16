@@ -5,7 +5,7 @@ from core.models import User
 
 @pytest.mark.django_db
 class TestUserListCreateView:
-    def test_list_users_returns_ordered_list(self, client):
+    def test_list_users_returns_list(self, client):
         # Authenticate first
         auth_user = User.objects.create_user(
             username="emiliano",
