@@ -99,6 +99,7 @@ const TraineeBookingFlow = () => {
           time: timeInFormathhmm,
           volunteerId: slot.volunteer_id,
           slotRuleId: slot.slot_rule_id,
+          name: slot.name,
         });
       }
     }

@@ -25,7 +25,7 @@ const TimeSlotGroup = ({
           setSelectedTimeProps(slot.time, slot.volunteerId, slot.slotRuleId)
         }
       >
-        <TimeSlotBtn time={slot.time} />
+        <TimeSlotBtn time={slot.time} name={slot.name} />
       </div>
     );
   });
