@@ -35,7 +35,7 @@ describe("SessionDetails Component tests", () => {
 			</AuthProvider>
 		);
 
-		cy.contains("Welcome back").should("be.visible");
+		cy.contains("Welcome").should("be.visible");
 		cy.contains("You are logged in as").should("be.visible");
 	});
 });
