@@ -22,39 +22,54 @@ const AddingSlotsBasket = ({
 			<h3 className="basket-title">{title}</h3>
 
 			<div className="basket-list">
-				{addedSlots.map((entry, index) => (
-					<div className="basket-row" key={index}>
-						<div className="basket-entries">
-							{entry.regular ? (
-								<span>Every {entry.weekday} </span>
-							) : (
-								<span>{`On ${toDisplayDate(entry.start_time)} `}</span>
-							)}
-							<span className="font-bold">
-								{`at ${toDisplayTime(entry.start_time)}`}
-							</span>
+				{addedSlots.map((entry, index) => {
+					const isRecurring =
+						entry.regular !== undefined
+							? entry.regular
+							: entry.repeat_until != null;
 
-							{entry.regular && (
-								<span>
-									{`(starting on ${toDisplayDate(
-										entry.start_time
-									)} until ${entry.repeat_until
-										.split("-")
-										.reverse()
-										.join("-")})`}
+					const weekday =
+						entry.weekday ||
+						new Date(entry.start_time).toLocaleDateString(undefined, {
+							weekday: "long",
+						});
+
+					return (
+						<div className="basket-row" key={index}>
+							<div className="basket-entries">
+								{isRecurring ? (
+									<span>Every {weekday} </span>
+								) : (
+									<span>{`On ${toDisplayDate(entry.start_time)} `}</span>
+								)}
+
+								<span className="font-bold">
+									{`at ${toDisplayTime(entry.start_time)}`}
 								</span>
+
+								{isRecurring && entry.repeat_until && (
+									<span>
+										{`(starting on ${toDisplayDate(
+											entry.start_time
+										)} until ${entry.repeat_until
+											.split("-")
+											.reverse()
+											.join("-")})`}
+									</span>
+								)}
+							</div>
+
+							{removeSlot && (
+								<ActionBtn
+									additionalBtnClass="btn-tertiary"
+									onClick={() => removeSlot(index)}
+								>
+									<X className="basket-delete-btn" />
+								</ActionBtn>
 							)}
 						</div>
-						{removeSlot && (
-							<ActionBtn
-								additionalBtnClass="btn-tertiary"
-								onClick={() => removeSlot(index)}
-							>
-								<X className="basket-delete-btn" />
-							</ActionBtn>
-						)}
-					</div>
-				))}
+					);
+				})}
 			</div>
 
 			{saveAll && (
