@@ -8,9 +8,16 @@ const TimeSlotGroup = ({
   if (!selectedDateProps) {
     return (
       <div className="timeslot-group-div">
-        <div className="timeslot-group-div">
-          <p>Select a date to see available times.</p>
-        </div>
+        <p>Select a date to see available times.</p>
+      </div>
+    );
+  }
+
+  if (availableTimes.length === 0) {
+    return (
+      <div className="timeslot-group-div">
+        <p>{selectedDateProps.toDateString()}</p>
+        <p className="timeslot-empty">No available times for this date</p>
       </div>
     );
   }
