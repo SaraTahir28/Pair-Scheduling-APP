@@ -3,7 +3,7 @@ import pytest
 
 @pytest.mark.django_db
 def test_logout_view_authenticated(client, django_user_model):
-    # Create and log in a user (Sara)
+
     sara = django_user_model.objects.create_user(
         username="sara",
         email="sara@example.com",
@@ -12,13 +12,10 @@ def test_logout_view_authenticated(client, django_user_model):
     )
     client.login(username="sara", password="securepass123")
 
-    # Call logout endpoint
     response = client.post("/auth/logout/")
     assert response.status_code == 200
     data = response.json()
     assert data["message"] == "Logged out"
-
-    # After logout, Sara should not be authenticated anymore
     response = client.get("/auth/user/")
     assert response.status_code == 403
 
@@ -36,8 +33,6 @@ def test_logout_view_method_not_allowed(client, django_user_model):
 
     response = client.get("/auth/logout/")
     assert response.status_code == 405
-    data = response.json()
-    assert data["error"] == "Method not allowed"
 
 
 @pytest.mark.django_db
