@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { formatLocalDate } from "../../utilities/dateTime";
 
 const monthNames = [
   "January",
@@ -69,8 +70,7 @@ const Calendar = ({
 
   const fullDaySquares = [];
   for (let i = 1; i <= daysInMonth; i++) {
-    // Build full date string in the same format as TraineeBookingFlow
-    const dateStr = new Date(year, month, i).toLocaleDateString("en-CA");
+    const dateStr = formatLocalDate(new Date(year, month, i));
 
     const isDayAvailable = availableDates.includes(dateStr);
 

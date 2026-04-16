@@ -112,7 +112,7 @@ const TraineeBookingFlow = () => {
   );
   for (let slot of sortedSlots) {
     const convertedToString = slot.start_time;
-    const dateOnlyStr = new Date(convertedToString).toLocaleDateString("en-CA");
+    const dateOnlyStr = convertedToString.split("T")[0];
 
     if (
       !convertedAllVDataToFrontendFormat.availableDates.includes(dateOnlyStr)
@@ -120,7 +120,7 @@ const TraineeBookingFlow = () => {
       convertedAllVDataToFrontendFormat.availableDates.push(dateOnlyStr);
     }
 
-    if (selectedDate && convertedToString.includes(selectedDate)) {
+    if (selectedDate && convertedToString.split("T")[0] === selectedDate) {
       const timeOnlyStr = convertedToString.split("T")[1];
       const timeInFormathhmm =
         timeOnlyStr.split(":")[0] + ":" + timeOnlyStr.split(":")[1];
