@@ -9,13 +9,6 @@ import api from "../../api/axiosClient";
 import BookingConfirmation from "../groups/BookingConfirmation";
 import { BackBtn } from "../elements/Button";
 import { useAuth } from "../../AuthContext";
-import {
-  isValidDate,
-  isValidTime,
-  parseLocalDate,
-  parseLocalDateTime,
-  formatLocalDate,
-} from "../../utilities/dateTime";
 
 const TraineeBookingFlow = () => {
   const [allVolunteersData, setAllVolunteersData] = useState(null);
@@ -25,13 +18,6 @@ const TraineeBookingFlow = () => {
     useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
-
-  const isInvalidDate =
-    selectedDate !== undefined && !isValidDate(selectedDate);
-  const isInvalidTime =
-    selectedTime !== undefined && !isValidTime(selectedTime);
-  const selectedDateObj =
-    selectedDate && !isInvalidDate ? parseLocalDate(selectedDate) : null;
 
   useEffect(() => {
     api
