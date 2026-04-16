@@ -57,5 +57,3 @@ describe("Volunteer Availability Manager - Simple Flow", () => {
 		cy.contains("My availability").should("be.visible");
 	});
 });
-
-export default VolunteerAvailabilityManager;

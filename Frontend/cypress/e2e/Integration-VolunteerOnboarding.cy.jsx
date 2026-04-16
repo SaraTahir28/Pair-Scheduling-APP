@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 describe("Volunteer flow", () => {
 	let mockSlots = [];
 	beforeEach(() => {
