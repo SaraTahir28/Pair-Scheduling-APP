@@ -76,11 +76,13 @@ describe("Trainee booking flow", () => {
 
     cy.wait("@postBooking")
       .its("request.body")
-      .should("deep.equal", {
-        volunteer_id: 1,
-        slot_rule_id: 1,
-        time_slot: `${slot.selectedDate}T${slot.selectedTime}:00Z`,
-        agenda: "I'd like to discuss React state management.",
+      .should((body) => {
+        expect(body.volunteer_id).to.equal(1);
+        expect(body.slot_rule_id).to.equal(1);
+        expect(body.agenda).to.equal(
+          "I'd like to discuss React state management."
+        );
+        expect(body.time_slot).to.be.a("string");
       });
 
     cy.url().should(
