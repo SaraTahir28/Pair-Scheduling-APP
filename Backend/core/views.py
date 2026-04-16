@@ -29,8 +29,6 @@ from .serializers.available_slot_serializer import AvailableSlotSerializer
 
 
 class CreateMeetingView(APIView):
-    permission_classes = [IsAuthenticated]
-
     def post(self, request):
         serializer = BookingSerializer(data=request.data)
 
@@ -76,26 +74,21 @@ class CreateMeetingView(APIView):
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = User.objects.all().order_by("id")
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
 
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
 
 
 class CurrentProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
         return self.request.user
 
 
 class AvailableSlotsView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
     def get(self, request):
         rules = SlotRule.objects.select_related("volunteer").filter(
             deleted_at__isnull=True
@@ -138,7 +131,6 @@ class AvailableSlotsView(APIView):
 class SlotRuleCreateView(generics.CreateAPIView):
     queryset = SlotRule.objects.all()
     serializer_class = SlotRuleSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
     # Always assign the slot rule to the logged-in user
     def perform_create(self, serializer):
@@ -148,7 +140,6 @@ class SlotRuleCreateView(generics.CreateAPIView):
 class SlotRuleDeleteView(generics.DestroyAPIView):
     queryset = SlotRule.objects.filter(deleted_at__isnull=True)
     serializer_class = SlotRuleSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
     def perform_destroy(self, instance):
         if instance.volunteer != self.request.user:
