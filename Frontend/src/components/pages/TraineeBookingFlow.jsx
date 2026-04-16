@@ -11,10 +11,11 @@ import { useAuth } from "../../AuthContext";
 
 const TraineeBookingFlow = () => {
   const [allVolunteersData, setAllVolunteersData] = useState(null);
-  //TODO next PR show all slots from all volunteers
   const [activeVolunteer, setActiveVolunteer] = useState(null);
 
-  const { selectedDate, selectedTime, status } = useParams();
+  const { selectedDate, selectedTime, status, volunteerId, slotRuleId } =
+    useParams();
+
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -24,6 +25,26 @@ const TraineeBookingFlow = () => {
       .then((res) => setAllVolunteersData(res.data))
       .catch((err) => console.log(err));
   }, []);
+
+  useEffect(() => {
+    if (!allVolunteersData || !volunteerId) {
+      setActiveVolunteer(null);
+      return;
+    }
+
+    const matchedSlot = allVolunteersData.find(
+      (slot) => String(slot.volunteer_id) === String(volunteerId)
+    );
+
+    if (matchedSlot) {
+      setActiveVolunteer({
+        id: matchedSlot.volunteer_id,
+        ...matchedSlot,
+      });
+    } else {
+      setActiveVolunteer(null);
+    }
+  }, [allVolunteersData, volunteerId]);
 
   if (allVolunteersData === null) {
     return (
@@ -46,30 +67,39 @@ const TraineeBookingFlow = () => {
     availableTimes: [],
   };
 
-  if (allVolunteersData && allVolunteersData.length > 0) {
-    const slotsToProcess = activeVolunteer
-      ? allVolunteersData.filter(
-          (slot) => slot.volunteer_id === activeVolunteer.id
-        )
-      : allVolunteersData;
+  const seenTimes = new Set();
 
-    for (let slot of slotsToProcess) {
-      const convertedToString = slot.start_time;
-      const dateOnlyStr = new Date(convertedToString).toLocaleDateString(
-        "en-CA"
-      );
+  const slotsToProcess = activeVolunteer
+    ? allVolunteersData.filter(
+        (slot) => String(slot.volunteer_id) === String(activeVolunteer.id)
+      )
+    : allVolunteersData;
 
-      if (
-        !convertedAllVDataToFrontendFormat.availableDates.includes(dateOnlyStr)
-      ) {
-        convertedAllVDataToFrontendFormat.availableDates.push(dateOnlyStr);
-      }
+  for (let slot of slotsToProcess) {
+    const convertedToString = slot.start_time;
+    const dateOnlyStr = new Date(convertedToString).toLocaleDateString("en-CA");
 
-      if (selectedDate && convertedToString.includes(selectedDate)) {
-        const timeOnlyStr = convertedToString.split("T")[1];
-        const timeInFormathhmm =
-          timeOnlyStr.split(":")[0] + ":" + timeOnlyStr.split(":")[1];
-        convertedAllVDataToFrontendFormat.availableTimes.push(timeInFormathhmm);
+    if (
+      !convertedAllVDataToFrontendFormat.availableDates.includes(dateOnlyStr)
+    ) {
+      convertedAllVDataToFrontendFormat.availableDates.push(dateOnlyStr);
+    }
+
+    if (selectedDate && convertedToString.includes(selectedDate)) {
+      const timeOnlyStr = convertedToString.split("T")[1];
+      const timeInFormathhmm =
+        timeOnlyStr.split(":")[0] + ":" + timeOnlyStr.split(":")[1];
+
+      const slotKey = `${timeInFormathhmm}-${slot.volunteer_id}-${slot.slot_rule_id}`;
+
+      if (!seenTimes.has(slotKey)) {
+        seenTimes.add(slotKey);
+
+        convertedAllVDataToFrontendFormat.availableTimes.push({
+          time: timeInFormathhmm,
+          volunteerId: slot.volunteer_id,
+          slotRuleId: slot.slot_rule_id,
+        });
       }
     }
   }
@@ -77,12 +107,19 @@ const TraineeBookingFlow = () => {
   const selectedDateObj = selectedDate ? new Date(selectedDate) : null;
 
   const updateUrlWithDate = (newDate) => {
+    if (!newDate) {
+      navigate("/trainee-booking");
+      return;
+    }
+
     const dateString = newDate.toLocaleDateString("en-CA");
     navigate(`/trainee-booking/${dateString}`);
   };
 
-  const updateUrlWithTime = (newTime) => {
-    navigate(`/trainee-booking/${selectedDate}/${newTime}`);
+  const updateUrlWithTime = (time, clickedVolunteerId, clickedSlotRuleId) => {
+    navigate(
+      `/trainee-booking/${selectedDate}/${time}/pending/${clickedVolunteerId}/${clickedSlotRuleId}`
+    );
   };
 
   const handleGoBack = () => {
@@ -92,24 +129,26 @@ const TraineeBookingFlow = () => {
   const isConfirmationPage = status === "confirmation";
 
   const createBookingDetailsObj = (bookingFormData) => {
-    if (!activeVolunteer) {
-      console.error("No volunteer selected");
+    if (!volunteerId || !slotRuleId) {
+      console.error("Missing volunteerId or slotRuleId");
       return;
     }
+
     const combinedDateAndTimeFromUrl = `${selectedDate}T${selectedTime}:00`;
     const timeSlotForBackend = `${combinedDateAndTimeFromUrl}Z`;
 
     const bookingDetailsObj = {
-      volunteer_id: activeVolunteer.id,
-      slot_rule_id: 1, //TODO will be updated in the next PR
+      volunteer_id: Number(volunteerId),
+      slot_rule_id: Number(slotRuleId),
       time_slot: timeSlotForBackend,
       agenda: bookingFormData.agenda || "No agenda provided.",
     };
+
     api
       .post("/api/create-meeting/", bookingDetailsObj)
       .then(() => {
         navigate(
-          `/trainee-booking/${selectedDate}/${selectedTime}/confirmation`
+          `/trainee-booking/${selectedDate}/${selectedTime}/confirmation/${volunteerId}/${slotRuleId}`
         );
       })
       .catch((error) => console.log("Error:", error));
@@ -128,15 +167,14 @@ const TraineeBookingFlow = () => {
       ) : (
         <>
           <div className="session-details-col">
-            {!isConfirmationPage &&
-              (activeVolunteer ? (
-                <SessionDetails
-                  selectedDateProps={selectedDateObj}
-                  activeVolunteerProps={activeVolunteer}
-                />
-              ) : (
-                <p>Viewing availability from all volunteers</p>
-              ))}
+            {activeVolunteer ? (
+              <SessionDetails
+                selectedDateProps={selectedDateObj}
+                activeVolunteerProps={activeVolunteer}
+              />
+            ) : (
+              <p>Viewing availability from all volunteers</p>
+            )}
           </div>
 
           {!selectedTime && (
@@ -150,6 +188,7 @@ const TraineeBookingFlow = () => {
                   }
                 />
               </div>
+
               <div className="timeslot-col">
                 <TimeSlotGroup
                   selectedDateProps={selectedDateObj}
@@ -167,6 +206,7 @@ const TraineeBookingFlow = () => {
               <div className="back-btn-div">
                 <BackBtn onClick={handleGoBack} />
               </div>
+
               <BookingForm
                 whenFormSubmit={createBookingDetailsObj}
                 trainee={user}
