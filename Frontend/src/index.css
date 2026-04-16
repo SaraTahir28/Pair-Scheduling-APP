@@ -22,63 +22,72 @@
   label {
     @apply font-normal text-main;
   }
+
   h1 {
     @apply text-2xl font-bold text-dark;
   }
+
   h2 {
     @apply mt-2 text-lg font-bold text-main;
   }
 
   /* action buttons and time seleciton buttons */
   .action-btn {
-    @apply gap-[10px] rounded-3xl text-base font-bold py-[8px] px-[24px] flex justify-center items-center transition-all hover:opacity-90;
+    @apply flex items-center justify-center gap-[10px] rounded-3xl px-[24px] py-[8px] text-base font-bold transition-all hover:opacity-90;
   }
 
   .btn-primary {
     @apply bg-brand-primary text-white;
   }
+
   .btn-secondary {
-    @apply bg-white border border-border-color text-main hover:bg-black/5 hover:text-brand-blue;
+    @apply border border-border-color bg-white text-main hover:bg-black/5 hover:text-brand-blue;
   }
+
   .btn-tertiary {
     @apply bg-transparent text-muted hover:text-brand-blue;
   }
+
   .btn-destructive {
-    @apply bg-white border border-red-600 text-main hover:bg-black/5 hover:text-main;
+    @apply border border-red-600 bg-white text-main hover:bg-black/5 hover:text-main;
   }
 
   .btn-time-slot {
-    @apply w-full py-3 border border-brand-blue/60 bg-white text-main rounded-lg text-sm font-bold transition-all;
-    @apply hover:bg-brand-blue/10 hover:border-brand-blue hover:text-brand-blue;
+    @apply w-full rounded-lg border border-brand-blue/60 bg-white py-3 text-sm font-bold text-main transition-all;
+    @apply hover:border-brand-blue hover:bg-brand-blue/10 hover:text-brand-blue;
   }
 
   .back-btn {
-    @apply inline-flex items-center gap-1 text-sm font-bold text-muted bg-transparent transition-colors cursor-pointer;
-    @apply hover:text-brand-blue;
+    @apply inline-flex cursor-pointer items-center gap-1 bg-transparent text-sm font-bold text-muted transition-colors hover:text-brand-blue;
   }
 
   .back-btn-div {
     @apply mb-4;
   }
+
   /* TRAINEE BOOKING */
   /* outer div */
   .booking-box {
-    @apply m-10 bg-white rounded-2xl shadow-sm border border-border-color flex w-full max-w-[1080px] min-h-[400px] overflow-hidden;
+    @apply m-10 flex min-h-[400px] w-full max-w-[1080px] overflow-hidden rounded-2xl border border-border-color bg-white shadow-sm;
   }
 
   /* main layout with all section columns*/
   .timeslot-col {
     @apply w-[30%] p-4;
   }
+
   .trainee-timeslot-width {
     @apply w-[30%];
   }
+
   .session-details-col {
-    @apply w-[30%] p-4 border-r border-black/10 flex flex-col gap-8;
+    @apply flex w-[30%] flex-col gap-8 border-r border-black/10 p-4;
   }
+
   .calendar-col {
     @apply w-[40%] p-4;
   }
+
   .bookings-col {
     @apply w-[70%] p-4;
   }
@@ -87,24 +96,26 @@
   .session-details-div {
     @apply flex flex-col;
   }
+
   .session-details-div h1 {
     @apply mt-3;
   }
+
   .session-icon-text-line {
-    @apply w-full flex items-center gap-2 text-muted mt-2;
+    @apply mt-2 flex w-full items-center gap-2 text-muted;
   }
 
   .session-icon {
-    @apply w-5 h-5 text-muted;
+    @apply h-5 w-5 text-muted;
   }
-  /* VolunteerSelector styles */
 
+  /* VolunteerSelector styles */
   .volunteer-selector-div {
     @apply flex flex-col gap-3;
   }
 
   .volunteer-selector-title {
-    @apply text-sm font-bold text-muted uppercase tracking-wider;
+    @apply text-sm font-bold uppercase tracking-wider text-muted;
   }
 
   .volunteer-selector-list {
@@ -112,7 +123,7 @@
   }
 
   .volunteer-card {
-    @apply flex items-center gap-3 p-2 rounded-xl border border-border-color bg-white cursor-pointer transition-all;
+    @apply flex cursor-pointer items-center gap-3 rounded-xl border border-border-color bg-white p-2 transition-all;
     @apply hover:border-brand-blue hover:bg-brand-blue/5;
   }
 
@@ -125,43 +136,45 @@
   }
 
   .volunteer-card-avatar {
-    @apply w-10 h-10 rounded-full object-cover shrink-0;
+    @apply h-10 w-10 shrink-0 rounded-full object-cover;
   }
 
   .volunteer-card-name {
-    @apply text-sm font-medium text-main leading-tight;
+    @apply text-sm font-medium leading-tight text-main;
   }
 
   /* avatar box styling */
   .availableVolunteersDiv {
     @apply gap-4;
   }
+
   .avatar {
     @apply mb-2;
   }
+
   /* MIDDLE CALENDAR */
   .calendar-col {
     @apply flex flex-col items-center border-r border-border-color transition-all duration-300;
   }
 
   .cal-div {
-    @apply w-full max-w-[360px] p-2 bg-white;
+    @apply w-full max-w-[360px] bg-white p-2;
   }
 
   .cal-heading-selectdt {
-    @apply text-lg font-bold text-dark mb-8;
+    @apply mb-8 text-lg font-bold text-dark;
   }
 
   .cal-buttons-and-month-div {
-    @apply flex items-center justify-center mb-8 relative;
+    @apply relative mb-8 flex items-center justify-center;
   }
 
   .cal-day-name {
-    @apply text-main font-bold;
+    @apply font-bold text-main;
   }
 
   .cal-chevron {
-    @apply w-8 h-8 rounded-full flex items-center justify-center text-muted transition-all bg-transparent;
+    @apply flex h-8 w-8 items-center justify-center rounded-full bg-transparent text-muted transition-all;
     @apply hover:bg-brand-blue/10 hover:text-brand-blue;
   }
 
@@ -170,36 +183,35 @@
   }
 
   .cal-day-grid {
-    @apply grid grid-cols-7 gap-1 mb-4 text-center;
+    @apply mb-4 grid grid-cols-7 gap-1 text-center;
   }
 
   /* DAY SELECTION SECTION */
   .cal-day {
-    @apply w-10 h-10 mx-auto rounded-full flex items-center justify-center text-sm font-medium text-main transition-all cursor-pointer hover:bg-brand-blue/10 hover:text-brand-blue;
+    @apply mx-auto flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-sm font-medium text-main transition-all hover:bg-brand-blue/10 hover:text-brand-blue;
   }
 
   .cal-day-today {
-    @apply border border-brand-blue text-brand-blue font-bold;
+    @apply border border-brand-blue font-bold text-brand-blue;
   }
 
   .cal-day-selected {
-    @apply w-10 h-10 mx-auto rounded-full flex items-center justify-center text-sm font-bold text-white bg-brand-blue transition-all cursor-pointer;
+    @apply mx-auto flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-brand-blue text-sm font-bold text-white transition-all;
   }
 
   .cal-day-past {
-    @apply text-muted opacity-40 cursor-default;
+    @apply cursor-default text-muted opacity-40;
   }
 
   .cal-day-available {
-    @apply text-brand-blue bg-brand-blue/10 font-bold hover:bg-brand-blue/20;
+    @apply bg-brand-blue/10 font-bold text-brand-blue hover:bg-brand-blue/20;
   }
 
   .cal-day-unavailable {
-    @apply text-muted opacity-50 cursor-default;
+    @apply cursor-default text-muted opacity-50;
   }
 
   /* BOOKING TIME SLOT SECTION */
-
   .timeslot-group-div {
     @apply flex flex-col gap-2;
   }
@@ -209,88 +221,92 @@
   }
 
   .timeslot-date-label {
-    @apply text-muted text-sm font-normal mb-3;
+    @apply mb-3 text-sm font-normal text-muted;
   }
 
   .btn-confirm {
-    @apply bg-brand-primary text-white px-10 py-3 rounded-full font-bold text-sm transition-transform active:scale-95 hover:opacity-90;
+    @apply rounded-full bg-brand-primary px-10 py-3 text-sm font-bold text-white transition-transform active:scale-95 hover:opacity-90;
   }
 
-  /* BOOKING  FORM */
+  /* BOOKING FORM */
   .booking-form-container {
-    @apply flex flex-col items-start w-full;
+    @apply flex w-full flex-col items-start;
   }
+
   .form-title {
-    @apply text-xl font-bold text-dark mb-6;
+    @apply mb-6 text-xl font-bold text-dark;
   }
+
   .form-input-group {
-    @apply gap-2 flex flex-col mb-2;
+    @apply mb-2 flex flex-col gap-2;
   }
+
   .form-label {
-    @apply text-[16px] font-bold text-muted uppercase tracking-wider;
+    @apply text-[16px] font-bold uppercase tracking-wider text-muted;
   }
+
   .form-input {
-    @apply border border-black/10 rounded-xl p-3 w-full max-w-[400px] outline-none transition-all bg-gray-50/50;
+    @apply w-full max-w-[400px] rounded-xl border border-black/10 bg-gray-50/50 p-3 outline-none transition-all;
     @apply focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/10;
   }
-
-  /* here will add confirmation styling */
 
   /* volunteer flow */
   .booking-card-div {
     @apply my-2;
   }
+
   .booking-card {
-    @apply bg-white rounded-2xl shadow-sm border border-border-color p-6 w-full flex justify-between gap-12;
+    @apply flex w-full justify-between gap-12 rounded-2xl border border-border-color bg-white p-6 shadow-sm;
   }
 
   .session-details-div-booking-card {
     @apply flex flex-col;
   }
-  /* .session-plus-trainee-details-div {
-		@apply flex flex-col;
-	} */
+
   .booking-card-btns {
     @apply flex flex-row items-start gap-1;
   }
+
   /* bookings section */
   .bookings-col {
-    @apply flex flex-col items-start border-border-color transition-all duration-300 p-8;
+    @apply flex flex-col items-start border-border-color p-8 transition-all duration-300;
   }
 
   .all-cards-container {
-    @apply w-full p-2 bg-white;
+    @apply w-full bg-white p-2;
   }
 
   .bookings-heading-selectdt {
-    @apply text-lg font-bold text-dark mb-8;
+    @apply mb-8 text-lg font-bold text-dark;
   }
+
   /* edit booking section */
   .view-booking-details-card {
-    @apply p-2 w-full flex justify-start gap-12;
+    @apply flex w-full justify-start gap-12 p-2;
   }
 
   /* landing page */
   .landing-page {
-    @apply min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6;
+    @apply flex min-h-screen flex-col items-center justify-center bg-gray-50 p-6;
   }
 
   .role-selection-grid {
-    @apply grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-8 max-w-3xl;
+    @apply mt-8 grid w-full max-w-3xl grid-cols-1 gap-6 md:grid-cols-2;
   }
 
   .role-tile {
-    @apply flex flex-col items-center justify-start p-8 rounded-2xl border-2 border-black/10 bg-white transition-all cursor-pointer text-main;
-    @apply hover:shadow-lg hover:scale-105;
+    @apply flex cursor-pointer flex-col items-center justify-start rounded-2xl border-2 border-black/10 bg-white p-8 text-main transition-all;
+    @apply hover:scale-105 hover:shadow-lg;
   }
 
   .role-tile-icon {
-    @apply w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-all;
+    @apply mb-4 flex h-16 w-16 items-center justify-center rounded-full transition-all;
   }
 
   .role-tile-trainee .role-tile-icon {
     @apply bg-brand-blue/10 text-brand-blue;
   }
+
   .role-tile-trainee:hover {
     @apply border-brand-blue duration-300 ease-in-out;
   }
@@ -298,29 +314,30 @@
   .role-tile-volunteer .role-tile-icon {
     @apply bg-brand-primary/10 text-brand-primary;
   }
+
   .role-tile-volunteer:hover {
     @apply border-brand-primary duration-300 ease-in-out;
   }
+
   .landing-tile {
-    @apply text-4xl font-bold mb-4 tracking-tight;
-    @apply bg-gradient-to-r from-brand-blue to-brand-primary;
-    @apply bg-clip-text text-transparent;
+    @apply mb-4 bg-gradient-to-r from-brand-blue to-brand-primary bg-clip-text text-4xl font-bold tracking-tight text-transparent;
   }
+
   .role-tile h3 {
-    @apply text-xl font-bold text-dark mb-2;
+    @apply mb-2 text-xl font-bold text-dark;
   }
 
   .role-tile p {
-    @apply text-sm text-muted text-center;
+    @apply text-center text-sm text-muted;
   }
 
   /* offer timeslots */
   .timeslot-form-container {
-    @apply p-6 rounded-2xl shadow-sm;
+    @apply rounded-2xl p-6 shadow-sm;
   }
 
   .form-title {
-    @apply text-xl font-bold mb-6;
+    @apply mb-6 text-xl font-bold;
   }
 
   .form-input-group {
@@ -334,24 +351,25 @@
   .form-input-group-row:hover {
     @apply border-border-color;
   }
+
   .form-label {
     @apply text-xs font-bold;
   }
 
   .form-input {
-    @apply w-full p-3 bg-gray-50 border-border-color rounded-xl text-gray-700 focus:text-brand-primary focus:outline-none 
-           transition-all cursor-pointer;
+    @apply w-full cursor-pointer rounded-xl border-border-color bg-gray-50 p-3 text-gray-700 transition-all focus:text-brand-primary focus:outline-none;
   }
 
   .form-checkbox {
-    @apply w-5 h-5 rounded-md border-border-color text-brand-primary cursor-pointer;
+    @apply h-5 w-5 cursor-pointer rounded-md border-border-color text-brand-primary;
   }
+
   .basket-container {
-    @apply mt-8 pt-6 border-t border-black/5 w-full;
+    @apply mt-0 w-full pt-0;
   }
 
   .basket-title {
-    @apply text-muted mb-2 text-lg;
+    @apply mb-4 text-lg text-muted;
   }
 
   .basket-list {
@@ -359,33 +377,67 @@
   }
 
   .basket-row {
-    @apply flex justify-between items-center py-2 border-b border-black/5 last:border-0 transition-all;
+    @apply flex items-center justify-between border-b border-black/5 py-2 transition-all last:border-0;
     @apply hover:bg-black/[0.02];
   }
 
+  .basket-entries {
+    @apply flex items-center gap-2;
+  }
+
   .basket-delete-btn {
-    @apply w-5 h-5 hover:text-brand-blue transition-all cursor-pointer;
+    @apply h-5 w-5 cursor-pointer transition-all hover:text-brand-blue;
   }
 
   .basket-save-btn {
-    @apply w-full mt-6;
+    @apply mt-6 w-full;
   }
+
+  /* edit availability slots volunteer */
+  .availability-outer-div {
+    @apply flex flex-col p-2;
+  }
+
+  .availability-header-container {
+    @apply mb-4 max-w-[600px] border-b border-black/10 pb-4;
+  }
+
+  .availability-header-row {
+    @apply flex w-full items-center justify-between;
+  }
+
+  .edit-form-title {
+    @apply text-xl font-bold text-dark;
+  }
+
+  .edit-form-p {
+    @apply mt-2 text-main;
+  }
+
+  .back-btn {
+    @apply mt-2;
+  }
+
   /* meeting booked confirmation */
   /* this is rendered in trainee booking */
   .conf-page-div {
-    @apply flex flex-col items-center justify-center w-full h-full p-12 bg-gray-50;
+    @apply flex h-full w-full flex-col items-center justify-center bg-gray-50 p-12;
   }
+
   .conf-page-div h3 {
-    @apply text-xl font-bold text-muted mb-2;
+    @apply mb-2 text-xl font-bold text-muted;
   }
+
   .confirmation-container {
-    @apply flex flex-col items-center justify-center w-full h-full p-8 gap-6;
+    @apply flex h-full w-full flex-col items-center justify-center gap-6 p-8;
   }
+
   .avatar-conf {
-    @apply w-24 h-24 shadow-sm;
+    @apply h-24 w-24 shadow-sm;
   }
+
   .confirmation-header {
-    @apply flex flex-col items-center gap-2 mb-4 text-center;
+    @apply mb-4 flex flex-col items-center gap-2 text-center;
   }
 
   .confirmation-title {
@@ -393,17 +445,19 @@
   }
 
   .confirmation-icon {
-    @apply text-brand-primary w-8 h-8;
+    @apply h-8 w-8 text-brand-primary;
   }
 
   .confirmation-subtitle {
     @apply text-main;
   }
-  /* .confirmation-container span  moved to top {
-		@apply text-main;
-	} */
+
+  /* .confirmation-container span {
+    @apply text-main;
+  } */
+
   .confirmation-details-card {
-    @apply flex flex-col items-start w-full max-w-[600px] border border-black/10 rounded-lg p-8 bg-white gap-4 shadow-sm;
+    @apply flex w-full max-w-[600px] flex-col items-start gap-4 rounded-lg border border-black/10 bg-white p-8 shadow-sm;
   }
 
   .confirmation-detail-row {
@@ -411,11 +465,12 @@
   }
 
   .confirmation-detail-icon {
-    @apply w-5 h-5 text-main;
+    @apply h-5 w-5 text-main;
   }
+
   /* 404 page */
   .not-found-page {
-    @apply min-h-screen flex flex-col items-center justify-center;
+    @apply flex min-h-screen flex-col items-center justify-center;
   }
 
   .not-found-huge-text {
@@ -423,10 +478,10 @@
   }
 
   .not-found-subtitle {
-    @apply text-3xl font-bold text-muted mb-4 mt-2;
+    @apply mb-4 mt-2 text-3xl font-bold text-muted;
   }
 
   .not-found-text {
-    @apply text-main mb-8 text-lg;
+    @apply mb-8 text-lg text-main;
   }
 }

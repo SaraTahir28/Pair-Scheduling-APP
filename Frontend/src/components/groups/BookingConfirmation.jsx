@@ -13,7 +13,7 @@ const BookingConfirmation = ({
 	selectedTime,
 	volunteerProps,
 }) => {
-	const formattedDate = selectedDateObj.toLocaleDateString("en-CA");
+	const formattedDate = selectedDateObj.toLocaleDateString();
 
 	return (
 		<div className="confirmation-container">

@@ -1,0 +1,27 @@
+services:
+  db:
+    ports: []
+    restart: unless-stopped
+
+  backend:
+    restart: unless-stopped
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --no-input &&
+             gunicorn booking_system.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+    volumes:
+      - ${GOOGLE_SERVICE_ACCOUNT_PATH}:/app/secrets/cyf-service-account.json:ro
+    environment:
+      DJANGO_ENV: production
+      FRONTEND_URL: ${FRONTEND_URL}
+
+  frontend:
+    restart: unless-stopped
+    build:
+      context: ./Frontend
+      target: prod
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+    ports:
+      - "8080:80"
+    volumes: []

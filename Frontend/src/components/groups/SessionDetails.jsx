@@ -1,7 +1,11 @@
 import React from "react";
 import { Clock, Video } from "lucide-react";
 
-const SessionDetails = ({ activeVolunteerProps, volunteerView }) => {
+const SessionDetails = ({
+	activeVolunteerProps,
+	volunteerView,
+	onManageAvailabilityClick,
+}) => {
 	if (volunteerView) {
 		return (
 			<div className="session-details-div">
@@ -18,6 +22,15 @@ const SessionDetails = ({ activeVolunteerProps, volunteerView }) => {
 						You are logged in as <br />
 						<strong>{activeVolunteerProps.name}</strong>
 					</p>
+
+					{onManageAvailabilityClick && (
+						<button
+							className="btn-secondary"
+							onClick={onManageAvailabilityClick}
+						>
+							Manage my availability
+						</button>
+					)}
 				</div>
 			</div>
 		);

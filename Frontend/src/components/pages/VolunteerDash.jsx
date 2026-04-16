@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { volunteersDetails, traineeDetails } from "../../data/UserData";
 import { bookedSessions } from "../../data/BookedSessions";
@@ -6,6 +6,7 @@ import BookingCard from "../groups/BookingCard";
 import SessionDetails from "../groups/SessionDetails";
 import VolunteerEditSession from "../groups/VolunteerEditSession";
 import VolunteerViewSession from "../groups/VolunteerViewSession";
+import VolunteerAvailabilityManager from "../groups/VolunteerAvailabilityManager";
 
 import VolunteerAvailabilityForm from "../groups/VolunteerAvailabilityForm";
 import { useAuth } from "../../AuthContext";
@@ -33,6 +34,23 @@ const VolunteerDash = () => {
 	const volunteerSubmitedFormWithSlots = (newSlotObj) => {
 		setTemporaryAddedSlotsStorage([...temporaryAddedSlotsStorage, newSlotObj]);
 	};
+	const [showManager, setShowManager] = useState(false);
+
+	useEffect(() => {
+		if (activeVolunteer?.id) {
+			api
+				.get("/api/slot-rules/")
+				.then((res) => {
+					const mySlots = res.data.filter(
+						(slot) => slot.volunteer_id === activeVolunteer.id
+					);
+					if (mySlots.length > 0) {
+						setHasUserSetAvailability(true);
+					}
+				})
+				.catch((err) => console.log("Error checking API:", err));
+		}
+	}, [activeVolunteer?.id]);
 
 	const sendVolunteerSlotsToDb = () => {
 		Promise.all(
@@ -40,6 +58,7 @@ const VolunteerDash = () => {
 				api.post("/api/slot-rules/", {
 					start_time: slot.start_time,
 					repeat_until: slot.repeat_until,
+					volunteer: activeVolunteer.id,
 					group: "all",
 				})
 			)
@@ -77,9 +96,9 @@ const VolunteerDash = () => {
 			);
 		setAllBookedSessionsForAllUsers(varPassToUpdateStateBookedSessions);
 
-		const objectToSendToBackendToDelete = {
-			session_id: idToDelete,
-		};
+		// const objectToSendToBackendToDelete = {
+		// 	session_id: idToDelete,
+		// };
 
 		// add delete route
 		//  fetch("http://localhost:8000/api/confirm-address-delete-booking/", {
@@ -123,18 +142,19 @@ const VolunteerDash = () => {
 				<SessionDetails
 					activeVolunteerProps={activeVolunteer}
 					volunteerView={true}
+					onManageAvailabilityClick={() => setShowManager(true)}
 				/>
 			</div>
 			<div className="bookings-col">
 				{!hasUserSetAvailability && (
 					<div className="">
 						<p className="">
-							Let's start by selecting your availability for 1:1 sessions.
+							Let&apos;s start by selecting your availability for 1:1 sessions.
 						</p>
 
 						<VolunteerAvailabilityForm
 							volunteerId={activeVolunteer.id}
-							mode="edit"
+							mode="onboarding"
 							whenFormSubmit={volunteerSubmitedFormWithSlots}
 							addedSlots={temporaryAddedSlotsStorage}
 							removeSlot={removeSlotFromTemporaryStorage}
@@ -143,32 +163,37 @@ const VolunteerDash = () => {
 					</div>
 				)}
 
-				{hasUserSetAvailability && (
+				{hasUserSetAvailability && !showManager && (
 					<>
-						{id ? (
-							editSessionMode ? (
-								<VolunteerEditSession
-									sessions={allBookedSessionsForAllUsers}
-									onSave={saveEditedSession}
-								/>
-							) : (
-								<VolunteerViewSession sessions={allBookedSessionsForAllUsers} />
-							)
-						) : (
-							<>
-								<div className="all-cards-container">
-									<h2 className="bookings-heading-selectdt">
-										Upcoming sessions
-									</h2>
-									{renderedSessions.length > 0 ? (
-										renderedSessions
-									) : (
-										<p>You do not have any booked sessions.</p>
-									)}
-								</div>
-							</>
+						{id && editSessionMode && (
+							<VolunteerEditSession
+								sessions={allBookedSessionsForAllUsers}
+								onSave={saveEditedSession}
+							/>
+						)}
+
+						{id && !editSessionMode && (
+							<VolunteerViewSession sessions={allBookedSessionsForAllUsers} />
+						)}
+
+						{!id && (
+							<div className="all-cards-container">
+								<h2 className="bookings-heading-selectdt">Upcoming sessions</h2>
+								{renderedSessions.length > 0 ? (
+									renderedSessions
+								) : (
+									<p>You do not have any booked sessions.</p>
+								)}
+							</div>
 						)}
 					</>
+				)}
+
+				{hasUserSetAvailability && showManager && (
+					<VolunteerAvailabilityManager
+						volunteerId={activeVolunteer.id}
+						onBackToDash={() => setShowManager(false)}
+					/>
 				)}
 			</div>
 		</div>

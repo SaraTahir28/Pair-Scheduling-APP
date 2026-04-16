@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 
 export default function Login() {
-  const googleLoginUrl =
-    "http://localhost:8000/accounts/google/login/?process=login&next=http://localhost:5173/";
+  const googleLoginUrl = `${import.meta.env.VITE_API_URL}/accounts/google/login/?process=login&next=${window.location.origin}/`;
 
   const handleGoogleLogin = () => {
     // Redirect straight to Google via Django
