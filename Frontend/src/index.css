@@ -46,6 +46,10 @@
 	.btn-destructive {
 		@apply bg-white border border-red-600 text-main hover:bg-black/5 hover:text-main;
 	}
+	.btn-with-icon {
+		@apply inline-flex items-center gap-2 mt-2 p-2 border border-border-color rounded-lg text-main transition-all;
+		@apply hover:bg-black/5 hover:text-brand-blue;
+	}
 
 	.btn-time-slot {
 		@apply w-full py-3 border border-brand-blue/60 bg-white text-main rounded-lg text-sm font-bold transition-all;
@@ -99,10 +103,13 @@
 	}
 	/* avatar box styling */
 	.availableVolunteersDiv {
-		@apply gap-4;
+		@apply gap-2;
+	}
+	.avatar-row {
+		@apply flex items-center gap-2;
 	}
 	.avatar {
-		@apply mb-2;
+		@apply w-16 h-16 rounded-full object-cover mb-2;
 	}
 	/* MIDDLE CALENDAR */
 	.calendar-col {

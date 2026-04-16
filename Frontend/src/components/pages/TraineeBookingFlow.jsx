@@ -56,6 +56,7 @@ const TraineeBookingFlow = () => {
 					setActiveVolunteer(null);
 				}
 			})
+
 			.catch((err) => console.log(err));
 	}, []);
 
@@ -68,7 +69,7 @@ const TraineeBookingFlow = () => {
 		);
 	}
 
-	if (allVolunteersData === null || activeVolunteer === null) {
+	if (allVolunteersData === null) {
 		return (
 			<div className="booking-box">
 				<h2>Loading volunteers...</h2>
@@ -89,13 +90,12 @@ const TraineeBookingFlow = () => {
 		availableTimes: [],
 	};
 
-	if (allVolunteersData && allVolunteersData.length > 0) {
+	if (activeVolunteer && allVolunteersData && allVolunteersData.length > 0) {
 		const activeVolunteerSlots = allVolunteersData.filter((slot) => {
 			return slot.volunteer_id === activeVolunteer.id;
 		});
 
 		for (let i = 0; i < activeVolunteerSlots.length; i++) {
-			//starting str one is "2026-03-20T09:00:00Z"
 			let slotWeAreOn = activeVolunteerSlots[i];
 			let convertedToString = slotWeAreOn.start_time; //TODO/question - converting to str if not a str from backend, is that ever possible?
 			let dateOnlyStr = convertedToString.split("T")[0];
@@ -169,6 +169,7 @@ const TraineeBookingFlow = () => {
 					<div className="session-details-col">
 						{!isConfirmationPage && (
 							<SessionDetails
+								traineeView={true}
 								selectedDateProps={selectedDateObj}
 								activeVolunteerProps={activeVolunteer}
 								volunteers={volunteers}
