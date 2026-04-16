@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import SessionDetails from "../groups/SessionDetails";
+import VolunteerSelector from "../groups/VolunteerSelector";
 import Calendar from "../groups/Calendar";
 import TimeSlotGroup from "../groups/TimeSlotGroup";
 import BookingForm from "../groups/BookingForm";
@@ -15,7 +16,6 @@ const TraineeBookingFlow = () => {
 
   const { selectedDate, selectedTime, status, volunteerId, slotRuleId } =
     useParams();
-
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -27,22 +27,18 @@ const TraineeBookingFlow = () => {
   }, []);
 
   useEffect(() => {
-    if (!allVolunteersData || !volunteerId) {
-      setActiveVolunteer(null);
-      return;
-    }
+    if (!allVolunteersData || !volunteerId) return;
 
-    const matchedSlot = allVolunteersData.find(
+    const matchedVolunteer = allVolunteersData.find(
       (slot) => String(slot.volunteer_id) === String(volunteerId)
     );
 
-    if (matchedSlot) {
+    if (matchedVolunteer) {
       setActiveVolunteer({
-        id: matchedSlot.volunteer_id,
-        ...matchedSlot,
+        id: matchedVolunteer.volunteer_id,
+        name: matchedVolunteer.name,
+        img: matchedVolunteer.img,
       });
-    } else {
-      setActiveVolunteer(null);
     }
   }, [allVolunteersData, volunteerId]);
 
@@ -53,6 +49,19 @@ const TraineeBookingFlow = () => {
       </div>
     );
   }
+
+  const availableVolunteers = [
+    ...new Map(
+      allVolunteersData.map((slot) => [
+        slot.volunteer_id,
+        {
+          id: slot.volunteer_id,
+          name: slot.name,
+          img: slot.img,
+        },
+      ])
+    ).values(),
+  ];
 
   if (allVolunteersData.length === 0) {
     return (
@@ -168,13 +177,22 @@ const TraineeBookingFlow = () => {
       ) : (
         <>
           <div className="session-details-col">
-            {activeVolunteer ? (
-              <SessionDetails
-                selectedDateProps={selectedDateObj}
-                activeVolunteerProps={activeVolunteer}
+            {!isConfirmationPage &&
+              (activeVolunteer ? (
+                <SessionDetails
+                  selectedDateProps={selectedDateObj}
+                  activeVolunteerProps={activeVolunteer}
+                />
+              ) : (
+                <p>Viewing availability from all volunteers</p>
+              ))}
+
+            {!selectedTime && (
+              <VolunteerSelector
+                volunteers={availableVolunteers}
+                activeVolunteer={activeVolunteer}
+                setActiveVolunteer={setActiveVolunteer}
               />
-            ) : (
-              <p>Viewing availability from all volunteers</p>
             )}
           </div>
 
