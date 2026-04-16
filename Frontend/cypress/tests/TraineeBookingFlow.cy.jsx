@@ -10,9 +10,22 @@ const mountAtRoute = (path) => {
       <MemoryRouter initialEntries={[path]}>
         <Routes>
           <Route path="/trainee-booking" element={<TraineeBookingFlow />} />
-          <Route path="/trainee-booking/:selectedDate" element={<TraineeBookingFlow />} />
-          <Route path="/trainee-booking/:selectedDate/:selectedTime" element={<TraineeBookingFlow />} />
-          <Route path="/trainee-booking/:selectedDate/:selectedTime/:status" element={<TraineeBookingFlow />} />
+          <Route
+            path="/trainee-booking/:selectedDate"
+            element={<TraineeBookingFlow />}
+          />
+          <Route
+            path="/trainee-booking/:selectedDate/:selectedTime"
+            element={<TraineeBookingFlow />}
+          />
+          <Route
+            path="/trainee-booking/:selectedDate/:selectedTime/:status"
+            element={<TraineeBookingFlow />}
+          />
+          <Route
+            path="/trainee-booking/:selectedDate/:selectedTime/:status/:volunteerId/:slotRuleId"
+            element={<TraineeBookingFlow />}
+          />
         </Routes>
       </MemoryRouter>
     </AuthProvider>
@@ -62,17 +75,29 @@ describe("TraineeBookingFlow URL validation", () => {
       body: [
         {
           volunteer_id: 1,
+          slot_rule_id: 1,
           name: "Test Volunteer",
           img: "",
           start_time: "2026-04-01T09:00:00Z",
+          end_time: "2026-04-01T10:00:00Z",
         },
       ],
     }).as("availableSlots");
-    cy.intercept("POST", "**/api/create-meeting/", { statusCode: 200, body: {} }).as("createMeeting");
-    mountAtRoute("/trainee-booking/2026-04-01/09:00");
+
+    cy.intercept("POST", "**/api/create-meeting/", {
+      statusCode: 200,
+      body: {},
+    }).as("createMeeting");
+
+    mountAtRoute("/trainee-booking/2026-04-01/09:00/pending/1/1");
+
     cy.get("textarea").type("discuss promises in javascript");
     cy.contains("Book meeting").click();
+
     const expected = new Date(2026, 3, 1, 9, 0).toISOString();
-    cy.wait("@createMeeting").its("request.body.time_slot").should("equal", expected);
+
+    cy.wait("@createMeeting")
+      .its("request.body.time_slot")
+      .should("equal", expected);
   });
 });

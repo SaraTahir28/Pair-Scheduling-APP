@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import SessionDetails from "../groups/SessionDetails";
+import VolunteerSelector from "../groups/VolunteerSelector";
 import Calendar from "../groups/Calendar";
 import TimeSlotGroup from "../groups/TimeSlotGroup";
 import BookingForm from "../groups/BookingForm";
@@ -8,36 +9,52 @@ import api from "../../api/axiosClient";
 import BookingConfirmation from "../groups/BookingConfirmation";
 import { BackBtn } from "../elements/Button";
 import { useAuth } from "../../AuthContext";
-import { isValidDate, isValidTime, parseLocalDate, parseLocalDateTime, formatLocalDate } from "../../utilities/dateTime";
+import {
+  isValidDate,
+  isValidTime,
+  parseLocalDate,
+  parseLocalDateTime,
+  formatLocalDate,
+} from "../../utilities/dateTime";
 
 const TraineeBookingFlow = () => {
   const [allVolunteersData, setAllVolunteersData] = useState(null);
-  //TODO next PR show all slots from all volunteers
   const [activeVolunteer, setActiveVolunteer] = useState(null);
 
-  const { selectedDate, selectedTime, status } = useParams();
+  const { selectedDate, selectedTime, status, volunteerId, slotRuleId } =
+    useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const isInvalidDate = selectedDate !== undefined && !isValidDate(selectedDate);
-  const isInvalidTime = selectedTime !== undefined && !isValidTime(selectedTime);
-  const selectedDateObj = selectedDate && !isInvalidDate ? parseLocalDate(selectedDate) : null;
+  const isInvalidDate =
+    selectedDate !== undefined && !isValidDate(selectedDate);
+  const isInvalidTime =
+    selectedTime !== undefined && !isValidTime(selectedTime);
+  const selectedDateObj =
+    selectedDate && !isInvalidDate ? parseLocalDate(selectedDate) : null;
 
   useEffect(() => {
     api
       .get("/api/available-slots/")
-      .then((res) => {
-        setAllVolunteersData(res.data);
-        if (res.data && res.data.length > 0) {
-          setActiveVolunteer({
-            id: res.data[0].volunteer_id,
-            name: res.data[0].name,
-            img: res.data[0].img,
-          });
-        }
-      })
+      .then((res) => setAllVolunteersData(res.data))
       .catch((err) => console.log(err));
   }, []);
+
+  useEffect(() => {
+    if (!allVolunteersData || !volunteerId) return;
+
+    const matchedVolunteer = allVolunteersData.find(
+      (slot) => String(slot.volunteer_id) === String(volunteerId)
+    );
+
+    if (matchedVolunteer) {
+      setActiveVolunteer({
+        id: matchedVolunteer.volunteer_id,
+        name: matchedVolunteer.name,
+        img: matchedVolunteer.img,
+      });
+    }
+  }, [allVolunteersData, volunteerId]);
 
   if (isInvalidDate || isInvalidTime) {
     return (
@@ -48,13 +65,26 @@ const TraineeBookingFlow = () => {
     );
   }
 
-  if (allVolunteersData === null || activeVolunteer === null) {
+  if (allVolunteersData === null) {
     return (
       <div className="booking-box">
         <h2>Loading volunteers...</h2>
       </div>
     );
   }
+
+  const availableVolunteers = [
+    ...new Map(
+      allVolunteersData.map((slot) => [
+        slot.volunteer_id,
+        {
+          id: slot.volunteer_id,
+          name: slot.name,
+          img: slot.img,
+        },
+      ])
+    ).values(),
+  ];
 
   if (allVolunteersData.length === 0) {
     return (
@@ -69,41 +99,60 @@ const TraineeBookingFlow = () => {
     availableTimes: [],
   };
 
-  if (allVolunteersData && allVolunteersData.length > 0) {
-    const activeVolunteerSlots = allVolunteersData.filter((slot) => {
-      return slot.volunteer_id === activeVolunteer.id;
-    });
+  const seenTimes = new Set();
 
-    for (let i = 0; i < activeVolunteerSlots.length; i++) {
-      //starting str one is "2026-03-20T09:00:00Z"
-      let slotWeAreOn = activeVolunteerSlots[i];
-      let convertedToString = slotWeAreOn.start_time; //TODO/question - converting to str if not a str from backend, is that ever possible?
-      let dateOnlyStr = convertedToString.split("T")[0];
-      let dateBitsArr = dateOnlyStr.split("-");
-      let dayString = dateBitsArr[2];
-      let dayNumber = Number(dayString);
+  const slotsToProcess = activeVolunteer
+    ? allVolunteersData.filter(
+        (slot) => String(slot.volunteer_id) === String(activeVolunteer.id)
+      )
+    : allVolunteersData;
 
-      if (
-        convertedAllVDataToFrontendFormat.availableDates.includes(dayNumber) ===
-        false
-      ) {
-        convertedAllVDataToFrontendFormat.availableDates.push(dayNumber);
-      }
-      if (selectedDate && convertedToString.includes(selectedDate)) {
-        let timeOnlyStr = convertedToString.split("T")[1];
-        let timeBitsArr = timeOnlyStr.split(":");
-        let timeInFormathhmm = timeBitsArr[0] + ":" + timeBitsArr[1];
-        convertedAllVDataToFrontendFormat.availableTimes.push(timeInFormathhmm);
+  const sortedSlots = [...slotsToProcess].sort(
+    (a, b) => new Date(a.start_time) - new Date(b.start_time)
+  );
+  for (let slot of sortedSlots) {
+    const convertedToString = slot.start_time;
+    const dateOnlyStr = convertedToString.split("T")[0];
+
+    if (
+      !convertedAllVDataToFrontendFormat.availableDates.includes(dateOnlyStr)
+    ) {
+      convertedAllVDataToFrontendFormat.availableDates.push(dateOnlyStr);
+    }
+
+    if (selectedDate && convertedToString.split("T")[0] === selectedDate) {
+      const timeOnlyStr = convertedToString.split("T")[1];
+      const timeInFormathhmm =
+        timeOnlyStr.split(":")[0] + ":" + timeOnlyStr.split(":")[1];
+
+      const slotKey = `${timeInFormathhmm}-${slot.volunteer_id}-${slot.slot_rule_id}`;
+
+      if (!seenTimes.has(slotKey)) {
+        seenTimes.add(slotKey);
+
+        convertedAllVDataToFrontendFormat.availableTimes.push({
+          time: timeInFormathhmm,
+          volunteerId: slot.volunteer_id,
+          slotRuleId: slot.slot_rule_id,
+          name: slot.name,
+        });
       }
     }
   }
 
   const updateUrlWithDate = (newDate) => {
+    if (!newDate) {
+      navigate("/trainee-booking");
+      return;
+    }
+
     navigate(`/trainee-booking/${formatLocalDate(newDate)}`);
   };
 
-  const updateUrlWithTime = (newTime) => {
-    navigate(`/trainee-booking/${selectedDate}/${newTime}`);
+  const updateUrlWithTime = (time, clickedVolunteerId, clickedSlotRuleId) => {
+    navigate(
+      `/trainee-booking/${selectedDate}/${time}/pending/${clickedVolunteerId}/${clickedSlotRuleId}`
+    );
   };
 
   const handleGoBack = () => {
@@ -113,19 +162,28 @@ const TraineeBookingFlow = () => {
   const isConfirmationPage = status === "confirmation";
 
   const createBookingDetailsObj = (bookingFormData) => {
-    const timeSlotForBackend = parseLocalDateTime(selectedDate, selectedTime).toISOString();
+    if (!volunteerId || !slotRuleId || !selectedDate || !selectedTime) {
+      alert("Missing booking details");
+      return;
+    }
+
+    const timeSlotForBackend = parseLocalDateTime(
+      selectedDate,
+      selectedTime
+    ).toISOString();
 
     const bookingDetailsObj = {
-      volunteer_id: activeVolunteer.id,
-      slot_rule_id: 1, //TODO will be updated in the next PR
+      volunteer_id: Number(volunteerId),
+      slot_rule_id: Number(slotRuleId),
       time_slot: timeSlotForBackend,
       agenda: bookingFormData.agenda || "No agenda provided.",
     };
+
     api
       .post("/api/create-meeting/", bookingDetailsObj)
       .then(() => {
         navigate(
-          `/trainee-booking/${selectedDate}/${selectedTime}/confirmation`
+          `/trainee-booking/${selectedDate}/${selectedTime}/confirmation/${volunteerId}/${slotRuleId}`
         );
       })
       .catch((error) => console.log("Error:", error));
@@ -144,10 +202,21 @@ const TraineeBookingFlow = () => {
       ) : (
         <>
           <div className="session-details-col">
-            {!isConfirmationPage && (
-              <SessionDetails
-                selectedDateProps={selectedDateObj}
-                activeVolunteerProps={activeVolunteer}
+            {!isConfirmationPage &&
+              (activeVolunteer ? (
+                <SessionDetails
+                  selectedDateProps={selectedDateObj}
+                  activeVolunteerProps={activeVolunteer}
+                />
+              ) : (
+                <p>Viewing availability from all volunteers</p>
+              ))}
+
+            {!selectedTime && (
+              <VolunteerSelector
+                volunteers={availableVolunteers}
+                activeVolunteer={activeVolunteer}
+                setActiveVolunteer={setActiveVolunteer}
               />
             )}
           </div>
@@ -163,6 +232,7 @@ const TraineeBookingFlow = () => {
                   }
                 />
               </div>
+
               <div className="timeslot-col">
                 <TimeSlotGroup
                   selectedDateProps={selectedDateObj}
@@ -180,6 +250,7 @@ const TraineeBookingFlow = () => {
               <div className="back-btn-div">
                 <BackBtn onClick={handleGoBack} />
               </div>
+
               <BookingForm
                 whenFormSubmit={createBookingDetailsObj}
                 trainee={user}
