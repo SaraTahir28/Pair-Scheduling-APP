@@ -77,10 +77,12 @@ describe("TraineeBookingFlow URL validation", () => {
         },
       ],
     }).as("availableSlots");
+
     cy.intercept("POST", "**/api/create-meeting/", {
       statusCode: 200,
       body: {},
     }).as("createMeeting");
+
     mountAtRoute("/trainee-booking/2026-04-01/09:00");
 
     cy.wait("@availableSlots");
@@ -89,7 +91,9 @@ describe("TraineeBookingFlow URL validation", () => {
 
     cy.get("textarea").type("discuss promises in javascript");
     cy.contains("Book meeting").click();
+
     const expected = new Date(2026, 3, 1, 9, 0).toISOString();
+
     cy.wait("@createMeeting")
       .its("request.body.time_slot")
       .should("equal", expected);
