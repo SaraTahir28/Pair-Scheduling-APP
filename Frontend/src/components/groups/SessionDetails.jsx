@@ -56,7 +56,15 @@ const SessionDetails = ({
 
       <div className="availableVolunteersDiv">
         <div className="avatar-row">
-          <img src={activeVolunteerProps.img} className="avatar" />
+          <img
+            src={activeVolunteerProps.img}
+            className="avatar"
+            alt={
+              activeVolunteerProps.name
+                ? `Profile picture of ${activeVolunteerProps.name}`
+                : "Volunteer profile picture"
+            }
+          />
         </div>
 
         <p>

@@ -75,7 +75,16 @@ const ViewBooking = ({ deleteBookedSession }) => {
       <div className="view-booking-details-card">
         <div className="session-plus-trainee-details-div">
           <div>
-            <img src={trainee.img} alt="Profile picture" className="avatar" />
+            <img
+              src={trainee.img}
+              alt={
+                trainee.name
+                  ? `Profile picture of ${trainee.name}`
+                  : "Trainee profile picture"
+              }
+              className="avatar"
+            />
+
             <p>
               Your session is with <br></br>
               <strong>{trainee.name}</strong>
@@ -117,6 +126,7 @@ const ViewBooking = ({ deleteBookedSession }) => {
           >
             Edit
           </Link>
+
 
           <ActionBtn
             additionalBtnClass="btn-tertiary"
