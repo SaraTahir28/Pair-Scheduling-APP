@@ -20,7 +20,7 @@ def user(db):
 @pytest.mark.django_db
 class TestSlotRuleCreateView:
     def get_url(self):
-        return reverse("slot-rule-create")
+        return reverse("slot-rule-list-create")
 
     def test_create_slot_rule_success(self, api_client, user):
         api_client.force_authenticate(user=user)

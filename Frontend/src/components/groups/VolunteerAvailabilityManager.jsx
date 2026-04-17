@@ -13,10 +13,7 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
     api
       .get("/api/slot-rules/")
       .then((res) => {
-        const specificVolunteerSlots = res.data.filter(
-          (slot) => slot.volunteer_id === volunteerId
-        );
-        setOriginalSlotRulesFromApi(specificVolunteerSlots);
+        setOriginalSlotRulesFromApi(res.data);
       })
       .catch((err) => console.log("Error fetching slots:", err));
   }, [volunteerId]);
@@ -70,10 +67,7 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
         return api.get("/api/slot-rules/");
       })
       .then((res) => {
-        const specificVolunteerSlots = res.data.filter((slot) => {
-          return slot.volunteer_id === volunteerId;
-        });
-        setOriginalSlotRulesFromApi(specificVolunteerSlots);
+        setOriginalSlotRulesFromApi(res.data);
         setSlotRulesInBasket([]);
         alert("Your availability has been updated.");
         setIsEditing(false);

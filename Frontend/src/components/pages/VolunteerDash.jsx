@@ -41,10 +41,7 @@ const VolunteerDash = () => {
       api
         .get("/api/slot-rules/")
         .then((res) => {
-          const mySlots = res.data.filter(
-            (slot) => slot.volunteer_id === activeVolunteer.id
-          );
-          if (mySlots.length > 0) {
+          if (res.data.length > 0) {
             setHasUserSetAvailability(true);
           }
         })

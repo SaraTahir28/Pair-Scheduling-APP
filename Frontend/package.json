@@ -10,7 +10,10 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "preview": "vite preview",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "cypress:component": "cypress run --component",
+    "cypress:integration": "cypress run --spec 'cypress/e2e/integration/**/*.cy.{js,jsx}'",
+    "cypress:full-stack": "cypress run --spec 'cypress/e2e/full-stack/**/*.cy.{js,jsx}'"
   },
   "dependencies": {
     "axios": "^1.14.0",
