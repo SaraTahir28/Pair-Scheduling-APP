@@ -5,7 +5,7 @@ import { Laptop, Users } from "lucide-react";
 const LandingPage = () => {
   return (
     <div className="landing-page">
-      <h1 className="landing-title">Welcome to the Booking App</h1>
+      <h1 className="landing-tile">Welcome to the Booking App</h1>
       <p>Please select your role to continue</p>
 
       <div className="role-selection-grid">

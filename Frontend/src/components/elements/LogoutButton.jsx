@@ -1,5 +1,5 @@
 import { useAuth } from "../../AuthContext";
-import { ActionBtn } from "./Button"; // reusing existing button design
+import { ActionBtn } from "./Button";
 
 export default function LogoutButton({ additionalBtnClass }) {
   const { logout } = useAuth();
@@ -8,9 +8,7 @@ export default function LogoutButton({ additionalBtnClass }) {
     <ActionBtn
       onClick={logout}
       ariaLabel="Logout"
-      additionalBtnClass={
-        additionalBtnClass || "bg-red-700 hover:bg-red-800 text-white"
-      }
+      additionalBtnClass={"btn-secondary"}
     >
       Logout
     </ActionBtn>
