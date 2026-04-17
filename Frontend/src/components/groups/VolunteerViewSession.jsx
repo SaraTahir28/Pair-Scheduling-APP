@@ -127,7 +127,6 @@ const ViewBooking = ({ deleteBookedSession }) => {
             Edit
           </Link>
 
-
           <ActionBtn
             additionalBtnClass="btn-tertiary"
             onClick={() => setIsUserClickingDelete(true)}
