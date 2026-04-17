@@ -13,14 +13,14 @@ const LandingPage = () => {
           <div className="role-title-icon">
             <Laptop size={32} strokeWidth={2} />
           </div>
-          <h3>I am a Trainee</h3>
+          <h2>I am a Trainee</h2>
           <p>Book a 1:1 pair programming session with a CYF volunteer.</p>
         </Link>
         <Link to="/volunteer-dash" className="role-tile role-tile-volunteer">
           <div className="role-title-icon">
             <Users size={32} strokeWidth={2} />
           </div>
-          <h3>I am a Volunteer</h3>
+          <h2>I am a Volunteer</h2>
           <p>Manage your availability and view upcoming sessions.</p>
         </Link>
       </div>
