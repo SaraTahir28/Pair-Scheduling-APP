@@ -42,6 +42,7 @@ class CreateMeetingView(APIView):
                 end_time=end_time,
                 trainee_email=request.user.email,
                 volunteer_email=validated["volunteer"].email,
+                agenda=validated.get("agenda", ""),
             )
 
             booking = serializer.save(
