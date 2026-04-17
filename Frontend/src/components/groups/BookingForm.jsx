@@ -30,7 +30,7 @@ const BookingForm = ({ whenFormSubmit, trainee }) => {
               : `What would you like to discuss?`}
           </label>
           <textarea
-            className="form-input"
+            className="form-input agenda"
             placeholder="Share the specific topic you would like to cover."
             value={agenda}
             rows="6"

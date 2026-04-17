@@ -254,7 +254,10 @@
     @apply w-full max-w-[400px] rounded-xl border border-black/10 bg-gray-50/50 p-3 outline-none transition-all;
     @apply focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/10;
   }
-
+  .agenda{
+  @apply max-w-[600px];
+  
+  }
   /* volunteer flow */
   .booking-card-div {
     @apply my-2;
