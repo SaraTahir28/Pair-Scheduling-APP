@@ -34,6 +34,7 @@ This service is intentionally isolated from Django views so that:
 # and attach Google Meet conference data.
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
+
 def _get_service_account_credentials():
     # Use env var JSON if available (Coolify/prod), otherwise read from file (dev)
     if settings.GOOGLE_SERVICE_ACCOUNT_INFO:
@@ -46,7 +47,7 @@ def _get_service_account_credentials():
     # This represents the service account itself (robot account)
     credentials = service_account.Credentials.from_service_account_info(
         json_data,
-        scopes=SCOPES  # Full Calendar scope needed for events + Meet links
+        scopes=SCOPES,  # Full Calendar scope needed for events + Meet links
     )
 
     # Use Domain-Wide Delegation to impersonate a real user
@@ -57,8 +58,6 @@ def _get_service_account_credentials():
 
     # Return the delegated credentials, which will be used by the Google Calendar API
     return delegated_credentials
-
-
 
 
 """
@@ -74,17 +73,22 @@ def _get_service_account_credentials():
     can be reused across different Google Calendar operations.
 
  """
+
+
 def get_calendar_service(credentials):
-    
+
     return build("calendar", "v3", credentials=credentials)
 
 
 logger = logging.getLogger(__name__)
 
-def create_google_meeting(start_time, end_time, trainee_email, volunteer_email,agenda=""):
+
+def create_google_meeting(
+    start_time, end_time, trainee_email, volunteer_email, agenda=""
+):
     credentials = _get_service_account_credentials()
     service = get_calendar_service(credentials)
-    
+
     """
     log entry before event creation
     extra is a dictionary that attaches structured metadata(data about data) to log entries making it cleaner, useful
@@ -93,7 +97,7 @@ def create_google_meeting(start_time, end_time, trainee_email, volunteer_email,a
     logging works with Djnagos logging system, log files, error tracking systems etc and it also
     leps us to categorise messages
     """
-   
+
     logger.info(
         "Creating Google Calendar event",
         extra={
@@ -119,43 +123,38 @@ def create_google_meeting(start_time, end_time, trainee_email, volunteer_email,a
             "dateTime": end_time.isoformat().replace("+00:00", "Z"),
             "timeZone": "UTC",
         },
-    
-
         "attendees": [
             {"email": trainee_email},
             {"email": volunteer_email},
         ],
-
         "conferenceData": {
             "createRequest": {
-                 #requestId must be unique for each conference creation request
+                # requestId must be unique for each conference creation request
                 "requestId": str(uuid.uuid4()),
-                "conferenceSolution":{  #conference data is processed correctly now. The issue was that they key was a nested object.
+                "conferenceSolution": {  # conference data is processed correctly now. The issue was that they key was a nested object.
                     "key": {"type": "hangoutsMeet"}
                 },
             }
         },
     }
-    
+
     created_event = (
         service.events()
         .insert(
             calendarId=settings.GOOGLE_CALENDAR_ID,
             body=event,
             conferenceDataVersion=1,
-            sendUpdates="all", # changing it to none from all to test 
+            sendUpdates="all",  # changing it to none from all to test
         )
-        
         .execute()
     )
-    #log entry after event creation
+    # log entry after event creation
     logger.info(
         "Google calender event created",
         extra={
             "event_id": created_event.get("id"),
             "meet_link": created_event.get("hangoutLink"),
         },
-        
     )
 
     return {
