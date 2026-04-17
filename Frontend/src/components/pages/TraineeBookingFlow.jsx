@@ -9,6 +9,7 @@ import api from "../../api/axiosClient";
 import BookingConfirmation from "../groups/BookingConfirmation";
 import { BackBtn } from "../elements/Button";
 import { useAuth } from "../../AuthContext";
+import { fromZonedTime } from "date-fns-tz";
 import {
   isValidDate,
   isValidTime,
@@ -172,9 +173,9 @@ const TraineeBookingFlow = () => {
       return;
     }
 
-    const timeSlotForBackend = parseLocalDateTime(
-      selectedDate,
-      selectedTime
+    const timeSlotForBackend = fromZonedTime(
+      `${selectedDate} ${selectedTime}`,
+      "Europe/London"
     ).toISOString();
 
     const bookingDetailsObj = {
