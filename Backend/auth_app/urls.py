@@ -1,6 +1,7 @@
 from django.urls import path
-from .views.loginlogout import UserView, LogoutView
+
 from .views.csrf import CsrfTokenView
+from .views.loginlogout import LogoutView, UserView
 
 urlpatterns = [
     path("user/", UserView.as_view(), name="user"),

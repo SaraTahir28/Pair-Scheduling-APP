@@ -10,11 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
-from pathlib import Path
-import environ
-import os
 import base64
 import json as _json
+import os
+from pathlib import Path
+
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -233,17 +234,21 @@ GOOGLE_SERVICE_ACCOUNT_FILE = BASE_DIR / "secrets/cyf-service-account.json"
 # If GOOGLE_SERVICE_ACCOUNT_JSON is set (base64-encoded JSON), use it directly.
 # Otherwise fall back to reading the file above (dev/Docker with file mount).
 _sa_json_b64 = os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON")
-GOOGLE_SERVICE_ACCOUNT_INFO = _json.loads(base64.b64decode(_sa_json_b64)) if _sa_json_b64 else None
+GOOGLE_SERVICE_ACCOUNT_INFO = (
+    _json.loads(base64.b64decode(_sa_json_b64)) if _sa_json_b64 else None
+)
 
 
 # Adding cors settings
-CORS_ALLOWED_ORIGINS = list({
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:5174",
-    "http://127.0.0.1:5174",
-    FRONTEND_URL,
-})
+CORS_ALLOWED_ORIGINS = list(
+    {
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:5174",
+        FRONTEND_URL,
+    }
+)
 CORS_ALLOW_CREDENTIALS = True
 
 # send logs to the console
@@ -277,13 +282,15 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",  # Needed for allauth(Google to work)
 ]
 
-CSRF_TRUSTED_ORIGINS = list({
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:5174",
-    "http://127.0.0.1:5174",
-    FRONTEND_URL,
-})
+CSRF_TRUSTED_ORIGINS = list(
+    {
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:5174",
+        FRONTEND_URL,
+    }
+)
 
 if DJANGO_ENV == "production":
     SESSION_COOKIE_SECURE = True

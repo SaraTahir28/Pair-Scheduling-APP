@@ -18,6 +18,7 @@ def volunteer_user(db):
         email="volunteer@example.com",
     )
 
+
 @pytest.mark.django_db
 class TestSlotRuleCoversTime:
     def test_one_off_rule_accepts_exact_matching_time(self, volunteer_user):

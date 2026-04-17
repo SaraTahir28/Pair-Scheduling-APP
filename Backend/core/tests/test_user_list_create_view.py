@@ -1,5 +1,6 @@
 import pytest
 from django.urls import reverse
+
 from core.models import User
 
 
@@ -32,7 +33,6 @@ class TestUserListCreateView:
         assert user2.id in returned_ids
 
     def test_create_user_returns_201(self, client):
-
         auth_user = User.objects.create_user(
             username="emiliano",
             email="emiliano@example.com",
@@ -56,7 +56,6 @@ class TestUserListCreateView:
         assert response.json()["email"] == "sara@example.com"
 
     def test_invalid_user_payload_returns_400(self, client):
-
         auth_user = User.objects.create_user(
             username="emiliano",
             email="emiliano@example.com",
