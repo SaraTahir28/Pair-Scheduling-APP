@@ -206,7 +206,7 @@
   }
 
   .cal-day-available {
-    @apply bg-brand-blue/10 font-bold text-brand-blue hover:bg-brand-blue/20;
+    @apply bg-brand-blue/30 font-bold text-dark hover:bg-brand-blue/30;
   }
 
   .cal-day-unavailable {
