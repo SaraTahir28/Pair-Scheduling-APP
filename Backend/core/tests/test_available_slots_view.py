@@ -1,9 +1,8 @@
-import pytest
 from datetime import timedelta
 
-from django.utils import timezone
+import pytest
 from django.urls import reverse
-
+from django.utils import timezone
 from rest_framework.test import APIClient
 
 from core.models import SlotRule, User

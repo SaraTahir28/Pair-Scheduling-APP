@@ -1,4 +1,3 @@
-from django.utils import timezone
 from core.policies.min_booking_window import MinimumBookingWindowPolicy
 
 

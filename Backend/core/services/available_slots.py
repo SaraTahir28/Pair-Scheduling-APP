@@ -1,6 +1,5 @@
-from datetime import timedelta, datetime
 from dataclasses import dataclass
-from typing import Optional
+from datetime import datetime, timedelta
 
 
 @dataclass
@@ -9,9 +8,9 @@ class AvailableSlot:
     volunteer_id: int
     start_time: datetime
     end_time: datetime
-    group: Optional[str]
+    group: str | None
     name: str
-    img: Optional[str]
+    img: str | None
 
 
 def build_available_slots(rules, beginning_of_booking_window):

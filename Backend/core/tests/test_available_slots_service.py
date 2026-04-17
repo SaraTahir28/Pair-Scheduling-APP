@@ -1,6 +1,5 @@
-import pytest
 from datetime import timedelta
-from unittest.mock import patch
+
 from django.utils import timezone
 
 from core.models import SlotRule, User

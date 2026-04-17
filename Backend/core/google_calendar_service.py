@@ -1,11 +1,10 @@
-from pathlib import Path
+import json
+import logging
 import uuid
 
 from django.conf import settings
-from googleapiclient.discovery import build
-import logging
 from google.oauth2 import service_account
-import json
+from googleapiclient.discovery import build
 
 """
 Google Calendar integration service.
@@ -90,7 +89,7 @@ def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
     log entry before event creation
     extra is a dictionary that attaches structured metadata(data about data) to log entries making it cleaner, useful
     easier to debug, search and prodcution ready.
-    we use logging in backend instead of print because print only works in terminal 
+    we use logging in backend instead of print because print only works in terminal
     logging works with Djnagos logging system, log files, error tracking systems etc and it also
     leps us to categorise messages
     """
