@@ -1,0 +1,4 @@
+#!/bin/sh
+# vim-test adds 'run' as the first arg; strip it and run in component mode
+shift
+exec "$(dirname "$0")/../node_modules/.bin/cypress" run --component "$@"
