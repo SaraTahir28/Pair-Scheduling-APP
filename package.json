@@ -1,5 +1,24 @@
 {
+  "name": "pair-scheduling-app",
+  "private": true,
+  "scripts": {
+    "prepare": "husky",
+    "format": "npm run format:js && npm run format:py",
+    "format:check": "npm run format:js:check && npm run format:py:check",
+    "format:js": "prettier --write .",
+    "format:js:check": "prettier --check .",
+    "format:py": "ruff format Backend",
+    "format:py:check": "ruff format --check Backend"
+  },
   "devDependencies": {
-    "prettier": "^3.8.3"
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.8"
+  },
+  "lint-staged": {
+    "Frontend/**/*.{js,jsx,ts,tsx,css,html,json,yml,yaml}": "prettier --write",
+    "Backend/{auth_app,booking_system,core}/**/*.py": "./scripts/ruff format --force-exclude",
+    "Backend/*.py": "./scripts/ruff format --force-exclude"
   }
 }

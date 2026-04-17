@@ -1,38 +1,41 @@
 {
-	"name": "pair-schedulling-fe",
-	"private": true,
-	"version": "0.0.0",
-	"type": "module",
-	"scripts": {
-		"dev": "vite --host 127.0.0.1",
-		"build": "vite build",
-		"lint": "eslint .",
-		"preview": "vite preview",
-		"cypress:open": "cypress open"
-	},
-	"dependencies": {
-		"axios": "^1.14.0",
-		"lucide-react": "^0.577.0",
-		"papaparse": "^5.5.3",
-		"react": "^18.3.1",
-		"react-dom": "^18.3.1",
-		"react-router-dom": "^7.13.1",
-		"swr": "^2.4.1"
-	},
-	"devDependencies": {
-		"@eslint/js": "^9.13.0",
-		"@types/react": "^18.3.12",
-		"@types/react-dom": "^18.3.1",
-		"@vitejs/plugin-react": "^4.3.3",
-		"autoprefixer": "^10.4.27",
-		"cypress": "^14.5.4",
-		"eslint": "^9.13.0",
-		"eslint-plugin-react": "^7.37.2",
-		"eslint-plugin-react-hooks": "^5.0.0",
-		"eslint-plugin-react-refresh": "^0.4.14",
-		"globals": "^15.11.0",
-		"postcss": "^8.5.8",
-		"tailwindcss": "3.4",
-		"vite": "^5.4.10"
-	}
+  "name": "pair-schedulling-fe",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "preview": "vite preview",
+    "cypress:open": "cypress open"
+  },
+  "dependencies": {
+    "axios": "^1.14.0",
+    "lucide-react": "^0.577.0",
+    "papaparse": "^5.5.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.13.1",
+    "swr": "^2.4.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "eslint-config-prettier": "^9.1.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "autoprefixer": "^10.4.27",
+    "cypress": "^14.5.4",
+    "eslint": "^9.13.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.14",
+    "globals": "^15.11.0",
+    "postcss": "^8.5.8",
+    "tailwindcss": "3.4",
+    "vite": "^5.4.10"
+  }
 }

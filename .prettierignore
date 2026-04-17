@@ -1,0 +1,23 @@
+node_modules
+venv
+.venv
+**/site-packages/**
+**/__pycache__/**
+.pytest_cache
+.ruff_cache
+.claude
+# Markdown is left alone — Prettier's markdown rules force blank lines
+# between sections that authors often deliberately omit.
+*.md
+
+Frontend/dist
+Frontend/bin
+Frontend/cypress/screenshots
+Frontend/cypress/videos
+Frontend/cypress/downloads
+package-lock.json
+Frontend/package-lock.json
+
+# Prettier never touches the Backend — Python is handled by Ruff,
+# and Django templates use {% %} tags that confuse Prettier.
+Backend
