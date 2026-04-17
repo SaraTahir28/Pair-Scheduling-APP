@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { volunteersDetails, traineeDetails } from "../../data/UserData";
+import { volunteersDetails, traineeDetails } from "../../data/UserData"; // hardcoded for presentation
 import { bookedSessions } from "../../data/BookedSessions";
 import BookingCard from "../groups/BookingCard";
 import SessionDetails from "../groups/SessionDetails";
@@ -10,7 +10,6 @@ import VolunteerAvailabilityManager from "../groups/VolunteerAvailabilityManager
 
 import VolunteerAvailabilityForm from "../groups/VolunteerAvailabilityForm";
 import { useAuth } from "../../AuthContext";
-import duncanImg from "../../assets/duncan.png";
 import api from "../../api/axiosClient";
 
 const VolunteerDash = () => {
@@ -18,11 +17,9 @@ const VolunteerDash = () => {
 	const { user } = useAuth();
 	const editSessionMode = window.location.pathname.includes("edit");
 
-	const activeVolunteer =
-		volunteersDetails.find((v) => v.email === user?.email) || user;
-	if (activeVolunteer && !activeVolunteer.img) {
-		activeVolunteer.img = duncanImg;
-	}
+	const activeVolunteer = user 
+    ? (user.img ? user : { ...user, img: "/placeholder.png" })
+    : null;
 
 	const [allBookedSessionsForAllUsers, setAllBookedSessionsForAllUsers] =
 		useState(bookedSessions);
@@ -53,15 +50,20 @@ const VolunteerDash = () => {
 	}, [activeVolunteer?.id]);
 
 	const sendVolunteerSlotsToDb = () => {
+		if (temporaryAddedSlotsStorage.length === 0) {
+        alert("Please add at least one time slot first.");
+        return;
+    }
+		
 		Promise.all(
 			temporaryAddedSlotsStorage.map((slot) =>
 				api.post("/api/slot-rules/", {
 					start_time: slot.start_time,
-					repeat_until: slot.repeat_until,
-					volunteer: activeVolunteer.id,
+					repeat_until: slot.repeat_until || null,
 					group: "all",
 				})
 			)
+			
 		)
 			.then(() => {
 				setHasUserSetAvailability(true);
@@ -69,7 +71,7 @@ const VolunteerDash = () => {
 				alert("Availability is saved.");
 			})
 			.catch((error) => {
-				console.error("Error saving slots:", error);
+				console.error("Error saving slots:", error.response?.data || error);
 				alert("Failed to save availability. Please try again.");
 			});
 	};
