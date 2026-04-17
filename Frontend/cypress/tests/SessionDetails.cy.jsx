@@ -8,28 +8,10 @@ describe("SessionDetails Component tests", () => {
   };
 
   it("shows trainee view by default", () => {
-    cy.mount(
-      <SessionDetails
-        activeVolunteerProps={testedVolunteer}
-        volunteerView={false}
-      />
-    );
+    cy.mount(<SessionDetails activeVolunteerProps={testedVolunteer} />);
 
     cy.contains("Book 1:1 session").should("be.visible");
-    cy.contains("Your session is with").should("be.visible");
-    cy.contains("Duncan").should("be.visible");
-  });
-
-  it("shows volunteer view when volunteerView is true", () => {
-    cy.mount(
-      <SessionDetails
-        activeVolunteerProps={testedVolunteer}
-        volunteerView={true}
-      />
-    );
-
-    cy.contains("Welcome back").should("be.visible");
-    cy.contains("You are logged in as").should("be.visible");
+    cy.contains("You are booking a session with").should("be.visible");
     cy.contains("Duncan").should("be.visible");
   });
 });
