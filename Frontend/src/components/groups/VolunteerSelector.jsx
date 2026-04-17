@@ -1,4 +1,3 @@
-
 const VolunteerSelector = ({
   volunteers,
   activeVolunteer,

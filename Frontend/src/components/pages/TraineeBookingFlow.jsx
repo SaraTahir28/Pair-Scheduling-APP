@@ -15,7 +15,7 @@ import {
   parseLocalDate,
   parseLocalDateTime,
   formatLocalDate,
-  formatLocalTime
+  formatLocalTime,
 } from "../../utilities/dateTime";
 
 const TraineeBookingFlow = () => {
@@ -211,7 +211,9 @@ const TraineeBookingFlow = () => {
                 <>
                   <div className="session-details-div">
                     <h1>Book 1:1 session</h1>
-                    <p className="session-icon-text-line">Viewing availability from all volunteers</p>
+                    <p className="session-icon-text-line">
+                      Viewing availability from all volunteers
+                    </p>
                   </div>
                 </>
               ))}

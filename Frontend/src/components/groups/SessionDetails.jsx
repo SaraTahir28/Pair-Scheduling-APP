@@ -1,7 +1,6 @@
 import { Clock, Video } from "lucide-react";
 
 const SessionDetails = ({ activeVolunteerProps }) => {
-
   return (
     <>
       <div className="session-details-div">
