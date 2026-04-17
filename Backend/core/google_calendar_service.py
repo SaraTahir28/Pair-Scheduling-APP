@@ -81,7 +81,9 @@ def get_calendar_service(credentials):
 logger = logging.getLogger(__name__)
 
 
-def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
+def create_google_meeting(
+    start_time, end_time, trainee_email, volunteer_email, agenda=""
+):
     credentials = _get_service_account_credentials()
     service = get_calendar_service(credentials)
 
@@ -103,10 +105,12 @@ def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
     )
     # DRF turns incoming timestamps into Python datetime objects.
     # Google Calendar only accepts RFC3339 strings, so we convert before sending.
-
+    description = "1:1 session between trainee and volunteer"
+    if agenda:
+        description += f"\n\nAgenda:\n{agenda}"
     event = {
         "summary": "Pair Scheduling Session",
-        "description": "1:1 session between trainee and volunteer",
+        "description": description,
         "start": {
             "dateTime": start_time.isoformat().replace("+00:00", "Z"),
             "timeZone": "UTC",
