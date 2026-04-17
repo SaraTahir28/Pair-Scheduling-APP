@@ -145,7 +145,9 @@ class TestSlotRuleCreateView:
         assert "start_time" in response.data
         assert SlotRule.objects.count() == 1
 
-    def test_can_create_slot_rule_when_previous_one_was_soft_deleted(self, api_client, user):
+    def test_can_create_slot_rule_when_previous_one_was_soft_deleted(
+        self, api_client, user
+    ):
         api_client.force_authenticate(user=user)
 
         SlotRule.objects.create(
@@ -166,9 +168,11 @@ class TestSlotRuleCreateView:
 
         assert response.status_code == 201
         assert SlotRule.objects.filter(volunteer=user).count() == 2
-        assert SlotRule.objects.filter(
-            volunteer=user,
-            start_time="2026-04-12T10:00:00Z",
-            deleted_at__isnull=True,
-        ).count() == 1
-        
+        assert (
+            SlotRule.objects.filter(
+                volunteer=user,
+                start_time="2026-04-12T10:00:00Z",
+                deleted_at__isnull=True,
+            ).count()
+            == 1
+        )

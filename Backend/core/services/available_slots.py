@@ -2,6 +2,7 @@ from datetime import timedelta, datetime
 from dataclasses import dataclass
 from typing import Optional
 
+
 @dataclass
 class AvailableSlot:
     slot_rule_id: int
@@ -9,14 +10,15 @@ class AvailableSlot:
     start_time: datetime
     end_time: datetime
     group: Optional[str]
-    name:str
-    img:Optional[str]
+    name: str
+    img: Optional[str]
+
 
 def build_available_slots(rules, beginning_of_booking_window):
     slots = []
     for rule in rules:
         for start_time in rule.occurrence_start_times():
-            if (start_time < beginning_of_booking_window):
+            if start_time < beginning_of_booking_window:
                 continue
             slots.append(
                 AvailableSlot(
@@ -25,15 +27,19 @@ def build_available_slots(rules, beginning_of_booking_window):
                     group=rule.group,
                     start_time=start_time,
                     end_time=start_time + timedelta(hours=1),
-                    name=rule.volunteer.get_full_name() or rule.volunteer.get_username(),
+                    name=rule.volunteer.get_full_name()
+                    or rule.volunteer.get_username(),
                     img="/public/placeholder.png",
                 )
             )
     return slots
 
+
 def exclude_booked_slots(slots, booked_pairs):
     if not booked_pairs:
         return slots
-    return [slot for slot in slots
+    return [
+        slot
+        for slot in slots
         if (slot.volunteer_id, slot.start_time) not in booked_pairs
     ]

@@ -125,6 +125,8 @@
 
   .avatar {
     @apply mb-2 h-16 w-16 rounded-full object-cover;
+  }
+
   /* VolunteerSelector styles */
   .volunteer-selector-div {
     @apply flex flex-col gap-3;
@@ -157,15 +159,6 @@
 
   .volunteer-card-name {
     @apply text-sm font-medium leading-tight text-main;
-  }
-
-  /* avatar box styling */
-  .availableVolunteersDiv {
-    @apply gap-4;
-  }
-
-  .avatar {
-    @apply mb-2;
   }
 
   /* MIDDLE CALENDAR */
@@ -241,7 +234,7 @@
   }
 
   .btn-confirm {
-    @apply rounded-full bg-brand-primary px-10 py-3 text-sm font-bold text-white transition-transform active:scale-95 hover:opacity-90;
+    @apply rounded-full bg-brand-primary px-10 py-3 text-sm font-bold text-white transition-transform hover:opacity-90 active:scale-95;
   }
 
   /* BOOKING FORM */
