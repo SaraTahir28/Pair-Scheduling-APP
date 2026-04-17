@@ -17,7 +17,7 @@ const VolunteerSelector = ({
           }`}
           onClick={() => setActiveVolunteer(null)}
         >
-          View volunteers
+          All volunteers
         </div>
 
         {volunteers.map((volunteer) => (
