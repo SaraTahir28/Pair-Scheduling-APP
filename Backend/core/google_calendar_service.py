@@ -76,7 +76,6 @@ def _get_service_account_credentials():
 
 
 def get_calendar_service(credentials):
-
     return build("calendar", "v3", credentials=credentials)
 
 
