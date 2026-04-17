@@ -140,7 +140,7 @@ const VolunteerDash = () => {
     <div className="booking-box">
       <div className="session-details-col">
         <SessionDetailsVolunteer
-          activeVolunteerProps={activeVolunteer}
+          user={activeVolunteer}
           onManageAvailabilityClick={() => setShowManager(true)}
         />
       </div>

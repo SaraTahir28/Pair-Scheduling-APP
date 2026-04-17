@@ -100,7 +100,9 @@
   .session-details-div h1 {
     @apply mt-3;
   }
-
+  .session-icon-div {
+    @apply flex flex-col justify-between flex-1;
+  }
   .session-icon-text-line {
     @apply mt-2 flex w-full items-center gap-2 text-muted;
   }
