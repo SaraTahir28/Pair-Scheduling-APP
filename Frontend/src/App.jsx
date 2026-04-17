@@ -9,9 +9,9 @@ function Layout() {
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <div className="flex-1">
+      <main className="flex-1">
         <Outlet />
-      </div>
+      </main>
     </div>
   );
 }

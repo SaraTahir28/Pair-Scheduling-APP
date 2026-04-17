@@ -1,10 +1,11 @@
 import { ChevronLeft } from "lucide-react";
 
-const ActionBtn = ({ children, onClick, additionalBtnClass }) => (
+const ActionBtn = ({ children, onClick, additionalBtnClass, ariaLabel }) => (
   <button
     type="button"
     className={`action-btn ${additionalBtnClass}`}
     onClick={onClick}
+    aria-label={ariaLabel}
   >
     {children}
   </button>

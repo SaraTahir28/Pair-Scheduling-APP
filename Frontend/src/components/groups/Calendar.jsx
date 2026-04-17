@@ -108,16 +108,21 @@ const Calendar = ({
           onClick={prevMonth}
           className={`cal-chevron ${isCurrentMonth ? "invisible" : ""}`}
           disabled={isCurrentMonth}
+          aria-label="Previous month"
         >
-          <ChevronLeft />
+          <ChevronLeft aria-hidden="true" />
         </button>
 
         <p className="cal-month-year-heading">
           {monthNames[month]} {year}
         </p>
 
-        <button onClick={nextMonth} className="cal-chevron">
-          <ChevronRight />
+        <button
+          onClick={nextMonth}
+          className="cal-chevron"
+          aria-label="Next month"
+        >
+          <ChevronRight aria-hidden="true" />
         </button>
       </div>
       <div className="cal-day-grid">

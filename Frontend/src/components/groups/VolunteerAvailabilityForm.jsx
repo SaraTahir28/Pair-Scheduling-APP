@@ -72,18 +72,24 @@ const VolunteerAvailabilityForm = ({
           <h2 className="form-title">Select your availability</h2>
           <div className="form-input-group-row">
             <input
+              id="recurring"
               className="form-checkbox"
               type="checkbox"
               checked={isRecurring}
               onChange={(e) => setIsRecurring(e.target.checked)}
             />
-            <label className="form-label">recurring weekly?</label>
+            <label htmlFor="recurring" className="form-label">
+              Recurring weekly?
+            </label>
           </div>
 
           {!isRecurring && (
             <div className="form-input-group">
-              <label className="form-label">Select date</label>
+              <label htmlFor="date" className="form-label">
+                Select date
+              </label>
               <input
+                id="date"
                 className="form-input"
                 type="date"
                 disabled={mode === "view"}
@@ -95,8 +101,11 @@ const VolunteerAvailabilityForm = ({
           {isRecurring && (
             <>
               <div className="form-input-group">
-                <label className="form-label">Starting on</label>
+                <label htmlFor="startDate" className="form-label">
+                  Starting on
+                </label>
                 <input
+                  id="startDate"
                   className="form-input"
                   type="date"
                   disabled={mode === "view"}
@@ -109,8 +118,11 @@ const VolunteerAvailabilityForm = ({
               </div>
 
               <div className="form-input-group">
-                <label className="form-label">Repeat until</label>
+                <label htmlFor="repeatUntil" className="form-label">
+                  Repeat until
+                </label>
                 <input
+                  id="repeatUntil"
                   className="form-input"
                   type="date"
                   disabled={mode === "view"}
@@ -130,8 +142,11 @@ const VolunteerAvailabilityForm = ({
           )}
 
           <div className="form-input-group">
-            <label className="form-label">Time</label>
+            <label htmlFor="time" className="form-label">
+              Time
+            </label>
             <input
+              id="time"
               className="form-input"
               type="time"
               disabled={mode === "view"}
