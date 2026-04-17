@@ -1,6 +1,7 @@
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import TraineeBookingFlow from "../../src/components/pages/TraineeBookingFlow";
 import { AuthProvider } from "../../src/AuthContext";
+import { formatLocalDate, formatLocalTime } from "../../src/utilities/dateTime";
 
 const mockUser = { id: 1, name: "Test Trainee", email: "trainee@test.com" };
 
@@ -69,7 +70,13 @@ describe("TraineeBookingFlow URL validation", () => {
     cy.get("[role='alert']").should("not.exist");
   });
 
-  it("submits the booking time as UTC", () => {
+  it("shows slots in local time and submits the original UTC", () => {
+    const advertisedUtc = "2026-07-01T09:00:00Z";
+    const slotStart = new Date(advertisedUtc);
+    const expectedLocalDate = formatLocalDate(slotStart);
+    const expectedLocalTime = formatLocalTime(slotStart);
+    console.log(expectedLocalDate, expectedLocalTime);
+
     cy.intercept("GET", "**/api/available-slots/", {
       statusCode: 200,
       body: [
@@ -78,8 +85,10 @@ describe("TraineeBookingFlow URL validation", () => {
           slot_rule_id: 1,
           name: "Test Volunteer",
           img: "",
-          start_time: "2026-04-01T09:00:00Z",
-          end_time: "2026-04-01T10:00:00Z",
+          start_time: advertisedUtc,
+          end_time: new Date(
+            slotStart.getTime() + 60 * 60 * 1000
+          ).toISOString(),
         },
       ],
     }).as("availableSlots");
@@ -89,15 +98,18 @@ describe("TraineeBookingFlow URL validation", () => {
       body: {},
     }).as("createMeeting");
 
-    mountAtRoute("/trainee-booking/2026-04-01/09:00/pending/1/1");
+    mountAtRoute(`/trainee-booking/${expectedLocalDate}`);
+    cy.wait("@availableSlots");
 
-    cy.get("textarea").type("discuss promises in javascript");
+    cy.contains(".btn-time-slot", expectedLocalTime)
+      .should("be.visible")
+      .click();
+
+    cy.get("textarea").type("discuss how bad date handling is in javascript");
     cy.contains("Book meeting").click();
-
-    const expected = new Date(2026, 3, 1, 9, 0).toISOString();
 
     cy.wait("@createMeeting")
       .its("request.body.time_slot")
-      .should("equal", expected);
+      .should("equal", slotStart.toISOString());
   });
 });
