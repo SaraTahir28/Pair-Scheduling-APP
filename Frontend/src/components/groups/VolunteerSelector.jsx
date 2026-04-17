@@ -18,10 +18,10 @@ const VolunteerSelector = ({
           }`}
           onClick={() => setActiveVolunteer(null)}
         >
-          View all volunteers
+          View volunteers
         </div>
 
-        {(activeVolunteer ? [activeVolunteer] : volunteers).map((volunteer) => (
+        {volunteers.map((volunteer) => (
           <div
             key={volunteer.id}
             className={`volunteer-card ${
