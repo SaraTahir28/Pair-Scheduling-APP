@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import SessionDetails from "../groups/SessionDetails";
 import VolunteerSelector from "../groups/VolunteerSelector";
@@ -209,7 +209,12 @@ const TraineeBookingFlow = () => {
                   activeVolunteerProps={activeVolunteer}
                 />
               ) : (
-                <p>Viewing availability from all volunteers</p>
+                <>
+                  <div className="session-details-div">
+                    <h1>Book 1:1 session</h1>
+                    <p className="session-icon-text-line">Viewing availability from all volunteers</p>
+                  </div>
+                </>
               ))}
 
             {!selectedTime && (

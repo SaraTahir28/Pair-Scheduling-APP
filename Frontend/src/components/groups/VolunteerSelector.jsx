@@ -1,4 +1,3 @@
-import React from "react";
 
 const VolunteerSelector = ({
   volunteers,
@@ -19,10 +18,10 @@ const VolunteerSelector = ({
           }`}
           onClick={() => setActiveVolunteer(null)}
         >
-          All volunteers
+          View all volunteers
         </div>
 
-        {volunteers.map((volunteer) => (
+        {(activeVolunteer ? [activeVolunteer] : volunteers).map((volunteer) => (
           <div
             key={volunteer.id}
             className={`volunteer-card ${

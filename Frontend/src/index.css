@@ -149,7 +149,7 @@
   }
 
   .avatar {
-    @apply mb-2;
+    @apply mb-2 h-16 w-16 rounded-full object-cover;
   }
 
   /* MIDDLE CALENDAR */
@@ -227,7 +227,10 @@
   .btn-confirm {
     @apply rounded-full bg-brand-primary px-10 py-3 text-sm font-bold text-white transition-transform hover:opacity-90 active:scale-95;
   }
-
+  .btn-with-icon {
+		@apply inline-flex items-center gap-2 mt-2 p-2 border border-border-color rounded-lg text-main transition-all;
+		@apply hover:bg-black/5 hover:text-brand-blue;
+	}
   /* BOOKING FORM */
   .booking-form-container {
     @apply flex w-full flex-col items-start;
