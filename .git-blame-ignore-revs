@@ -4,3 +4,6 @@
 
 # Add the SHA of each formatter sweep on its own line, with a trailing comment:
 # abc123…  # prettier + ruff sweep 2026-04-17
+
+43f49e1415138693c9ba5063b97cfd720e70f165  # prettier + ruff sweep 2026-04-17
+f3d2eaa319af7b476329f40c1acfaf24058a1e28  # ruff lint fixes 2026-04-17
