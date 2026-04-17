@@ -7,7 +7,7 @@ export default function LogoutButton({ additionalBtnClass }) {
   return (
     <ActionBtn
       onClick={logout}
-      arialabel="Logout"
+      ariaLabel="Logout"
       additionalBtnClass={
         additionalBtnClass || "bg-red-700 hover:bg-red-800 text-white"
       }
