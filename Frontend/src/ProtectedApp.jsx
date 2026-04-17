@@ -5,9 +5,7 @@ import { AuthProvider } from "./AuthContext";
 import api from "./api/axiosClient";
 
 export default function ProtectedApp() {
-
   const [user, setUser] = useState(undefined);
- 
 
   useEffect(() => {
     api
@@ -19,7 +17,7 @@ export default function ProtectedApp() {
         setUser(null);
       });
   }, []);
-  
+
   // Fetch CSRF ONLY after user is logged in
   useEffect(() => {
     if (user && user.id) {
@@ -38,12 +36,11 @@ export default function ProtectedApp() {
         alert("Could not log out. Please try again.");
       });
   }
-  
+
   if (user === undefined) {
     return <div>Loading...</div>;
   }
 
-  
   if (!user || !user.id) {
     return <Login />;
   }

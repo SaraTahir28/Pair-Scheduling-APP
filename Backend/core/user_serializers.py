@@ -3,9 +3,7 @@ from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     class Meta:
-
         model = User
 
         # Fields that will be exposed in the API (GET / PATCH responses)

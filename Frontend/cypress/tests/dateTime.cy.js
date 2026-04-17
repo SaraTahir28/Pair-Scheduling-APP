@@ -1,4 +1,12 @@
-import { isValidDate, isValidTime, toDayOfWeekName, parseLocalDate, parseLocalDateTime, formatLocalDate, formatLocalTime } from "../../src/utilities/dateTime";
+import {
+  isValidDate,
+  isValidTime,
+  toDayOfWeekName,
+  parseLocalDate,
+  parseLocalDateTime,
+  formatLocalDate,
+  formatLocalTime,
+} from "../../src/utilities/dateTime";
 
 describe("isValidDate", () => {
   it("accepts valid dates", () => {

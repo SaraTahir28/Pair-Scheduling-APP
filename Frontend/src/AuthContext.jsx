@@ -6,8 +6,6 @@
  * - Access auth state/functions anywhere via `const { user, handleLogout } = useAuth()`
  */
 
-
-
 import { createContext, useContext } from "react";
 
 const AuthContext = createContext();
@@ -18,9 +16,5 @@ export function useAuth() {
 }
 // Provider component to wrap the app
 export function AuthProvider({ children, value }) {
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
