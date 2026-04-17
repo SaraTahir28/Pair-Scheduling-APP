@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { volunteersDetails, traineeDetails } from "../../data/UserData";
 import { bookedSessions } from "../../data/BookedSessions";
 import BookingCard from "../groups/BookingCard";
-import SessionDetails from "../groups/SessionDetails";
+import SessionDetailsVolunteer from "../groups/SessionDetailsVolunteer";
 import VolunteerEditSession from "../groups/VolunteerEditSession";
 import VolunteerViewSession from "../groups/VolunteerViewSession";
 import VolunteerAvailabilityManager from "../groups/VolunteerAvailabilityManager";
@@ -139,9 +139,8 @@ const VolunteerDash = () => {
   return (
     <div className="booking-box">
       <div className="session-details-col">
-        <SessionDetails
-          activeVolunteerProps={activeVolunteer}
-          volunteerView={true}
+        <SessionDetailsVolunteer
+          user={activeVolunteer}
           onManageAvailabilityClick={() => setShowManager(true)}
         />
       </div>

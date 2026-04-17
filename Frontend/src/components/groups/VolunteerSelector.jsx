@@ -1,5 +1,3 @@
-import React from "react";
-
 const VolunteerSelector = ({
   volunteers,
   activeVolunteer,
@@ -19,7 +17,7 @@ const VolunteerSelector = ({
           }`}
           onClick={() => setActiveVolunteer(null)}
         >
-          All volunteers
+          View volunteers
         </div>
 
         {volunteers.map((volunteer) => (

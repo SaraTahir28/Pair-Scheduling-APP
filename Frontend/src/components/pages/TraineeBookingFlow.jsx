@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import SessionDetails from "../groups/SessionDetails";
 import VolunteerSelector from "../groups/VolunteerSelector";
@@ -15,6 +15,7 @@ import {
   parseLocalDate,
   parseLocalDateTime,
   formatLocalDate,
+  formatLocalTime,
 } from "../../utilities/dateTime";
 
 const TraineeBookingFlow = () => {
@@ -112,7 +113,7 @@ const TraineeBookingFlow = () => {
   );
   for (let slot of sortedSlots) {
     const convertedToString = slot.start_time;
-    const dateOnlyStr = convertedToString.split("T")[0];
+    const dateOnlyStr = formatLocalDate(new Date(convertedToString));
 
     if (
       !convertedAllVDataToFrontendFormat.availableDates.includes(dateOnlyStr)
@@ -120,10 +121,8 @@ const TraineeBookingFlow = () => {
       convertedAllVDataToFrontendFormat.availableDates.push(dateOnlyStr);
     }
 
-    if (selectedDate && convertedToString.split("T")[0] === selectedDate) {
-      const timeOnlyStr = convertedToString.split("T")[1];
-      const timeInFormathhmm =
-        timeOnlyStr.split(":")[0] + ":" + timeOnlyStr.split(":")[1];
+    if (selectedDate && dateOnlyStr === selectedDate) {
+      const timeInFormathhmm = formatLocalTime(new Date(convertedToString));
 
       const slotKey = `${timeInFormathhmm}-${slot.volunteer_id}-${slot.slot_rule_id}`;
 
@@ -209,7 +208,14 @@ const TraineeBookingFlow = () => {
                   activeVolunteerProps={activeVolunteer}
                 />
               ) : (
-                <p>Viewing availability from all volunteers</p>
+                <>
+                  <div className="session-details-div">
+                    <h1>Book 1:1 session</h1>
+                    <p className="session-icon-text-line">
+                      Viewing availability from all volunteers
+                    </p>
+                  </div>
+                </>
               ))}
 
             {!selectedTime && (

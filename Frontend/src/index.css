@@ -100,7 +100,9 @@
   .session-details-div h1 {
     @apply mt-3;
   }
-
+  .session-icon-div {
+    @apply flex flex-1 flex-col justify-between;
+  }
   .session-icon-text-line {
     @apply mt-2 flex w-full items-center gap-2 text-muted;
   }
@@ -149,7 +151,7 @@
   }
 
   .avatar {
-    @apply mb-2;
+    @apply mb-2 h-16 w-16 rounded-full object-cover;
   }
 
   /* MIDDLE CALENDAR */
@@ -227,7 +229,10 @@
   .btn-confirm {
     @apply rounded-full bg-brand-primary px-10 py-3 text-sm font-bold text-white transition-transform hover:opacity-90 active:scale-95;
   }
-
+  .btn-with-icon {
+    @apply mt-2 inline-flex items-center gap-2 rounded-lg border border-border-color p-2 text-main transition-all;
+    @apply hover:bg-black/5 hover:text-brand-blue;
+  }
   /* BOOKING FORM */
   .booking-form-container {
     @apply flex w-full flex-col items-start;

@@ -1,41 +1,6 @@
-import React from "react";
 import { Clock, Video } from "lucide-react";
 
-const SessionDetails = ({
-  activeVolunteerProps,
-  volunteerView,
-  onManageAvailabilityClick,
-}) => {
-  if (volunteerView) {
-    return (
-      <div className="session-details-div">
-        <h1>Welcome back</h1>
-        <div className="availableVolunteersDiv">
-          <div className="avatar-row">
-            <img
-              src={activeVolunteerProps.img}
-              className="avatar"
-              alt="Profile"
-            />
-          </div>
-          <p>
-            You are logged in as <br />
-            <strong>{activeVolunteerProps.name}</strong>
-          </p>
-
-          {onManageAvailabilityClick && (
-            <button
-              className="btn-secondary"
-              onClick={onManageAvailabilityClick}
-            >
-              Manage my availability
-            </button>
-          )}
-        </div>
-      </div>
-    );
-  }
-
+const SessionDetails = ({ activeVolunteerProps }) => {
   return (
     <>
       <div className="session-details-div">
@@ -60,7 +25,7 @@ const SessionDetails = ({
         </div>
 
         <p>
-          Your session is with <br></br>
+          You are booking a session with <br></br>
           <strong>{activeVolunteerProps.name}</strong>
         </p>
       </div>
