@@ -10,8 +10,8 @@ export default function Navbar() {
   return (
     <nav className="flex items-center justify-between bg-gray-100 p-4 shadow-md">
       <div className="logo">
-        <Link to="/" className="text-xl font-bold text-gray-800">
-          CYF Pair Scheduler
+        <Link to="/" className="text-gray-800">
+          <h1 className="text-xl font-bold">CYF Pair Scheduler</h1>
         </Link>
       </div>
 
