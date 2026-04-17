@@ -63,7 +63,6 @@ const VolunteerDash = () => {
 					group: "all",
 				})
 			)
-			
 		)
 			.then(() => {
 				setHasUserSetAvailability(true);
