@@ -31,6 +31,7 @@ def auth_client(trainee_user):
     client.force_authenticate(user=trainee_user)
     return client
 
+
 @pytest.fixture
 def volunteer_slot_rule(db, volunteer_user):
     return SlotRule.objects.create(
@@ -39,6 +40,7 @@ def volunteer_slot_rule(db, volunteer_user):
         repeat_until=None,
         group=None,
     )
+
 
 @pytest.mark.django_db
 class TestCreateMeetingView:
@@ -68,7 +70,9 @@ class TestCreateMeetingView:
         assert "detail" in response.json()
 
     @patch("core.views.create_google_meeting")
-    def test_successful_meeting_creation_returns_201(self, mock_google_meeting, auth_client, volunteer_slot_rule):
+    def test_successful_meeting_creation_returns_201(
+        self, mock_google_meeting, auth_client, volunteer_slot_rule
+    ):
         url = reverse("create_meeting")
 
         mock_google_meeting.return_value = {
@@ -95,7 +99,9 @@ class TestCreateMeetingView:
         assert data["meet_link"] == "https://meet.google.com/xyz"
 
     @patch("core.views.create_google_meeting", side_effect=Exception("Boom"))
-    def test_unexpected_error_returns_500(self, mock_google_meeting, auth_client, volunteer_slot_rule):
+    def test_unexpected_error_returns_500(
+        self, mock_google_meeting, auth_client, volunteer_slot_rule
+    ):
         url = reverse("create_meeting")
 
         payload = {

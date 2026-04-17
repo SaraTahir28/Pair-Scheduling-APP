@@ -225,7 +225,7 @@
   }
 
   .btn-confirm {
-    @apply rounded-full bg-brand-primary px-10 py-3 text-sm font-bold text-white transition-transform active:scale-95 hover:opacity-90;
+    @apply rounded-full bg-brand-primary px-10 py-3 text-sm font-bold text-white transition-transform hover:opacity-90 active:scale-95;
   }
 
   /* BOOKING FORM */

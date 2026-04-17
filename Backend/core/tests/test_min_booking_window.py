@@ -3,6 +3,7 @@ from django.utils import timezone
 from core.policies.min_booking_window import MinimumBookingWindowPolicy
 from freezegun import freeze_time
 
+
 def test_slot_inside_minimum_window():
     now = timezone.now()
     slot_start = now + timedelta(hours=2)
@@ -23,6 +24,8 @@ def test_slot_exactly_at_minimum_window():
 
 def test_slot_outside_minimum_window():
     now = timezone.now()
-    slot_start = now + MinimumBookingWindowPolicy.MINIMUM_BOOKING_WINDOW + timedelta(minutes=1)
+    slot_start = (
+        now + MinimumBookingWindowPolicy.MINIMUM_BOOKING_WINDOW + timedelta(minutes=1)
+    )
 
     assert MinimumBookingWindowPolicy.is_outside_window(slot_start) is True

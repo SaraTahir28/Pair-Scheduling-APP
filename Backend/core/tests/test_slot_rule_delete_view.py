@@ -34,7 +34,9 @@ class TestSlotRuleDeleteView:
     def get_url(self, slot_rule_id):
         return reverse("slot-rule-delete", kwargs={"pk": slot_rule_id})
 
-    def test_authenticated_user_can_soft_delete_own_slot_rule(self, api_client, volunteer):
+    def test_authenticated_user_can_soft_delete_own_slot_rule(
+        self, api_client, volunteer
+    ):
         slot_rule = SlotRule.objects.create(
             volunteer=volunteer,
             start_time="2026-04-12T10:00:00Z",
@@ -82,7 +84,9 @@ class TestSlotRuleDeleteView:
         slot_rule.refresh_from_db()
         assert slot_rule.deleted_at is None
 
-    def test_deleting_other_volunteer_slot_rule_is_forbidden(self, api_client, volunteer, other_volunteer):
+    def test_deleting_other_volunteer_slot_rule_is_forbidden(
+        self, api_client, volunteer, other_volunteer
+    ):
         slot_rule = SlotRule.objects.create(
             volunteer=other_volunteer,
             start_time="2026-04-12T10:00:00Z",
@@ -98,7 +102,9 @@ class TestSlotRuleDeleteView:
         slot_rule.refresh_from_db()
         assert slot_rule.deleted_at is None
 
-    def test_existing_bookings_remain_intact_after_soft_delete(self, api_client, volunteer):
+    def test_existing_bookings_remain_intact_after_soft_delete(
+        self, api_client, volunteer
+    ):
         slot_rule = SlotRule.objects.create(
             volunteer=volunteer,
             start_time="2026-04-12T10:00:00Z",

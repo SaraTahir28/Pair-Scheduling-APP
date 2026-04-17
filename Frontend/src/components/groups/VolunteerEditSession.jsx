@@ -4,61 +4,61 @@ import { ActionBtn } from "../elements/Button";
 // import { bookedSessions } from "../../data/BookedSessions";
 
 const VolunteerEditSession = ({ sessions, onSave }) => {
-	const { id } = useParams();
-	const navigate = useNavigate();
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-	// const session = bookedSessions.find((s) => s.id === id);
-	const session = sessions?.find((s) => String(s.id) === String(id));
+  // const session = bookedSessions.find((s) => s.id === id);
+  const session = sessions?.find((s) => String(s.id) === String(id));
 
-	const handleEditSubmit = (e) => {
-		e.preventDefault();
-		const formData = new FormData(e.target);
+  const handleEditSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
 
-		const updatedSession = {
-			...session,
-			date: formData.get("new_date"),
-			time: formData.get("new_time"),
-		};
+    const updatedSession = {
+      ...session,
+      date: formData.get("new_date"),
+      time: formData.get("new_time"),
+    };
 
-		onSave(updatedSession);
+    onSave(updatedSession);
 
-		navigate("/volunteer-dash");
-	};
+    navigate("/volunteer-dash");
+  };
 
-	if (!session) {
-		return <div>Session not found</div>;
-	}
+  if (!session) {
+    return <div>Session not found</div>;
+  }
 
-	return (
-		<div className="booking-card-div">
-			<h2 className="bookings-heading-selectdt">Edit booked session</h2>
-			<div className="booking-card">
-				<form className="session-edit-div" onSubmit={handleEditSubmit}>
-					<label>
-						New Date:
-						<input type="date" name="new_date" defaultValue={session.date} />
-					</label>
-					<br />
-					<label>
-						New Time:
-						<input type="time" name="new_time" defaultValue={session.time} />
-					</label>
-					<br />
-					<div className="booking-card-btns">
-						<button type="submit" className="action-btn btn-primary">
-							Save
-						</button>
-						<ActionBtn
-							additionalBtnClass="btn-secondary"
-							onClick={() => navigate("/volunteer-dash")}
-						>
-							Cancel
-						</ActionBtn>
-					</div>
-				</form>
-			</div>
-		</div>
-	);
+  return (
+    <div className="booking-card-div">
+      <h2 className="bookings-heading-selectdt">Edit booked session</h2>
+      <div className="booking-card">
+        <form className="session-edit-div" onSubmit={handleEditSubmit}>
+          <label>
+            New Date:
+            <input type="date" name="new_date" defaultValue={session.date} />
+          </label>
+          <br />
+          <label>
+            New Time:
+            <input type="time" name="new_time" defaultValue={session.time} />
+          </label>
+          <br />
+          <div className="booking-card-btns">
+            <button type="submit" className="action-btn btn-primary">
+              Save
+            </button>
+            <ActionBtn
+              additionalBtnClass="btn-secondary"
+              onClick={() => navigate("/volunteer-dash")}
+            >
+              Cancel
+            </ActionBtn>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 };
 
 export default VolunteerEditSession;
