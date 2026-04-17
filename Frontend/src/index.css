@@ -28,7 +28,7 @@
   }
 
   h2 {
-    @apply mt-2 text-lg font-bold text-main;
+    @apply mt-2 text-xl font-bold text-main;
   }
 
   /* action buttons and time seleciton buttons */
@@ -194,7 +194,8 @@
   }
 
   .cal-day-today {
-    @apply border border-brand-blue font-bold text-brand-blue;
+    @apply border border-brand-blue bg-transparent font-bold text-brand-blue;
+    @apply ring-1 ring-brand-blue hover:bg-brand-blue/20;
   }
 
   .cal-day-selected {
@@ -206,11 +207,12 @@
   }
 
   .cal-day-available {
-    @apply bg-brand-blue/10 font-bold text-dark hover:bg-brand-blue/40;
+    @apply cursor-pointer bg-brand-blue/10 font-semibold text-black transition-all;
+    @apply hover:bg-brand-blue/50 hover:text-dark hover:ring-1 hover:ring-brand-blue/90;
   }
 
   .cal-day-unavailable {
-    @apply cursor-default text-muted opacity-50;
+    @apply cursor-default text-muted opacity-30;
   }
 
   /* BOOKING TIME SLOT SECTION */

@@ -125,9 +125,14 @@ class AvailableSlotsView(APIView):
         return Response(serializer.data)
 
 
-class SlotRuleCreateView(generics.CreateAPIView):
-    queryset = SlotRule.objects.all()
+class SlotRuleListCreateView(generics.ListCreateAPIView):
     serializer_class = SlotRuleSerializer
+
+    def get_queryset(self):
+        return SlotRule.objects.filter(
+            volunteer=self.request.user,
+            deleted_at__isnull=True,
+        ).order_by("start_time")
 
     # Always assign the slot rule to the logged-in user
     def perform_create(self, serializer):
