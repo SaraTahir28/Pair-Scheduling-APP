@@ -194,7 +194,8 @@
   }
 
   .cal-day-today {
-    @apply border border-brand-blue font-bold text-brand-blue;
+     @apply border border-brand-blue font-bold text-brand-blue bg-transparent;
+     @apply hover:bg-brand-blue/20 ring-1 ring-brand-blue;
   }
 
   .cal-day-selected {
@@ -206,11 +207,12 @@
   }
 
   .cal-day-available {
-    @apply bg-brand-blue/30 font-bold text-dark hover:bg-brand-blue/30;
+    @apply bg-brand-blue/20 text-black font-semibold cursor-pointer transition-all;
+    @apply hover:bg-brand-blue/50 hover:text-dark hover:ring-1 hover:ring-brand-blue/90;
   }
 
   .cal-day-unavailable {
-    @apply cursor-default text-muted opacity-50;
+    @apply cursor-default text-muted opacity-30;
   }
 
   /* BOOKING TIME SLOT SECTION */
