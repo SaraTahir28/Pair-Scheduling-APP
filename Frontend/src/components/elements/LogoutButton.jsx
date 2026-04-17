@@ -1,5 +1,5 @@
 import { useAuth } from "../../AuthContext";
-import { ActionBtn } from "./Button"; 
+import { ActionBtn } from "./Button";
 
 export default function LogoutButton({ additionalBtnClass }) {
   const { logout } = useAuth();

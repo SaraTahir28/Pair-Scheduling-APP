@@ -206,7 +206,7 @@
   }
 
   .cal-day-available {
-    @apply bg-brand-blue/10 font-bold hover:bg-brand-blue/40 text-dark;
+    @apply bg-brand-blue/10 font-bold text-dark hover:bg-brand-blue/40;
   }
 
   .cal-day-unavailable {
@@ -254,9 +254,8 @@
     @apply w-full max-w-[400px] rounded-xl border border-black/10 bg-gray-50/50 p-3 outline-none transition-all;
     @apply focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/10;
   }
-  .agenda{
-  @apply max-w-[600px];
-  
+  .agenda {
+    @apply max-w-[600px];
   }
   /* volunteer flow */
   .booking-card-div {
@@ -492,48 +491,48 @@
   .not-found-text {
     @apply mb-8 text-lg text-main;
   }
-  
+
   @media (max-width: 1023px) {
-  .booking-box {
-    @apply m-4 flex-col;
+    .booking-box {
+      @apply m-4 flex-col;
+    }
+
+    .session-details-col,
+    .calendar-col,
+    .timeslot-col,
+    .trainee-timeslot-width {
+      @apply w-full border-r-0 p-4;
+    }
+
+    .session-details-col,
+    .calendar-col {
+      @apply border-b border-border-color;
+    }
+
+    .cal-div {
+      @apply mx-auto w-full max-w-[360px];
+    }
   }
 
-  .session-details-col,
-  .calendar-col,
-  .timeslot-col,
-  .trainee-timeslot-width {
-    @apply w-full border-r-0 p-4;
-  }
+  @media (max-width: 639px) {
+    .booking-box {
+      @apply m-3 rounded-xl;
+    }
 
-  .session-details-col,
-  .calendar-col {
-    @apply border-b border-border-color;
-  }
+    .session-details-col,
+    .calendar-col,
+    .timeslot-col,
+    .trainee-timeslot-width {
+      @apply p-3;
+    }
 
-  .cal-div {
-    @apply w-full max-w-[360px] mx-auto;
-  }
-}
+    .volunteer-card {
+      @apply w-full;
+    }
 
-@media (max-width: 639px) {
-  .booking-box {
-    @apply m-3 rounded-xl;
+    .cal-day,
+    .cal-day-selected {
+      @apply h-9 w-9 text-xs;
+    }
   }
-
-  .session-details-col,
-  .calendar-col,
-  .timeslot-col,
-  .trainee-timeslot-width {
-    @apply p-3;
-  }
-
-  .volunteer-card {
-    @apply w-full;
-  }
-
-  .cal-day,
-  .cal-day-selected {
-    @apply h-9 w-9 text-xs;
-  }
-}
 }
