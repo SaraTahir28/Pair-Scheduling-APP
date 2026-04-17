@@ -99,8 +99,6 @@ def create_google_meeting(start_time, end_time, trainee_email, volunteer_email):
         extra={
             "start_time": start_time,
             "end_time": end_time,
-            "trainee_email": trainee_email,
-            "volunteer_email": volunteer_email,
         },
     )
     # DRF turns incoming timestamps into Python datetime objects.
