@@ -1,0 +1,6 @@
+# Revisions listed here are ignored by `git blame` and GitHub's blame view.
+# Use for large formatting-only sweeps so blame still points at semantic changes.
+# Enable locally with: git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# Add the SHA of each formatter sweep on its own line, with a trailing comment:
+# abc123…  # prettier + ruff sweep 2026-04-17
