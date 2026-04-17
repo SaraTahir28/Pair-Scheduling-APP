@@ -2,13 +2,17 @@
 import LogoutButton from "./LogoutButton";
 import { useAuth } from "../../AuthContext";
 
+import { Link } from "react-router-dom";
+
 export default function Navbar() {
   const { user } = useAuth();
 
   return (
     <nav className="flex items-center justify-between bg-gray-100 p-4 shadow-md">
       <div className="logo">
-        <h1 className="text-xl font-bold text-gray-800">CYF Pair Scheduler</h1>
+        <Link to="/" className="text-xl font-bold text-gray-800">
+          CYF Pair Scheduler
+        </Link>
       </div>
 
       <div className="user-section flex items-center gap-4">
