@@ -1,7 +1,9 @@
 from datetime import timedelta
+
 from django.utils import timezone
-from core.policies.min_booking_window import MinimumBookingWindowPolicy
 from freezegun import freeze_time
+
+from core.policies.min_booking_window import MinimumBookingWindowPolicy
 
 
 def test_slot_inside_minimum_window():

@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.utils import timezone
 from rest_framework.test import APIClient
 
-from core.models import SlotRule, User, Booking
+from core.models import Booking, SlotRule, User
 
 
 @pytest.fixture
