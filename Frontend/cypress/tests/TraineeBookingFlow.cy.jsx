@@ -78,8 +78,8 @@ describe("TraineeBookingFlow URL validation", () => {
           slot_rule_id: 1,
           name: "Test Volunteer",
           img: "",
-          start_time: "2026-04-01T09:00:00Z",
-          end_time: "2026-04-01T10:00:00Z",
+          start_time: "2026-04-01T08:00:00Z",
+          end_time: "2026-04-01T09:00:00Z",
         },
       ],
     }).as("availableSlots");
@@ -94,10 +94,8 @@ describe("TraineeBookingFlow URL validation", () => {
     cy.get("textarea").type("discuss promises in javascript");
     cy.contains("Book meeting").click();
 
-    const expected = new Date(2026, 3, 1, 9, 0).toISOString();
-
     cy.wait("@createMeeting")
       .its("request.body.time_slot")
-      .should("equal", expected);
+      .should("equal", "2026-04-01T08:00:00.000Z");
   });
 });

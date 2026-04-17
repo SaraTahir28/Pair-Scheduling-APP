@@ -111,8 +111,11 @@ const TraineeBookingFlow = () => {
     (a, b) => new Date(a.start_time) - new Date(b.start_time)
   );
   for (let slot of sortedSlots) {
-    const convertedToString = slot.start_time;
-    const dateOnlyStr = convertedToString.split("T")[0];
+    const dateObj = new Date(slot.start_time);
+
+    const dateOnlyStr = dateObj.toLocaleDateString("en-CA", {
+      timeZone: "Europe/London",
+    });
 
     if (
       !convertedAllVDataToFrontendFormat.availableDates.includes(dateOnlyStr)
@@ -120,10 +123,12 @@ const TraineeBookingFlow = () => {
       convertedAllVDataToFrontendFormat.availableDates.push(dateOnlyStr);
     }
 
-    if (selectedDate && convertedToString.split("T")[0] === selectedDate) {
-      const timeOnlyStr = convertedToString.split("T")[1];
-      const timeInFormathhmm =
-        timeOnlyStr.split(":")[0] + ":" + timeOnlyStr.split(":")[1];
+    if (selectedDate && dateOnlyStr === selectedDate) {
+      const timeInFormathhmm = dateObj.toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Europe/London",
+      });
 
       const slotKey = `${timeInFormathhmm}-${slot.volunteer_id}-${slot.slot_rule_id}`;
 

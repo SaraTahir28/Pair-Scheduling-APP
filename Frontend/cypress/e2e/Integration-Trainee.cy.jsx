@@ -8,10 +8,20 @@ const buildDynamicSlot = () => {
   const start = new Date(Date.UTC(year, month, 20, 9, 0, 0));
   const end = new Date(Date.UTC(year, month, 20, 10, 0, 0));
 
+  const selectedDate = start.toLocaleDateString("en-CA", {
+    timeZone: "Europe/London",
+  });
+
+  const selectedTime = start.toLocaleTimeString("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Europe/London",
+  });
+
   return {
     appNow,
-    selectedDate: start.toISOString().split("T")[0],
-    selectedTime: "09:00",
+    selectedDate,
+    selectedTime,
     start_time: start.toISOString(),
     end_time: end.toISOString(),
   };
