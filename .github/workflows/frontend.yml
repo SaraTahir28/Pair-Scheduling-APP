@@ -129,7 +129,7 @@ jobs:
         with:
           working-directory: Frontend
           start: npm run dev
-          wait-on: "http://127.0.0.1:5173,tcp:127.0.0.1:8000"
+          wait-on: "http-get://127.0.0.1:5173,http-get://127.0.0.1:8000/auth/csrf/"
           wait-on-timeout: 60
           spec: cypress/e2e/full-stack/**/*.cy.jsx
 
