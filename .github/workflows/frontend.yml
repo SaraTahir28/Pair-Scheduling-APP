@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "Frontend/**"
+      - "Backend/**"
       - ".github/workflows/frontend.yml"
 
 jobs:
@@ -67,3 +68,72 @@ jobs:
           start: npm run dev
           wait-on: "http://127.0.0.1:5173"
           wait-on-timeout: 30
+          spec: cypress/e2e/integration/**/*.cy.jsx
+
+  cypress-full-stack:
+    runs-on: ubuntu-latest
+
+    env:
+      DJANGO_SECRET_KEY: ci-secret-key-not-used-in-prod
+      GOOGLE_CLIENT_ID: test-client-id
+      GOOGLE_CLIENT_SECRET: test-client-secret
+      POSTGRES_DB: pairschedulingdb
+      POSTGRES_USER: pairschedulinguser
+      POSTGRES_PASSWORD: securepassword
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: pairschedulingdb
+          POSTGRES_USER: pairschedulinguser
+          POSTGRES_PASSWORD: securepassword
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U pairschedulinguser -d pairschedulingdb"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: Backend/requirements.txt
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: Frontend/package-lock.json
+
+      - name: Install backend deps
+        working-directory: Backend
+        run: pip install -r requirements.txt
+
+      - name: Migrate
+        working-directory: Backend
+        run: python manage.py migrate
+
+      - name: Start Django
+        working-directory: Backend
+        run: nohup python manage.py runserver 127.0.0.1:8000 > django.log 2>&1 &
+
+      - uses: cypress-io/github-action@v6
+        with:
+          working-directory: Frontend
+          start: npm run dev
+          wait-on: "http://127.0.0.1:5173,tcp:127.0.0.1:8000"
+          wait-on-timeout: 60
+          spec: cypress/e2e/full-stack/**/*.cy.jsx
+
+      - name: Django log (on failure)
+        if: failure()
+        working-directory: Backend
+        run: cat django.log || true
