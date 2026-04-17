@@ -42,12 +42,12 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <main className="flex min-h-screen flex-col">
       <Navbar />
       <div className="flex-1">
         <RouterProvider router={router} />
       </div>
-    </div>
+    </main>
   );
 }
 
