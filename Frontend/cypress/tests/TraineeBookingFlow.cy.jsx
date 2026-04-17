@@ -22,6 +22,10 @@ const mountAtRoute = (path) => {
             path="/trainee-booking/:selectedDate/:selectedTime/:status"
             element={<TraineeBookingFlow />}
           />
+          <Route
+            path="/trainee-booking/:selectedDate/:selectedTime/:status/:volunteerId/:slotRuleId"
+            element={<TraineeBookingFlow />}
+          />
         </Routes>
       </MemoryRouter>
     </AuthProvider>
@@ -71,9 +75,11 @@ describe("TraineeBookingFlow URL validation", () => {
       body: [
         {
           volunteer_id: 1,
+          slot_rule_id: 1,
           name: "Test Volunteer",
           img: "",
           start_time: "2026-04-01T09:00:00Z",
+          end_time: "2026-04-01T10:00:00Z",
         },
       ],
     }).as("availableSlots");
@@ -83,11 +89,7 @@ describe("TraineeBookingFlow URL validation", () => {
       body: {},
     }).as("createMeeting");
 
-    mountAtRoute("/trainee-booking/2026-04-01/09:00");
-
-    cy.wait("@availableSlots");
-
-    cy.get(".avatar").first().click();
+    mountAtRoute("/trainee-booking/2026-04-01/09:00/pending/1/1");
 
     cy.get("textarea").type("discuss promises in javascript");
     cy.contains("Book meeting").click();

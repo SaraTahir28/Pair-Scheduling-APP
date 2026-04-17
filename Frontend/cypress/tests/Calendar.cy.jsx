@@ -1,5 +1,24 @@
 import Calendar from "../../src/components/groups/Calendar";
 
+const getCurrentMonthDates = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+
+  const formatDate = (day) => {
+    const date = new Date(year, month, day);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+  return {
+    day15: formatDate(15),
+    day20: formatDate(20),
+  };
+};
+
 describe("Basic Calendar Component Tests", () => {
   it("shows the current month and year on load", () => {
     cy.mount(
@@ -29,11 +48,13 @@ describe("Basic Calendar Component Tests", () => {
   });
 
   it("highlights the dates that are available", () => {
+    const { day15, day20 } = getCurrentMonthDates();
+
     cy.mount(
       <Calendar
         selectedDateProps={null}
         setSelectedDateProps={() => {}}
-        availableDates={[15, 20]}
+        availableDates={[day15, day20]}
       />
     );
 
@@ -42,11 +63,13 @@ describe("Basic Calendar Component Tests", () => {
   });
 
   it("does not highlight dates that are unavailable", () => {
+    const { day15, day20 } = getCurrentMonthDates();
+
     cy.mount(
       <Calendar
         selectedDateProps={null}
         setSelectedDateProps={() => {}}
-        availableDates={[15, 20]}
+        availableDates={[day15, day20]}
       />
     );
 

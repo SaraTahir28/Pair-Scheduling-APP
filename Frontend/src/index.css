@@ -125,6 +125,47 @@
 
   .avatar {
     @apply mb-2 h-16 w-16 rounded-full object-cover;
+  /* VolunteerSelector styles */
+  .volunteer-selector-div {
+    @apply flex flex-col gap-3;
+  }
+
+  .volunteer-selector-title {
+    @apply text-sm font-bold uppercase tracking-wider text-muted;
+  }
+
+  .volunteer-selector-list {
+    @apply flex flex-col gap-2;
+  }
+
+  .volunteer-card {
+    @apply flex cursor-pointer items-center gap-3 rounded-xl border border-border-color bg-white p-2 transition-all;
+    @apply hover:border-brand-blue hover:bg-brand-blue/5;
+  }
+
+  .volunteer-card.selected {
+    @apply border-brand-blue bg-brand-blue/10;
+  }
+
+  .volunteer-card-all {
+    @apply justify-center text-sm font-bold text-main;
+  }
+
+  .volunteer-card-avatar {
+    @apply h-10 w-10 shrink-0 rounded-full object-cover;
+  }
+
+  .volunteer-card-name {
+    @apply text-sm font-medium leading-tight text-main;
+  }
+
+  /* avatar box styling */
+  .availableVolunteersDiv {
+    @apply gap-4;
+  }
+
+  .avatar {
+    @apply mb-2;
   }
 
   /* MIDDLE CALENDAR */

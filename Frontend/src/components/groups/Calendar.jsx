@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { formatLocalDate } from "../../utilities/dateTime";
 
 const monthNames = [
   "January",
@@ -69,12 +70,15 @@ const Calendar = ({
 
   const fullDaySquares = [];
   for (let i = 1; i <= daysInMonth; i++) {
-    const isDayAvailable = availableDates.includes(i);
+    const dateStr = formatLocalDate(new Date(year, month, i));
+
+    const isDayAvailable = availableDates.includes(dateStr);
 
     const isDaySelectedInCal =
       selectedDateProps &&
       selectedDateProps.getDate() === i &&
-      selectedDateProps.getMonth() === month;
+      selectedDateProps.getMonth() === month &&
+      selectedDateProps.getFullYear() === year;
 
     fullDaySquares.push(
       <div key={"day_" + i}>
