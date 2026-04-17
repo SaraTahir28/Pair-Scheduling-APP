@@ -16,7 +16,7 @@ export default function Navbar() {
       </div>
 
       <div className="user-section flex items-center gap-4">
-        {user && <span className="text-gray-700">Hello, {user.name}</span>}
+        {user && <span className="text-gray-700 italic">Hello, {user.name}</span>}
         <LogoutButton />
       </div>
     </nav>

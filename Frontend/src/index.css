@@ -176,7 +176,7 @@
   }
 
   .cal-chevron {
-    @apply flex h-8 w-8 items-center justify-center rounded-full bg-transparent text-muted transition-all;
+    @apply flex h-8 w-8 items-center justify-center rounded-full bg-transparent text-dark transition-all;
     @apply hover:bg-brand-blue/10 hover:text-brand-blue;
   }
 
@@ -206,7 +206,7 @@
   }
 
   .cal-day-available {
-    @apply bg-brand-blue/10 font-bold text-brand-blue hover:bg-brand-blue/20;
+    @apply bg-brand-blue/10 font-bold hover:bg-brand-blue/40 text-dark;
   }
 
   .cal-day-unavailable {
@@ -292,7 +292,7 @@
 
   /* landing page */
   .landing-page {
-    @apply flex min-h-screen flex-col items-center justify-center bg-gray-50 p-6;
+    @apply flex min-h-screen flex-col items-center justify-center bg-brand-blue/5 p-6;
   }
 
   .role-selection-grid {
@@ -489,4 +489,48 @@
   .not-found-text {
     @apply mb-8 text-lg text-main;
   }
+  
+  @media (max-width: 1023px) {
+  .booking-box {
+    @apply m-4 flex-col;
+  }
+
+  .session-details-col,
+  .calendar-col,
+  .timeslot-col,
+  .trainee-timeslot-width {
+    @apply w-full border-r-0 p-4;
+  }
+
+  .session-details-col,
+  .calendar-col {
+    @apply border-b border-border-color;
+  }
+
+  .cal-div {
+    @apply w-full max-w-[360px] mx-auto;
+  }
+}
+
+@media (max-width: 639px) {
+  .booking-box {
+    @apply m-3 rounded-xl;
+  }
+
+  .session-details-col,
+  .calendar-col,
+  .timeslot-col,
+  .trainee-timeslot-width {
+    @apply p-3;
+  }
+
+  .volunteer-card {
+    @apply w-full;
+  }
+
+  .cal-day,
+  .cal-day-selected {
+    @apply h-9 w-9 text-xs;
+  }
+}
 }

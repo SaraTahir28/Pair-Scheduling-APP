@@ -1,5 +1,5 @@
 import { useAuth } from "../../AuthContext";
-import { ActionBtn } from "./Button"; // reusing existing button design
+import { ActionBtn } from "./Button"; 
 
 export default function LogoutButton({ additionalBtnClass }) {
   const { logout } = useAuth();
@@ -8,7 +8,7 @@ export default function LogoutButton({ additionalBtnClass }) {
     <ActionBtn
       onClick={logout}
       additionalBtnClass={
-        additionalBtnClass || "bg-red-500 hover:bg-red-600 text-white"
+        "btn-secondary" || "bg-red-500 hover:bg-red-600 text-white"
       }
     >
       Logout
