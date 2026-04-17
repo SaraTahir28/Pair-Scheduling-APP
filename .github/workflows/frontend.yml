@@ -125,12 +125,15 @@ jobs:
         working-directory: Backend
         run: nohup python manage.py runserver 127.0.0.1:8000 > django.log 2>&1 &
 
+      - name: Wait for Django
+        run: npx --yes wait-on --timeout 60000 http-get://127.0.0.1:8000/auth/csrf/
+
       - uses: cypress-io/github-action@v6
         with:
           working-directory: Frontend
           start: npm run dev
-          wait-on: "http-get://127.0.0.1:5173,http-get://127.0.0.1:8000/auth/csrf/"
-          wait-on-timeout: 60
+          wait-on: "http://127.0.0.1:5173"
+          wait-on-timeout: 30
           spec: cypress/e2e/full-stack/**/*.cy.jsx
 
       - name: Django log (on failure)
