@@ -1,8 +1,11 @@
+from datetime import timedelta
+
 from rest_framework import serializers
+
 from core.models import Booking, SlotRule
 from core.policies.min_booking_window import MinimumBookingWindowPolicy
-from datetime import timedelta
 from core.services.booking_validation import slot_rule_covers_time
+
 
 class BookingSerializer(serializers.Serializer):
     slot_rule_id = serializers.IntegerField()
@@ -22,9 +25,11 @@ class BookingSerializer(serializers.Serializer):
 
         try:
             slot_rule = SlotRule.objects.get(id=slot_rule_id)
-        except SlotRule.DoesNotExist:
-            raise serializers.ValidationError({"slot_rule_id": "Slot rule not found."})
-        
+        except SlotRule.DoesNotExist as err:
+            raise serializers.ValidationError(
+                {"slot_rule_id": "Slot rule not found."}
+            ) from err
+
         if not slot_rule_covers_time(slot_rule, time_slot):
             raise serializers.ValidationError(
                 {"time_slot": "This time is not available for the selected slot rule."}
@@ -44,18 +49,17 @@ class BookingSerializer(serializers.Serializer):
         agenda = validated_data.get("agenda", "")
 
         booking = Booking(
-           trainee=trainee,
-           volunteer=volunteer,
-           slot_rule=slot_rule,
-           start_time=start_time,
-           google_meet_link=google_meet_link,
-           agenda=agenda,
-       )
+            trainee=trainee,
+            volunteer=volunteer,
+            slot_rule=slot_rule,
+            start_time=start_time,
+            google_meet_link=google_meet_link,
+            agenda=agenda,
+        )
 
         booking.full_clean()
         booking.save()
         return booking
-
 
     def to_representation(self, instance):
         return {
@@ -65,4 +69,4 @@ class BookingSerializer(serializers.Serializer):
             "end_time": instance.start_time + timedelta(hours=1),
             "google_meet_link": instance.google_meet_link,
             "agenda": instance.agenda,
-       }
+        }

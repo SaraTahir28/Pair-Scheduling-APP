@@ -1,8 +1,10 @@
-from django.db import models
+from datetime import timedelta
+
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
-from datetime import timedelta
+from django.db import models
 from django.db.models import Q
+
 
 class User(AbstractUser):
     ROLE_CHOICES = [
@@ -24,12 +26,18 @@ class User(AbstractUser):
         ("the_launch", "The Launch"),
     ]
     email = models.EmailField(max_length=254, unique=True)
-    group = models.CharField(max_length=20,choices=GROUP_CHOICES,null=True,blank=True,)
+    group = models.CharField(
+        max_length=20,
+        choices=GROUP_CHOICES,
+        null=True,
+        blank=True,
+    )
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="trainee")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="active")
 
     def __str__(self):
         return self.email or self.username
+
 
 class SlotRule(models.Model):
     volunteer = models.ForeignKey(
@@ -47,7 +55,11 @@ class SlotRule(models.Model):
     # End date for recurring rules, null for one-off slots.
     repeat_until = models.DateField(null=True, blank=True)
 
-    group = models.CharField(max_length=20,choices=User.GROUP_CHOICES,null=True,blank=True,
+    group = models.CharField(
+        max_length=20,
+        choices=User.GROUP_CHOICES,
+        null=True,
+        blank=True,
     )
 
     deleted_at = models.DateTimeField(null=True, blank=True, default=None)
@@ -115,12 +127,18 @@ class Booking(models.Model):
     def clean(self):
         errors = {}
 
-        if self.trainee_id and self.volunteer_id and self.trainee_id == self.volunteer_id:
+        if (
+            self.trainee_id
+            and self.volunteer_id
+            and self.trainee_id == self.volunteer_id
+        ):
             errors["volunteer"] = "A user cannot book a session with themselves."
 
         if self.slot_rule_id and self.volunteer_id:
             if self.slot_rule.volunteer_id != self.volunteer_id:
-                errors["slot_rule"] = "Selected slot rule does not belong to the selected volunteer."
+                errors["slot_rule"] = (
+                    "Selected slot rule does not belong to the selected volunteer."
+                )
 
         if errors:
             raise ValidationError(errors)

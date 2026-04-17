@@ -1,4 +1,3 @@
-
 # Project Setup
 
 Follow these steps to run the backend locally.
@@ -75,43 +74,43 @@ If everything is set up correctly, Django’s default welcome page will appear.
 
 The Google Calendar integration uses a dedicated cyf service account with a user acount
 
-The required  credentials have already been generated for this project.
-
+The required credentials have already been generated for this project.
 
 ### Security Note
 
 The following folder contain sensitive credentials and must **not** be committed to the repository:
- secrets folder
+secrets folder
 
-Make sure the folder are included in `.gitignore`.
----
+## Make sure the folder are included in `.gitignore`.
 
 ## Testing the Meeting Creation Endpoint
 
 Once the backend server is running, you can test the Google Calendar integration by sending a POST request to the API endpoint.
+
 ```
 POST /api/create-meeting/
 ```
-### Example API Request 
+
+### Example API Request
 
 curl -X POST http://127.0.0.1:8000/api/create-meeting/ \
 -H "Content-Type: application/json" \
 -d '{
-  "trainee_email": "trainee@example.com",
-  "volunteer_email": "volunteer@example.com",
-  "start_time": "2026-03-10T14:00:00Z",
-  "end_time": "2026-03-10T15:00:00Z"
+"trainee_email": "trainee@example.com",
+"volunteer_email": "volunteer@example.com",
+"start_time": "2026-03-10T14:00:00Z",
+"end_time": "2026-03-10T15:00:00Z"
 }'
- 
+
 ### Example Response
+
 {
-  "message": "Meeting created successfully.",
-  "event_id": "...",
-  "meet_link": "https://meet.google.com/..."
+"message": "Meeting created successfully.",
+"event_id": "...",
+"meet_link": "https://meet.google.com/..."
 }
 
 The meeting link can then be used by both participants to join the session.
-
 
 When the request succeeds, the system will:
 
@@ -132,14 +131,15 @@ Example time format:
 
 ## Google OAuth Login (React + Django Sessions)
 
-
 This project uses Google OAuth2 authentication with django-allauth and Django sessions.
 
 # Overview
+
 Authentication is handled by the Django backend
 The React frontend controls the user experience
 
 # Backend Setup
+
 1. Install dependencies
 
 Inside the Backend/ folder:
@@ -156,8 +156,8 @@ GOOGLE_CLIENT_SECRET=your_client_secret
 ⚠️ Never commit this file
 
 3. Run migrations & start the server
-python manage.py migrate
-python manage.py runserver
+   python manage.py migrate
+   python manage.py runserver
 
 Once the server is running, the backend will be accessible at:
 http://localhost:8000/
@@ -172,28 +172,26 @@ npm run dev
 Frontend runs at:
 
 http://localhost:5173/
- Authentication Flow
+Authentication Flow
+
 1. User visits frontend
-http://localhost:5173/
+   http://localhost:5173/
 2. React checks session
-fetch("http://localhost:8000/auth/user/", {
-  credentials: "include",
-});
-If logged in → show app
-If not → show login screen
+   fetch("http://localhost:8000/auth/user/", {
+   credentials: "include",
+   });
+   If logged in → show app
+   If not → show login screen
 3. User clicks “Continue with Google”
 
 Redirect to:
 
-http://localhost:8000/accounts/google/login/
-4. OAuth flow (handled by Django)
+http://localhost:8000/accounts/google/login/ 4. OAuth flow (handled by Django)
 User logs in with Google
 Django receives callback
 User is created (if new)
-Session is created
-5. Redirect back to frontend
-http://localhost:5173/
-6. Session is active
+Session is created 5. Redirect back to frontend
+http://localhost:5173/ 6. Session is active
 
 Frontend calls /auth/user/ again → user is authenticated ✅
 
@@ -207,52 +205,55 @@ Redirected back to app
 Booking UI is accessible
 
 # API ENDPOINTS User Management Setup
+
 # Usage Guide
 
 This project now uses Django REST Framework (DRF) to handle user data via a JSON API.
 
 1. Installation & Environment
-First, ensure you have the updated dependencies installed, including the new version of Django and the REST Framework.
-Bash
+   First, ensure you have the updated dependencies installed, including the new version of Django and the REST Framework.
+   Bash
 
 # Update your environment
-pip install -r requirements.txt 
-or only: 
+
+pip install -r requirements.txt
+or only:
 pip install djangorestframework
 
 2. Database Synchronization
-Since we have updated the User model to include google_sub, full_name, and roles, you must apply the migrations:
-Bash
-python manage.py makemigrations
-python manage.py migrate
+   Since we have updated the User model to include google_sub, full_name, and roles, you must apply the migrations:
+   Bash
+   python manage.py makemigrations
+   python manage.py migrate
 
 ## Understanding the Data Flow
+
 We use Serializers to bridge the gap between our database and the frontend
 Serialization converts Django Database Objects into JSON (for the frontend to read)
 Deserialization converts JSON into Django Database Objects (to save incoming data)
 
 4. API Endpoints
-Start the server using python manage.py runserver and use the following endpoints:
+   Start the server using python manage.py runserver and use the following endpoints:
 
-GET /api/users/ 			        View all users in the system.
-GET /api/users/[user_id]/		  View a specific user by their ID.
-GET /api/users/?format=json		Access the clean JSON output directly.
-PATCH /api/users/[user_id]/   Update specific user information (role).
+GET /api/users/ View all users in the system.
+GET /api/users/[user_id]/ View a specific user by their ID.
+GET /api/users/?format=json Access the clean JSON output directly.
+PATCH /api/users/[user_id]/ Update specific user information (role).
 
-You can simply visit 
-  http://127.0.0.1:8000/api/users/?format=json
-  http://127.0.0.1:8000/api/users/
-  http://127.0.0.1:8000/api/users/[user_id]/
-in their browser. 
+You can simply visit
+http://127.0.0.1:8000/api/users/?format=json
+http://127.0.0.1:8000/api/users/
+http://127.0.0.1:8000/api/users/[user_id]/
+in their browser.
 
 5. Updating User Information
-To update a user's details (like their role or name), send a PATCH request. This allows you to update only specific fields without sending the entire object.
-Example via cURL:
+   To update a user's details (like their role or name), send a PATCH request. This allows you to update only specific fields without sending the entire object.
+   Example via cURL:
 
 curl -X PATCH http://127.0.0.1:8000/api/users/1/ \
 -H "Content-Type: application/json" \
 -d '{
-    "first_name": "Joe",
-    "last_name": "Bloggs",
-    "role": "volunteer"
+"first_name": "Joe",
+"last_name": "Bloggs",
+"role": "volunteer"
 }'

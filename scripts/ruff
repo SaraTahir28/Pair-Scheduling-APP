@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Wrapper used by lint-staged so the pre-commit hook works whether ruff is
+# on PATH (pipx install) or only present in Backend/venv.
+set -euo pipefail
+
+if command -v ruff >/dev/null 2>&1; then
+  exec ruff "$@"
+fi
+
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+VENV_RUFF="$REPO_ROOT/Backend/venv/bin/ruff"
+if [ -x "$VENV_RUFF" ]; then
+  exec "$VENV_RUFF" "$@"
+fi
+
+echo "ruff not found. Run: pipx install ruff==0.7.4 (or activate Backend/venv)" >&2
+exit 1

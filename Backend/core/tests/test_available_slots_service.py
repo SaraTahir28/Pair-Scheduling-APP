@@ -1,6 +1,5 @@
-import pytest
 from datetime import timedelta
-from unittest.mock import patch
+
 from django.utils import timezone
 
 from core.models import SlotRule, User
@@ -8,6 +7,7 @@ from core.services.available_slots import build_available_slots, exclude_booked_
 
 NOW = timezone.now()
 FUTURE = timezone.now() + timedelta(days=1)
+
 
 def make_slot_rule(
     volunteer_id=1,
@@ -23,7 +23,7 @@ def make_slot_rule(
     rule.id = rule_id
     rule.start_time = start_time or FUTURE
     rule.repeat_until = repeat_until
-    rule.volunteer_id=volunteer_id
+    rule.volunteer_id = volunteer_id
     rule.group = group
     rule.volunteer = User(
         id=volunteer_id,
@@ -33,7 +33,8 @@ def make_slot_rule(
     )
     return rule
 
-def test_one_off_slot(): 
+
+def test_one_off_slot():
     rule = make_slot_rule(group="itd")
     slots = build_available_slots([rule], NOW)
     assert len(slots) == 1
@@ -41,7 +42,8 @@ def test_one_off_slot():
     assert slots[0].slot_rule_id == rule.id
     assert slots[0].group == "itd"
 
-def test_multiple_one_off_slots(): 
+
+def test_multiple_one_off_slots():
     rule_1 = make_slot_rule(rule_id=1)
     rule_2 = make_slot_rule(rule_id=2)
     slots = build_available_slots([rule_1, rule_2], NOW)
@@ -49,14 +51,16 @@ def test_multiple_one_off_slots():
     assert slots[0].slot_rule_id == rule_1.id
     assert slots[1].slot_rule_id == rule_2.id
 
-def test_recurring_rule_expands_to_multiple_slots(): 
+
+def test_recurring_rule_expands_to_multiple_slots():
     start_time = timezone.now() + timedelta(weeks=1)
     repeat_until = (timezone.now() + timedelta(weeks=3)).date()
     rule = make_slot_rule(start_time=start_time, repeat_until=repeat_until)
     slots = build_available_slots([rule], NOW)
     assert len(slots) == 3
 
-def test_recurring_rule_past_occurrences_excluded(): 
+
+def test_recurring_rule_past_occurrences_excluded():
     start_time = NOW - timedelta(weeks=2)
     repeat_until = (NOW + timedelta(weeks=4)).date()
     rule = make_slot_rule(start_time=start_time, repeat_until=repeat_until)
@@ -64,7 +68,8 @@ def test_recurring_rule_past_occurrences_excluded():
     for slot in slots:
         assert slot.start_time >= NOW
 
-def test_slots_include_past_when_limit_is_in_past(): 
+
+def test_slots_include_past_when_limit_is_in_past():
     start_time = NOW - timedelta(weeks=2)
     repeat_until = (NOW + timedelta(weeks=2)).date()
 
@@ -81,13 +86,18 @@ def test_slots_include_past_when_limit_is_in_past():
     occurrence_times = rule.occurrence_start_times()
     assert len(slots) == len(occurrence_times)
 
-def test_slots_filtered_by_custom_future_limit(): 
-    start_time = NOW + timedelta(days=1)  
+
+def test_slots_filtered_by_custom_future_limit():
+    start_time = NOW + timedelta(days=1)
     repeat_until = (NOW + timedelta(days=21)).date()
 
-    rule = make_slot_rule(start_time=start_time,repeat_until=repeat_until,group="itd",)
+    rule = make_slot_rule(
+        start_time=start_time,
+        repeat_until=repeat_until,
+        group="itd",
+    )
 
-    # moving booking window 2 weeks forward 
+    # moving booking window 2 weeks forward
     custom_limit = NOW + timedelta(weeks=2)
 
     slots = build_available_slots([rule], custom_limit)
@@ -99,7 +109,8 @@ def test_slots_filtered_by_custom_future_limit():
     # It should have fewer than total occurrences
     assert len(slots) < len(rule.occurrence_start_times())
 
-def test_exclude_booked_slots_returns_slots_when_none_are_booked(): 
+
+def test_exclude_booked_slots_returns_slots_when_none_are_booked():
     rule = make_slot_rule()
     slots = build_available_slots([rule], NOW)
 
@@ -109,6 +120,7 @@ def test_exclude_booked_slots_returns_slots_when_none_are_booked():
     assert filtered_slots[0].volunteer_id == rule.volunteer_id
     assert filtered_slots[0].slot_rule_id == rule.id
     assert filtered_slots[0].group == rule.group
+
 
 def test_exclude_booked_slots_excludes_booked_slot():
     rule = make_slot_rule()
@@ -121,6 +133,7 @@ def test_exclude_booked_slots_excludes_booked_slot():
     filtered_slots = exclude_booked_slots(slots, booked_pairs)
 
     assert filtered_slots == []
+
 
 def test_exclude_booked_slots_excludes_only_exact_booked_pair():
     rule_1 = make_slot_rule(volunteer_id=1, rule_id=1, start_time=FUTURE)
@@ -137,6 +150,7 @@ def test_exclude_booked_slots_excludes_only_exact_booked_pair():
     assert len(filtered_slots) == 1
     assert filtered_slots[0].slot_rule_id == rule_2.id
     assert filtered_slots[0].volunteer_id == rule_2.volunteer_id
+
 
 def test_exclude_booked_slots_keeps_other_occurrences_for_same_volunteer():
     start_time = FUTURE
@@ -160,4 +174,3 @@ def test_exclude_booked_slots_keeps_other_occurrences_for_same_volunteer():
     assert len(filtered_slots) == 1
     assert filtered_slots[0].volunteer_id == 1
     assert filtered_slots[0].start_time == second_occurrence
-    

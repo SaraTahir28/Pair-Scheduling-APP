@@ -1,31 +1,27 @@
-import json
-import dataclasses
 from datetime import timedelta
 
 # Django Core
 from django.db.models import Q
-from django.http import JsonResponse
-from django.shortcuts import render
 from django.utils import timezone
-from django.views.decorators.http import require_POST
 
 # Django Rest Framework
-from rest_framework import generics, permissions, status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import generics, status
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-# Local Models & Services
-from .models import User, SlotRule, Booking
-from .google_calendar_service import create_google_meeting
 from core.services.available_slots import build_available_slots, exclude_booked_slots
+
+from .google_calendar_service import create_google_meeting
+
+# Local Models & Services
+from .models import Booking, SlotRule, User
+from .serializers.available_slot_serializer import AvailableSlotSerializer
+from .serializers.booking_serializer import BookingSerializer
+from .serializers.slot_rule_serializer import SlotRuleSerializer
 
 # Local Serializers
 from .user_serializers import UserSerializer
-from .serializers.booking_serializer import BookingSerializer
-from .serializers.slot_rule_serializer import SlotRuleSerializer
-from .serializers.available_slot_serializer import AvailableSlotSerializer
 
 
 class CreateMeetingView(APIView):
