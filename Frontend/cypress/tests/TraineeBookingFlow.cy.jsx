@@ -75,7 +75,6 @@ describe("TraineeBookingFlow URL validation", () => {
     const slotStart = new Date(advertisedUtc);
     const expectedLocalDate = formatLocalDate(slotStart);
     const expectedLocalTime = formatLocalTime(slotStart);
-    console.log(expectedLocalDate, expectedLocalTime);
 
     cy.intercept("GET", "**/api/available-slots/", {
       statusCode: 200,
