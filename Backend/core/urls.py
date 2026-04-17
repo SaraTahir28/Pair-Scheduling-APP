@@ -1,9 +1,14 @@
 from django.urls import path
 
-from .views import CurrentProfileView
-from .views import CreateMeetingView
-from .views import AvailableSlotsView
-from .views import UserListCreateView, UserDetailView, SlotRuleCreateView, SlotRuleDeleteView
+from .views import (
+    AvailableSlotsView,
+    CreateMeetingView,
+    CurrentProfileView,
+    SlotRuleCreateView,
+    SlotRuleDeleteView,
+    UserDetailView,
+    UserListCreateView,
+)
 
 # API routes for calendar-related actions
 urlpatterns = [

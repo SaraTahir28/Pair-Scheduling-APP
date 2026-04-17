@@ -1,0 +1,39 @@
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+force-exclude = true
+extend-exclude = [
+    "venv",
+    ".venv",
+    "**/venv/**",
+    "**/.venv/**",
+    "**/site-packages/**",
+    "secrets",
+    "**/secrets/**",
+    "**/migrations/**",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort
+    "W",   # pycodestyle warnings
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+]
+ignore = [
+    "E501", # line too long — formatter handles this
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/migrations/*" = ["E", "F", "I", "W", "UP", "B"]
+"**/settings.py" = ["F405", "F403"]
+# Tests often assign `create_user()` results to variables for their DB side
+# effects — the binding itself doesn't need to be referenced.
+"**/tests/**" = ["F841"]
+"**/test_*.py" = ["F841"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

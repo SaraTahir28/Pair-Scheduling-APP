@@ -3,7 +3,6 @@ import pytest
 
 @pytest.mark.django_db
 def test_logout_view_authenticated(client, django_user_model):
-
     sara = django_user_model.objects.create_user(
         username="sara",
         email="sara@example.com",
@@ -37,7 +36,6 @@ def test_logout_view_method_not_allowed(client, django_user_model):
 
 @pytest.mark.django_db
 def test_logout_clears_session(client, django_user_model):
-
     kaska = django_user_model.objects.create_user(
         username="kaska",
         email="kaska@example.com",

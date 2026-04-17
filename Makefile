@@ -22,4 +22,15 @@ logs:
 clean:
 	docker compose down -v
 
-.PHONY: dev dev-build prod prod-build down down-prod logs clean
+RUFF := $(shell command -v ruff 2>/dev/null || echo Backend/venv/bin/ruff)
+
+format:
+	npx prettier --write .
+	$(RUFF) format Backend
+
+format-check:
+	npx prettier --check .
+	$(RUFF) format --check Backend
+	$(RUFF) check Backend
+
+.PHONY: dev dev-build prod prod-build down down-prod logs clean format format-check

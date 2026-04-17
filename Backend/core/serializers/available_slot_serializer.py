@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+
 class AvailableSlotSerializer(serializers.Serializer):
     slot_rule_id = serializers.IntegerField()
     start_time = serializers.DateTimeField()

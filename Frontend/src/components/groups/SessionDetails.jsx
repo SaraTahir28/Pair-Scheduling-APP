@@ -2,70 +2,70 @@ import React from "react";
 import { Clock, Video } from "lucide-react";
 
 const SessionDetails = ({
-	activeVolunteerProps,
-	volunteerView,
-	onManageAvailabilityClick,
+  activeVolunteerProps,
+  volunteerView,
+  onManageAvailabilityClick,
 }) => {
-	if (volunteerView) {
-		return (
-			<div className="session-details-div">
-				<h1>Welcome back</h1>
-				<div className="availableVolunteersDiv">
-					<div className="avatar-row">
-						<img
-							src={activeVolunteerProps.img}
-							className="avatar"
-							alt="Profile"
-						/>
-					</div>
-					<p>
-						You are logged in as <br />
-						<strong>{activeVolunteerProps.name}</strong>
-					</p>
+  if (volunteerView) {
+    return (
+      <div className="session-details-div">
+        <h1>Welcome back</h1>
+        <div className="availableVolunteersDiv">
+          <div className="avatar-row">
+            <img
+              src={activeVolunteerProps.img}
+              className="avatar"
+              alt="Profile"
+            />
+          </div>
+          <p>
+            You are logged in as <br />
+            <strong>{activeVolunteerProps.name}</strong>
+          </p>
 
-					{onManageAvailabilityClick && (
-						<button
-							className="btn-secondary"
-							onClick={onManageAvailabilityClick}
-						>
-							Manage my availability
-						</button>
-					)}
-				</div>
-			</div>
-		);
-	}
+          {onManageAvailabilityClick && (
+            <button
+              className="btn-secondary"
+              onClick={onManageAvailabilityClick}
+            >
+              Manage my availability
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
 
-	return (
-		<>
-			<div className="session-details-div">
-				<h1>Book 1:1 session</h1>
+  return (
+    <>
+      <div className="session-details-div">
+        <h1>Book 1:1 session</h1>
 
-				<div className="session-icon-text">
-					<div className="session-icon-text-line">
-						<Clock className="session-icon" />
-						<p>1 hour</p>
-					</div>
+        <div className="session-icon-text">
+          <div className="session-icon-text-line">
+            <Clock className="session-icon" />
+            <p>1 hour</p>
+          </div>
 
-					<div className="session-icon-text-line">
-						<Video className="session-icon" />
-						<p>Google Meet link provided upon confirmation.</p>
-					</div>
-				</div>
-			</div>
+          <div className="session-icon-text-line">
+            <Video className="session-icon" />
+            <p>Google Meet link provided upon confirmation.</p>
+          </div>
+        </div>
+      </div>
 
-			<div className="availableVolunteersDiv">
-				<div className="avatar-row">
-					<img src={activeVolunteerProps.img} className="avatar" />
-				</div>
+      <div className="availableVolunteersDiv">
+        <div className="avatar-row">
+          <img src={activeVolunteerProps.img} className="avatar" />
+        </div>
 
-				<p>
-					Your session is with <br></br>
-					<strong>{activeVolunteerProps.name}</strong>
-				</p>
-			</div>
-		</>
-	);
+        <p>
+          Your session is with <br></br>
+          <strong>{activeVolunteerProps.name}</strong>
+        </p>
+      </div>
+    </>
+  );
 };
 
 export default SessionDetails;
