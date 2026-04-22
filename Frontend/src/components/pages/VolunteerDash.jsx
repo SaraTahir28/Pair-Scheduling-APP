@@ -144,7 +144,7 @@ const VolunteerDash = () => {
       <div className="bookings-col">
         {!hasUserSetAvailability && (
           <div className="">
-            <p className="">
+            <p className="text-muted">
               Let&apos;s start by selecting your availability for 1:1 sessions.
             </p>
 
@@ -174,7 +174,7 @@ const VolunteerDash = () => {
 
             {!id && (
               <div className="all-cards-container">
-                <h2 className="bookings-heading-selectdt">Upcoming sessions</h2>
+                <h2 className="edit-form-title">Upcoming sessions</h2>
                 {renderedSessions.length > 0 ? (
                   renderedSessions
                 ) : (
