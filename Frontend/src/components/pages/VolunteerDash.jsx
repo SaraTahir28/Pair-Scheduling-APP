@@ -10,7 +10,7 @@ import VolunteerAvailabilityManager from "../groups/VolunteerAvailabilityManager
 
 import VolunteerAvailabilityForm from "../groups/VolunteerAvailabilityForm";
 import { useAuth } from "../../AuthContext";
-import duncanImg from "../../assets/duncan.png";
+
 import api from "../../api/axiosClient";
 
 const VolunteerDash = () => {
@@ -21,7 +21,7 @@ const VolunteerDash = () => {
   const activeVolunteer =
     volunteersDetails.find((v) => v.email === user?.email) || user;
   if (activeVolunteer && !activeVolunteer.img) {
-    activeVolunteer.img = duncanImg;
+    activeVolunteer.img = "/placeholder.png";
   }
 
   const [allBookedSessionsForAllUsers, setAllBookedSessionsForAllUsers] =

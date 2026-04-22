@@ -39,7 +39,7 @@ describe("Trainee booking flow", () => {
           volunteer_id: 1,
           slot_rule_id: 1,
           name: "Duncan Parkinson",
-          img: "/public/placeholder.png",
+          img: "/placeholder.png",
         },
       ],
     }).as("getSlots");
