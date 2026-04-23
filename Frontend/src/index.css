@@ -80,7 +80,6 @@
   /* TRAINEE BOOKING */
   /* outer div */
   .booking-box {
-    @apply m-10 flex min-h-[400px] w-full max-w-[1080px] overflow-hidden rounded-2xl border border-border-color bg-white shadow-sm;
     @apply mx-auto my-10 flex min-h-[400px] w-full max-w-[1080px] overflow-hidden rounded-2xl border border-border-color bg-white shadow-sm;
   }
 
