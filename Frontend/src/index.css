@@ -67,6 +67,9 @@
   .back-btn-div {
     @apply mt-2;
   }
+  .logout-btn {
+    @apply hover:border-brand-blue hover:bg-white;
+  }
   .nav-div {
     @apply flex items-center justify-between bg-brand-blue/30 p-4 shadow-md;
   }

@@ -23,7 +23,7 @@ describe("BookingForm Component tests", () => {
       expect(text).to.contains("Agenda should be between 10 and 500 chars.");
     });
 
-    cy.get("textarea.form-input").type("Too short");
+    cy.get("textarea.agenda-tr").type("Too short");
     cy.get("button").contains("Book meeting").click();
     cy.get("@testedSubmit").should("not.have.been.called");
   });
@@ -33,7 +33,7 @@ describe("BookingForm Component tests", () => {
 
     cy.mount(<BookingForm trainee={testedTrainee} whenFormSubmit={() => {}} />);
 
-    cy.get("textarea.form-input")
+    cy.get("textarea.agenda-tr")
       .type("I want to learn about passing props between components in React")
       .should(
         "have.value",
