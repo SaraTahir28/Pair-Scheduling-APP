@@ -64,11 +64,11 @@ describe("Trainee booking flow", () => {
 
     cy.contains(".btn-time-slot", slot.selectedTime).click();
 
-    cy.get(".booking-form-container").should("be.visible");
-    cy.get(".form-title").should("contain", "Your session details");
+    cy.get(".booking-form-container-tr").should("be.visible");
+    cy.get(".form-title-tr").should("contain", "Your session details");
     cy.contains("label", "Okay Kaska, what would you like to discuss?");
 
-    cy.get("textarea.form-input").type(
+    cy.get("textarea.agenda-tr").type(
       "I'd like to discuss React state management."
     );
 
@@ -112,7 +112,7 @@ describe("Trainee booking flow", () => {
 
     cy.contains(".btn-time-slot", slot.selectedTime).click();
 
-    cy.get("textarea.form-input").type("Too short");
+    cy.get("textarea.agenda-tr").type("Too short");
     cy.contains("button", "Book meeting").click();
 
     cy.then(() => {

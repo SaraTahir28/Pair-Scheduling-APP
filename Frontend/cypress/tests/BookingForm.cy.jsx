@@ -6,7 +6,7 @@ describe("BookingForm Component tests", () => {
 
     cy.mount(<BookingForm trainee={testedTrainee} whenFormSubmit={() => {}} />);
 
-    cy.get("label.form-label").should(
+    cy.get("label.form-label-tr").should(
       "contain",
       "Okay Kaska Test, what would you like to discuss?"
     );
