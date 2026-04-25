@@ -20,17 +20,17 @@ const BookingForm = ({ whenFormSubmit, trainee }) => {
   };
 
   return (
-    <div className="booking-form-container">
-      <h2 className="form-title">Your session details</h2>
+    <div className="booking-form-container-tr">
+      <h2 className="form-title-tr">Your session details</h2>
       <form>
-        <div className="form-input-group">
-          <label className="form-label">
+        <div className="form-input-group-tr">
+          <label className="form-label-tr">
             {name
               ? `Okay ${name}, what would you like to discuss?`
               : `What would you like to discuss?`}
           </label>
           <textarea
-            className="form-input agenda"
+            className="agenda-tr"
             placeholder="Share the specific topic you would like to cover."
             value={agenda}
             rows="6"

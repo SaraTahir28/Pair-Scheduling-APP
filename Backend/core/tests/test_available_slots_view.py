@@ -226,7 +226,7 @@ def test_slots_returned_includes_name_and_img():
     assert response.status_code == 200
     assert len(response.data) == 1
     assert response.data[0]["name"] == "Duncan Parkinson"
-    assert response.data[0]["img"] == "/public/placeholder.png"
+    assert response.data[0]["img"] == "/placeholder.png"
     assert slot["end_time"] > slot["start_time"]
 
 

@@ -107,8 +107,15 @@ const TraineeBookingFlow = () => {
         (slot) => String(slot.volunteer_id) === String(activeVolunteer.id)
       )
     : allVolunteersData;
+  const now = new Date();
+  const onlySlots24hrsFromNow = slotsToProcess.filter((slot) => {
+    const slotTime = new Date(slot.start_time);
+    const timeDifferenceInHours =
+      (slotTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+    return timeDifferenceInHours >= 24;
+  });
 
-  const sortedSlots = [...slotsToProcess].sort(
+  const sortedSlots = [...onlySlots24hrsFromNow].sort(
     (a, b) => new Date(a.start_time) - new Date(b.start_time)
   );
   for (let slot of sortedSlots) {

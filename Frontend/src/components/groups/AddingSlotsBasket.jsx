@@ -63,6 +63,7 @@ const AddingSlotsBasket = ({
                 <ActionBtn
                   additionalBtnClass="btn-tertiary"
                   onClick={() => removeSlot(index)}
+                  aria-label="Remove slot"
                 >
                   <X className="basket-delete-btn" />
                 </ActionBtn>
@@ -73,7 +74,7 @@ const AddingSlotsBasket = ({
       </div>
 
       {saveAll && (
-        <ActionBtn additionalBtnClass="btn-primary" onClick={saveAll}>
+        <ActionBtn additionalBtnClass="btn-primary mt-2" onClick={saveAll}>
           Save all
         </ActionBtn>
       )}
