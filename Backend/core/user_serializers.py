@@ -96,6 +96,7 @@ class UserSerializer(serializers.ModelSerializer):
                 raise PermissionDenied(
                     "You do not have permission to assign the admin role."
                 )
-            print("SERIALIZER UPDATE CALLED")
+            if instance.role == "admin" and request.user.role != "admin":
+                raise PermissionDenied("You cannot modofy and admins role.")
 
         return super().update(instance, validated_data)
