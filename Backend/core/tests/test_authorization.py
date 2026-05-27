@@ -42,3 +42,32 @@ def test_volunteer_cannot_promote_themselves_to_admin(api_client):
     url = reverse("user-detail", args=[volunteer.id])
     response = api_client.patch(url, {"role": "admin"}, format="json")
     assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_admin_can_promote_user_to_admin(api_client):
+    admin = User.objects.create_user(
+        username="sara",
+        email="sara@example.com",
+        password="securepass123",
+        role="admin",
+        status="active",
+    )
+
+    target = User.objects.create_user(
+        username="kaska",
+        email="kaska@example.com",
+        password="securepass123",
+        role="trainee",
+        status="active",
+    )
+
+    # Authenticate as the admin
+    api_client.force_authenticate(user=admin)
+
+    # Admin promotes the target user to admin
+    url = reverse("user-detail", args=[target.id])
+    response = api_client.patch(url, {"role": "admin"}, format="json")
+
+    assert response.status_code == 200
+    assert response.data["role"] == "admin"
