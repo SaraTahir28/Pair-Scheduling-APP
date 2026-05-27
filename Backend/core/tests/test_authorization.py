@@ -99,3 +99,31 @@ def test_admin_can_demote_an_admin(api_client):
 
     assert response.status_code == 200
     assert response.data["role"] == "volunteer"
+
+
+@pytest.mark.django_db
+def test_non_admin_cannot_demote_an_admin(api_client):
+    non_admin = User.objects.create_user(
+        username="volunteer_user",
+        email="volunteer@example.com",
+        password="securepass342",
+        role="volunteer",  # or a "trainee"
+        status="active",
+    )
+
+    admin_user = User.objects.create_user(
+        username="sara",
+        email="sara@example.com",
+        password="securepass123",
+        role="admin",
+        status="active",
+    )
+
+    # Authenticate as the non-admin user
+    api_client.force_authenticate(user=non_admin)
+
+    # Attempt to demote the admin to volunteer
+    url = reverse("user-detail", args=[admin_user.id])
+    response = api_client.patch(url, {"role": "volunteer"}, format="json")
+
+    assert response.status_code == 403
