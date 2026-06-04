@@ -62,6 +62,25 @@ const VolunteerAvailabilityForm = ({
       return;
     }
 
+    const checkForOverlapSlot =
+      addedSlots &&
+      addedSlots.some((oldSlot) => {
+        const oldSlotTimeInMs = new Date(oldSlot.start_time).getTime();
+        const newSlotTimeInMs = new Date(timeWithDate).getTime();
+        let timeDifferenceInMs;
+        if (oldSlotTimeInMs > newSlotTimeInMs) {
+          timeDifferenceInMs = oldSlotTimeInMs - newSlotTimeInMs;
+        } else {
+          timeDifferenceInMs = newSlotTimeInMs - oldSlotTimeInMs;
+        }
+        const slotIsTooClose = timeDifferenceInMs < 3600000;
+        return slotIsTooClose;
+      });
+    if (checkForOverlapSlot) {
+      alert("Your sessions must be at least one hour apart.");
+      return;
+    }
+
     const slotsObj = {
       volunteer_id: volunteerId,
       regular: isRecurring,
