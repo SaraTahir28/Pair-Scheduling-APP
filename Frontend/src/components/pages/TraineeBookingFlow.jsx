@@ -35,10 +35,17 @@ const TraineeBookingFlow = () => {
     selectedDate && !isInvalidDate ? parseLocalDate(selectedDate) : null;
 
   useEffect(() => {
-    api
-      .get("/api/available-slots/")
-      .then((res) => setAllVolunteersData(res.data))
-      .catch((err) => console.log(err));
+    const fetchAvailableSlots = () => {
+      api
+        .get("/api/available-slots/")
+        .then((res) => setAllVolunteersData(res.data))
+        .catch((err) => console.log(err));
+    };
+
+    fetchAvailableSlots();
+    const pollInterval = setInterval(fetchAvailableSlots, 30000);
+
+    return () => clearInterval(pollInterval);
   }, []);
 
   useEffect(() => {
