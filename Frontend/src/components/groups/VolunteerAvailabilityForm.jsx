@@ -42,6 +42,26 @@ const VolunteerAvailabilityForm = ({
       startTime
     ).toISOString();
 
+    const checkForDuplicateSlot =
+      addedSlots &&
+      addedSlots.some((oldSlot) => {
+        const isSameStartDateAndTime = oldSlot.start_time === timeWithDate;
+
+        if (isRecurring) {
+          const isOldRecurring = oldSlot.regular === true;
+          const isSameRepeatUntil = oldSlot.repeat_until === repeatUntil;
+
+          return isSameStartDateAndTime && isOldRecurring && isSameRepeatUntil;
+        } else {
+          return isSameStartDateAndTime;
+        }
+      });
+
+    if (checkForDuplicateSlot) {
+      alert("This slot is already added.");
+      return;
+    }
+
     const slotsObj = {
       volunteer_id: volunteerId,
       regular: isRecurring,
