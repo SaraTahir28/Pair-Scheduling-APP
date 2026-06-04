@@ -29,10 +29,9 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
   };
 
   const removeSlotFromBasket = (indexToRemove) => {
-    const updatedBasket = slotRulesInBasket.filter(
-      (_, i) => i !== indexToRemove
-    );
-    setSlotRulesInBasket(updatedBasket);
+    setSlotRulesInBasket((freshestBasketState) => {
+      return freshestBasketState.filter((_, i) => i !== indexToRemove);
+    });
   };
 
   const sendNewSlotRulesToDb = () => {
