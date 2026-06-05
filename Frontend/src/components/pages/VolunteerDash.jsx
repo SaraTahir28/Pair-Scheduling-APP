@@ -139,6 +139,7 @@ const VolunteerDash = () => {
         <SessionDetailsVolunteer
           user={activeVolunteer}
           onManageAvailabilityClick={() => setShowManager(true)}
+          showManageButton={hasUserSetAvailability}
         />
       </div>
       <div className="bookings-col">

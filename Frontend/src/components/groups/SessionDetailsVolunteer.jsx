@@ -1,6 +1,10 @@
 import { Calendar } from "lucide-react";
 
-const VolunteerSessionDetails = ({ onManageAvailabilityClick, user }) => {
+const VolunteerSessionDetails = ({
+  onManageAvailabilityClick,
+  user,
+  showManageButton,
+}) => {
   return (
     <div className="session-details-div">
       <h1>Welcome</h1>
@@ -19,7 +23,7 @@ const VolunteerSessionDetails = ({ onManageAvailabilityClick, user }) => {
           <p>You can view and manage your availability for 1:1 sessions.</p>
         </div>
         <div className="session-icon-text-line">
-          {onManageAvailabilityClick && (
+          {onManageAvailabilityClick && showManageButton && (
             <button
               className="btn-with-icon"
               onClick={onManageAvailabilityClick}
