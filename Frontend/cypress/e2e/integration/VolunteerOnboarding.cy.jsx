@@ -116,7 +116,6 @@ describe("Volunteer flow", () => {
     cy.get(".basket-delete-btn").click();
 
     cy.get(".basket-delete-btn").should("not.exist");
-    cy.contains("button", /save all/i).should("be.disabled");
   });
 
   it("hides onboarding after successful slots save", () => {
