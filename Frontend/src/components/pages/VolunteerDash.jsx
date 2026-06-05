@@ -140,6 +140,7 @@ const VolunteerDash = () => {
           user={activeVolunteer}
           onManageAvailabilityClick={() => setShowManager(true)}
           showManageButton={hasUserSetAvailability}
+          isManageAvailabilityTabActive={showManager}
         />
       </div>
       <div className="bookings-col">
