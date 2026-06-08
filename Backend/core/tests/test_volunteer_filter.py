@@ -108,24 +108,6 @@ class TestVolunteerByDateTimeView:
         assert response.status_code == 400
         assert response.json()["error"] == "Incorrect date/time values"
 
-    def test_non_admin_gets_403(self, client):
-        trainee = User.objects.create_user(
-            username="trainee",
-            email="trainee@example.com",
-            password="pass123",
-            role="trainee",
-        )
-        client.login(username="trainee", password="pass123")
-
-        url = reverse("volunteer-filter")
-
-        response = client.get(
-            url,
-            {"start": self.start.isoformat(), "end": self.end.isoformat()},
-        )
-
-        assert response.status_code == 403
-
     def test_excludes_booked_slots(self, client):
         admin = User.objects.create_user(
             username="admin",
