@@ -158,8 +158,6 @@ class VolunteerByDateTimeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        if request.user.role != "admin":
-            raise PermissionDenied("You do not have permission to view volunteer data.")
 
         start_str = request.query_params.get("start")
         end_str = request.query_params.get("end")
