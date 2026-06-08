@@ -7,7 +7,7 @@ from django.utils import timezone
 # Django Rest Framework
 from rest_framework import generics, status
 from rest_framework.exceptions import PermissionDenied
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -72,6 +72,7 @@ class CreateMeetingView(APIView):
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = User.objects.all().order_by("id")
     serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
 
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
