@@ -173,6 +173,10 @@ class VolunteerByDateTimeView(APIView):
         try:
             start = datetime.fromisoformat(start_str)
             end = datetime.fromisoformat(end_str)
+            if timezone.is_naive(start):
+                start = timezone.make_aware(start)
+            if timezone.is_naive(end):
+                end = timezone.make_aware(end)
         except ValueError:
             return Response(
                 {"error": "Incorrect date/time values"},
