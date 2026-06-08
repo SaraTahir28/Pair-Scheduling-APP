@@ -159,7 +159,6 @@ class VolunteerByDateTimeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-
         start_str = request.query_params.get("start")
         end_str = request.query_params.get("end")
 
