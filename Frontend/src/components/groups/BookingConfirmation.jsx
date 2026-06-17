@@ -24,10 +24,10 @@ const BookingConfirmation = ({
       />
 
       <div className="confirmation-header">
-        <div className="confirmation-title">
+        <h2 className="confirmation-title">
           <CheckCircle2 className="confirmation-icon" />
           <span>You are scheduled</span>
-        </div>
+        </h2>
         <p className="confirmation-subtitle">
           A calendar invitation has been sent to your email address.
         </p>

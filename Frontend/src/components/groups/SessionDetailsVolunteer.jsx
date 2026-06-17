@@ -7,9 +7,8 @@ const VolunteerSessionDetails = ({ onManageAvailabilityClick, user }) => {
 
       <div className="session-icon-div">
         <div className="session-icon-text-line">
-          <p>You are logged in as</p>
           <p>
-            <strong>{user?.name || "a Volunteer"}</strong>
+            You are logged in as <strong>{user?.name || "a Volunteer"}</strong>
           </p>
         </div>
 

@@ -140,10 +140,7 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
               </div>
             )}
 
-            <ActionBtn
-              additionalBtnClass="btn-primary mt-4"
-              onClick={startEditing}
-            >
+            <ActionBtn additionalBtnClass="btn-primary" onClick={startEditing}>
               Edit my slots
             </ActionBtn>
           </div>

@@ -28,7 +28,7 @@ def build_available_slots(rules, beginning_of_booking_window):
                     end_time=start_time + timedelta(hours=1),
                     name=rule.volunteer.get_full_name()
                     or rule.volunteer.get_username(),
-                    img="/public/placeholder.png",
+                    img="/placeholder.png",
                 )
             )
     return slots

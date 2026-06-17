@@ -30,6 +30,9 @@
   h2 {
     @apply mt-2 text-xl font-bold text-main;
   }
+  .title-lg {
+    @apply text-xl font-bold text-dark;
+  }
 
   /* action buttons and time seleciton buttons */
   .action-btn {
@@ -62,13 +65,25 @@
   }
 
   .back-btn-div {
-    @apply mb-4;
+    @apply mt-2;
+  }
+  .logout-btn {
+    @apply hover:border-brand-blue hover:bg-white;
+  }
+  .nav-div {
+    @apply flex items-center justify-between bg-brand-blue/30 p-4 shadow-md;
   }
 
+  .nav-buttons-div {
+    @apply flex items-center gap-4;
+  }
+  .greeting {
+    @apply italic text-black/70;
+  }
   /* TRAINEE BOOKING */
   /* outer div */
   .booking-box {
-    @apply m-10 flex min-h-[400px] w-full max-w-[1080px] overflow-hidden rounded-2xl border border-border-color bg-white shadow-sm;
+    @apply mx-auto my-10 flex min-h-[400px] w-full max-w-[1080px] overflow-hidden rounded-2xl border border-border-color bg-white shadow-sm;
   }
 
   /* main layout with all section columns*/
@@ -77,7 +92,7 @@
   }
 
   .trainee-timeslot-width {
-    @apply w-[30%];
+    @apply w-[45%];
   }
 
   .session-details-col {
@@ -236,29 +251,27 @@
     @apply hover:bg-black/5 hover:text-brand-blue;
   }
   /* BOOKING FORM */
-  .booking-form-container {
+  .booking-form-container-tr {
     @apply flex w-full flex-col items-start;
   }
 
-  .form-title {
-    @apply mb-6 text-xl font-bold text-dark;
+  .form-title-tr {
+    @apply mb-6 mt-0 text-xl font-bold text-dark;
   }
 
-  .form-input-group {
+  .form-input-group-tr {
     @apply mb-2 flex flex-col gap-2;
   }
 
-  .form-label {
-    @apply text-[16px] font-bold uppercase tracking-wider text-muted;
+  .form-label-tr {
+    @apply mb-2 text-lg text-muted;
   }
 
-  .form-input {
-    @apply w-full max-w-[400px] rounded-xl border border-black/10 bg-gray-50/50 p-3 outline-none transition-all;
+  .agenda-tr {
+    @apply mb-2 w-full min-w-[380px] max-w-[600px] rounded-xl border border-black/10 bg-gray-50/50 p-3 outline-none transition-all;
     @apply focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/10;
   }
-  .agenda {
-    @apply max-w-[600px];
-  }
+
   /* volunteer flow */
   .booking-card-div {
     @apply my-2;
@@ -278,7 +291,7 @@
 
   /* bookings section */
   .bookings-col {
-    @apply flex flex-col items-start border-border-color p-8 transition-all duration-300;
+    @apply flex flex-col items-start border-border-color transition-all duration-300;
   }
 
   .all-cards-container {
@@ -366,7 +379,8 @@
   }
 
   .form-input {
-    @apply w-full cursor-pointer rounded-xl border-border-color bg-gray-50 p-3 text-gray-700 transition-all focus:text-brand-primary focus:outline-none;
+    @apply mb-2 w-full max-w-[400px] rounded-xl border border-black/10 bg-gray-50/50 p-3 outline-none transition-all;
+    @apply focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/10;
   }
 
   .form-checkbox {
@@ -374,7 +388,7 @@
   }
 
   .basket-container {
-    @apply mt-0 w-full pt-0;
+    @apply w-full py-4;
   }
 
   .basket-title {
@@ -404,7 +418,7 @@
 
   /* edit availability slots volunteer */
   .availability-outer-div {
-    @apply flex flex-col p-2;
+    @apply flex flex-col;
   }
 
   .availability-header-container {
@@ -412,11 +426,11 @@
   }
 
   .availability-header-row {
-    @apply flex w-full items-center justify-between;
+    @apply mt-2 flex w-full flex-col-reverse items-start;
   }
 
   .edit-form-title {
-    @apply text-xl font-bold text-dark;
+    @apply mb-3 text-xl font-bold text-dark;
   }
 
   .edit-form-p {
@@ -428,7 +442,7 @@
   }
 
   /* meeting booked confirmation */
-  /* this is rendered in trainee booking */
+
   .conf-page-div {
     @apply flex h-full w-full flex-col items-center justify-center bg-gray-50 p-12;
   }
@@ -442,7 +456,7 @@
   }
 
   .avatar-conf {
-    @apply h-24 w-24 shadow-sm;
+    @apply h-24 w-24 rounded-full object-cover shadow-sm;
   }
 
   .confirmation-header {
@@ -496,7 +510,7 @@
 
   @media (max-width: 1023px) {
     .booking-box {
-      @apply m-4 flex-col;
+      @apply m-4 w-auto flex-col;
     }
 
     .session-details-col,
@@ -518,7 +532,7 @@
 
   @media (max-width: 639px) {
     .booking-box {
-      @apply m-3 rounded-xl;
+      @apply m-3 w-auto rounded-xl;
     }
 
     .session-details-col,
