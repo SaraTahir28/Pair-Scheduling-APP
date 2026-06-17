@@ -108,3 +108,6 @@ Frontend runs at: http://127.0.0.1:5173
 2.`npm run cypress:open` -> For E2E tests.
 
 3.`npm run cypress:open -- --component` -> for component tests.
+
+## Walkthrough Video
+[![Loom Walkthrough](assets/loom-preview.gif)](https://www.loom.com/share/080f26e0b5b9442fa02c198c57bddde2)
