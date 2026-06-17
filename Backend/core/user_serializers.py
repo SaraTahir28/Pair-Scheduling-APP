@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied
 
 from .models import User
 
@@ -83,3 +84,19 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+    def update(self, instance, validated_data):
+        request = self.context["request"]
+
+        # Prevent privilege escalation
+        if "role" in validated_data:
+            new_role = validated_data["role"]
+
+            if new_role == "admin" and request.user.role != "admin":
+                raise PermissionDenied(
+                    "You do not have permission to assign the admin role."
+                )
+            if instance.role == "admin" and request.user.role != "admin":
+                raise PermissionDenied("You cannot modofy and admins role.")
+
+        return super().update(instance, validated_data)
