@@ -12,8 +12,9 @@ class TestUserListCreateView:
             username="emiliano",
             email="emiliano@example.com",
             password="securepass123",
-            role="trainee",
+            role="admin",
             status="active",
+            is_staff=True,
         )
         client.login(username="emiliano", password="securepass123")
 
@@ -37,8 +38,9 @@ class TestUserListCreateView:
             username="emiliano",
             email="emiliano@example.com",
             password="securepass123",
-            role="trainee",
+            role="admin",
             status="active",
+            is_staff=True,
         )
         client.login(username="emiliano", password="securepass123")
 
@@ -60,8 +62,9 @@ class TestUserListCreateView:
             username="emiliano",
             email="emiliano@example.com",
             password="securepass123",
-            role="trainee",
+            role="admin",
             status="active",
+            is_staff=True,
         )
         client.login(username="emiliano", password="securepass123")
 

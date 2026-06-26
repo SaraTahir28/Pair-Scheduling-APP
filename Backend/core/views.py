@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 # Django Core
 from django.db.models import Q
@@ -7,6 +7,7 @@ from django.utils import timezone
 # Django Rest Framework
 from rest_framework import generics, status
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -19,6 +20,7 @@ from .models import Booking, SlotRule, User
 from .serializers.available_slot_serializer import AvailableSlotSerializer
 from .serializers.booking_serializer import BookingSerializer
 from .serializers.slot_rule_serializer import SlotRuleSerializer
+from .serializers.volunteer_public_serializer import VolunteerPublicSerializer
 
 # Local Serializers
 from .user_serializers import UserSerializer
@@ -71,6 +73,7 @@ class CreateMeetingView(APIView):
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = User.objects.all().order_by("id")
     serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
 
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
@@ -151,3 +154,80 @@ class SlotRuleDeleteView(generics.DestroyAPIView):
 
         instance.deleted_at = timezone.now()
         instance.save(update_fields=["deleted_at"])
+
+
+class VolunteerByDateTimeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        start_str = request.query_params.get("start")
+        end_str = request.query_params.get("end")
+
+        if not start_str or not end_str:
+            return Response(
+                {"error": "Incorrect date/time values"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            start = datetime.fromisoformat(start_str)
+            end = datetime.fromisoformat(end_str)
+            if timezone.is_naive(start):
+                start = timezone.make_aware(start)
+            if timezone.is_naive(end):
+                end = timezone.make_aware(end)
+        except ValueError:
+            return Response(
+                {"error": "Incorrect date/time values"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if start >= end:
+            return Response(
+                {"error": "Incorrect date/time values"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Build available slots for the requested window
+        rules = SlotRule.objects.select_related("volunteer").filter(
+            deleted_at__isnull=True
+        )
+
+        user_group = request.user.group
+        if user_group:
+            rules = rules.filter(Q(group=user_group) | Q(group="all"))
+        else:
+            rules = rules.filter(group="all")
+
+        # Build slots starting from the requested start time
+        slots = build_available_slots(rules, start)
+
+        # Keep only slots inside the requested window
+        filtered_slots = []
+        for slot in slots:
+            if start <= slot.start_time < end:
+                filtered_slots.append(slot)
+        slots = filtered_slots
+
+        if not slots:
+            return Response([], status=status.HTTP_200_OK)
+
+        booked_pairs = set(
+            Booking.objects.filter(
+                volunteer_id__in=[slot.volunteer_id for slot in slots],
+                start_time__in=[slot.start_time for slot in slots],
+            ).values_list("volunteer_id", "start_time")
+        )
+
+        slots = exclude_booked_slots(slots, booked_pairs)
+
+        # extract unique volunteers from remaining slots
+        volunteer_ids = {slot.volunteer_id for slot in slots}
+
+        volunteers = User.objects.filter(
+            id__in=volunteer_ids,
+            role="volunteer",
+        )
+
+        serializer = VolunteerPublicSerializer(volunteers, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
