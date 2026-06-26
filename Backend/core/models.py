@@ -75,12 +75,15 @@ class SlotRule(models.Model):
         ]
 
     def occurrence_start_times(self):
+        exceptions = {e.date for e in self.exceptions.all()}
+
         if self.repeat_until is None:
-            return [self.start_time]
+            return [] if self.start_time.date() in exceptions else [self.start_time]
         result = []
         current = self.start_time
         while current.date() <= self.repeat_until:
-            result.append(current)
+            if current.date() not in exceptions:
+                result.append(current)
             current += timedelta(weeks=1)
         return result
 
@@ -145,3 +148,18 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"session {self.start_time} | {self.trainee} and {self.volunteer}"
+
+
+class SlotRuleException(models.Model):
+    slot_rule = models.ForeignKey(
+        SlotRule,
+        on_delete=models.CASCADE,
+        related_name="exceptions",
+    )
+    date = models.DateField()
+
+    class Meta:
+        unique_together = ("slot_rule", "date")
+
+    def __str__(self):
+        return f"Exception for {self.slot_rule_id} on {self.date}"

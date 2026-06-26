@@ -5,6 +5,7 @@ from .views import (
     CreateMeetingView,
     CurrentProfileView,
     SlotRuleDeleteView,
+    SlotRuleExceptionCreateView,
     SlotRuleListCreateView,
     UserDetailView,
     UserListCreateView,
@@ -24,4 +25,9 @@ urlpatterns = [
         name="slot-rule-list-create",
     ),
     path("slot-rules/<int:pk>/", SlotRuleDeleteView.as_view(), name="slot-rule-delete"),
+    path(
+        "slot-rule-exceptions/",
+        SlotRuleExceptionCreateView.as_view(),
+        name="slot-rule-exception-create",
+    ),
 ]
