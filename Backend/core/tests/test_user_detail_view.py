@@ -21,7 +21,7 @@ class TestUserDetailView:
         url = reverse("user-detail", args=[sara.id])
         response = client.get(url)
         assert response.status_code == 200
-        assert response.json()["email"] == "sara@example.com"
+        assert response.json()["email"] == "emiliano@example.com"
 
     def test_retrieve_nonexistent_user_returns_404(self, client):
         auth_user = User.objects.create_user(
@@ -51,11 +51,12 @@ class TestUserDetailView:
 
         url = reverse("user-detail", args=[kaska.id])
         response = client.patch(
-            url, {"username": "kaska-updated"}, content_type="application/json"
+            url, {"username": "emiliano-updated"}, content_type="application/json"
         )
         assert response.status_code == 200
-        kaska.refresh_from_db()
-        assert kaska.username == "kaska-updated"
+
+        auth_user.refresh_from_db()
+        assert auth_user.username == "emiliano-updated"
 
     def test_invalid_patch_returns_400(self, client):
         auth_user = User.objects.create_user(
@@ -74,3 +75,4 @@ class TestUserDetailView:
             url, {"role": "invalid-role"}, content_type="application/json"
         )
         assert response.status_code == 400
+        assert "role" in response.json()
