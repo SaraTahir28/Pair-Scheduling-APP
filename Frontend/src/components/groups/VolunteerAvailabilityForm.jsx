@@ -135,7 +135,14 @@ const VolunteerAvailabilityForm = ({
 
       <div className="booking-form-container">
         <form onSubmit={checkInputsValid}>
-          <h2 className="form-title">Select your availability</h2>
+          <h2 className="form-title">
+            {mode === "onboarding"
+              ? "Set up your initial availability"
+              : "Add new slots"}
+          </h2>
+          <p className="pb-4 text-muted">
+            Let&apos;s start by selecting your availability for 1:1 sessions.
+          </p>
           <div className="form-input-group-row">
             <input
               id="recurring"
