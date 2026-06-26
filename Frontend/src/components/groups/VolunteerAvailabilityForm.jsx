@@ -74,6 +74,33 @@ const VolunteerAvailabilityForm = ({
           timeDifferenceInMs = newSlotTimeInMs - oldSlotTimeInMs;
         }
         const slotIsTooClose = timeDifferenceInMs < 3600000;
+
+        const oldSlotDate = new Date(oldSlot.start_time);
+        const newSlotDate = new Date(timeWithDate);
+        const isSameWeekday = oldSlotDate.getDay() === newSlotDate.getDay();
+        const checkMinutesDifference = Math.abs(
+          oldSlotDate.getHours() * 60 +
+            oldSlotDate.getMinutes() -
+            (newSlotDate.getHours() * 60 + newSlotDate.getMinutes())
+        );
+        if (oldSlot.regular && !isRecurring) {
+          return (
+            isSameWeekday &&
+            checkMinutesDifference < 60 &&
+            newSlotDate >= oldSlotDate &&
+            newSlotDate <= new Date(oldSlot.repeat_until)
+          );
+        }
+
+        if (isRecurring && !oldSlot.regular) {
+          return (
+            isSameWeekday &&
+            checkMinutesDifference < 60 &&
+            oldSlotDate >= newSlotDate &&
+            oldSlotDate <= new Date(repeatUntil)
+          );
+        }
+
         return slotIsTooClose;
       });
     if (checkForOverlapSlot) {
