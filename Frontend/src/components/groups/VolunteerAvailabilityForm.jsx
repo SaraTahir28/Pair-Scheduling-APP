@@ -42,6 +42,72 @@ const VolunteerAvailabilityForm = ({
       startTime
     ).toISOString();
 
+    const checkForDuplicateSlot =
+      addedSlots &&
+      addedSlots.some((oldSlot) => {
+        const isSameStartDateAndTime = oldSlot.start_time === timeWithDate;
+
+        if (isRecurring) {
+          const isOldRecurring = oldSlot.regular === true;
+          const isSameRepeatUntil = oldSlot.repeat_until === repeatUntil;
+
+          return isSameStartDateAndTime && isOldRecurring && isSameRepeatUntil;
+        } else {
+          return isSameStartDateAndTime;
+        }
+      });
+
+    if (checkForDuplicateSlot) {
+      alert("This slot is already added.");
+      return;
+    }
+
+    const checkForOverlapSlot =
+      addedSlots &&
+      addedSlots.some((oldSlot) => {
+        const oldSlotTimeInMs = new Date(oldSlot.start_time).getTime();
+        const newSlotTimeInMs = new Date(timeWithDate).getTime();
+        let timeDifferenceInMs;
+        if (oldSlotTimeInMs > newSlotTimeInMs) {
+          timeDifferenceInMs = oldSlotTimeInMs - newSlotTimeInMs;
+        } else {
+          timeDifferenceInMs = newSlotTimeInMs - oldSlotTimeInMs;
+        }
+        const slotIsTooClose = timeDifferenceInMs < 3600000;
+
+        const oldSlotDate = new Date(oldSlot.start_time);
+        const newSlotDate = new Date(timeWithDate);
+        const isSameWeekday = oldSlotDate.getDay() === newSlotDate.getDay();
+        const checkMinutesDifference = Math.abs(
+          oldSlotDate.getHours() * 60 +
+            oldSlotDate.getMinutes() -
+            (newSlotDate.getHours() * 60 + newSlotDate.getMinutes())
+        );
+        if (oldSlot.regular && !isRecurring) {
+          return (
+            isSameWeekday &&
+            checkMinutesDifference < 60 &&
+            newSlotDate >= oldSlotDate &&
+            newSlotDate <= new Date(oldSlot.repeat_until)
+          );
+        }
+
+        if (isRecurring && !oldSlot.regular) {
+          return (
+            isSameWeekday &&
+            checkMinutesDifference < 60 &&
+            oldSlotDate >= newSlotDate &&
+            oldSlotDate <= new Date(repeatUntil)
+          );
+        }
+
+        return slotIsTooClose;
+      });
+    if (checkForOverlapSlot) {
+      alert("Your sessions must be at least one hour apart.");
+      return;
+    }
+
     const slotsObj = {
       volunteer_id: volunteerId,
       regular: isRecurring,
