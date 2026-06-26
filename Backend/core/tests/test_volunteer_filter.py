@@ -147,3 +147,67 @@ class TestVolunteerByDateTimeView:
 
         assert response.status_code == 200
         assert response.json() == []
+
+    def test_unauthenticated_user_gets_403(self, client):
+        url = reverse("volunteer-filter")
+        response = client.get(
+            url, {"start": self.start.isoformat(), "end": self.end.isoformat()}
+        )
+        assert response.status_code == 403
+
+    def test_trainee_can_access_filter(self, client):
+        trainee = User.objects.create_user(
+            username="trainee",
+            email="t@example.com",
+            password="pass123",
+            role="trainee",
+        )
+        client.login(username="trainee", password="pass123")
+
+        url = reverse("volunteer-filter")
+        response = client.get(
+            url, {"start": self.start.isoformat(), "end": self.end.isoformat()}
+        )
+        assert response.status_code == 200
+
+    def test_volunteer_filter_does_not_expose_sensitive_fields(self, client):
+        admin = User.objects.create_user(
+            username="admin",
+            email="admin@example.com",
+            password="pass123",
+            role="admin",
+        )
+        client.login(username="admin", password="pass123")
+
+        vol = User.objects.create(
+            username="vol",
+            email="vol@example.com",
+            role="volunteer",
+            status="active",
+        )
+
+        SlotRule.objects.create(
+            volunteer=vol,
+            start_time=self.start,
+            repeat_until=None,
+            group="all",
+        )
+
+        url = reverse("volunteer-filter")
+        response = client.get(
+            url,
+            {"start": self.start.isoformat(), "end": self.end.isoformat()},
+        )
+
+        data = response.json()[0]
+
+        assert "last_login" not in data
+        assert "status" not in data
+        assert "role" not in data
+        assert "date_joined" not in data
+        assert "is_staff" not in data
+        assert "is_superuser" not in data
+
+        assert "email" in data
+        assert "first_name" in data
+        assert "last_name" in data
