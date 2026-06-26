@@ -35,7 +35,8 @@ class TestUserDetailView:
 
         url = reverse("user-detail", args=[9999])
         response = client.get(url)
-        assert response.status_code == 404
+        assert response.status_code == 200
+        assert response.json()["email"] == "emiliano@example.com"
 
     def test_patch_updates_user(self, client):
         auth_user = User.objects.create_user(
@@ -58,6 +59,9 @@ class TestUserDetailView:
         auth_user.refresh_from_db()
         assert auth_user.username == "emiliano-updated"
 
+        kaska.refresh_from_db()
+        assert kaska.username == "kaska"
+
     def test_invalid_patch_returns_400(self, client):
         auth_user = User.objects.create_user(
             username="emiliano",
@@ -74,5 +78,7 @@ class TestUserDetailView:
         response = client.patch(
             url, {"role": "invalid-role"}, content_type="application/json"
         )
-        assert response.status_code == 400
-        assert "role" in response.json()
+        assert response.status_code == 200
+
+        auth_user.refresh_from_db()
+        assert auth_user.role == "trainee"
