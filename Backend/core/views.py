@@ -21,6 +21,7 @@ from .serializers.available_slot_serializer import AvailableSlotSerializer
 from .serializers.booking_serializer import BookingSerializer
 from .serializers.slot_rule_exception_serializer import SlotRuleExceptionSerializer
 from .serializers.slot_rule_serializer import SlotRuleSerializer
+from .serializers.volunteer_public_serializer import VolunteerPublicSerializer
 
 # Local Serializers
 from .user_serializers import UserSerializer
@@ -231,5 +232,5 @@ class VolunteerByDateTimeView(APIView):
             role="volunteer",
         )
 
-        serializer = UserSerializer(volunteers, many=True)
+        serializer = VolunteerPublicSerializer(volunteers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
