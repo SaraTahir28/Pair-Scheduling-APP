@@ -10,12 +10,19 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
   const [slotRulesInBasket, setSlotRulesInBasket] = useState([]);
 
   useEffect(() => {
-    api
-      .get("/api/slot-rules/")
-      .then((res) => {
-        setOriginalSlotRulesFromApi(res.data);
-      })
-      .catch((err) => console.log("Error fetching slots:", err));
+    const fetchSlots = () => {
+      api
+        .get("/api/slot-rules/")
+        .then((res) => {
+          setOriginalSlotRulesFromApi(res.data);
+        })
+        .catch((err) => console.log("Error fetching slots:", err));
+    };
+
+    fetchSlots();
+    const pollInterval = setInterval(fetchSlots, 30000);
+
+    return () => clearInterval(pollInterval);
   }, [volunteerId]);
 
   const startEditing = () => {
