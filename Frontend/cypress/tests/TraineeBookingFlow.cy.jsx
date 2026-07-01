@@ -34,9 +34,7 @@ const mountAtRoute = (path) => {
 };
 
 describe("TraineeBookingFlow URL validation", () => {
-  const futureDate = new Date();
-  futureDate.setDate(futureDate.getDate() + 2);
-  futureDate.setHours(9, 0, 0, 0);
+  const futureDate = new Date(Date.UTC(2026, 12, 1, 9, 0, 0));
   const advertisedUtc = futureDate.toISOString();
 
   beforeEach(() => {
