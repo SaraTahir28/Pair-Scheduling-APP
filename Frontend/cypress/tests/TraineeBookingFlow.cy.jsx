@@ -34,6 +34,29 @@ const mountAtRoute = (path) => {
 };
 
 describe("TraineeBookingFlow URL validation", () => {
+  const futureDate = new Date(Date.UTC(2026, 12, 1, 9, 0, 0));
+  const advertisedUtc = futureDate.toISOString();
+
+  beforeEach(() => {
+    cy.intercept("GET", "**/api/available-slots/", {
+      statusCode: 200,
+      body: [
+        {
+          volunteer_id: 1,
+          slot_rule_id: 1,
+          name: "Test Volunteer",
+          img: "",
+          start_time: advertisedUtc,
+        },
+      ],
+    }).as("availableSlots");
+
+    cy.intercept("POST", "**/api/create-meeting/", {
+      statusCode: 200,
+      body: {},
+    }).as("createMeeting");
+  });
+
   it("renders normally for no date or time entered yet", () => {
     mountAtRoute("/trainee-booking/");
     cy.get("[role='alert']").should("not.exist");
@@ -71,31 +94,9 @@ describe("TraineeBookingFlow URL validation", () => {
   });
 
   it("shows slots in local time and submits the original UTC", () => {
-    const advertisedUtc = "2026-07-01T09:00:00Z";
     const slotStart = new Date(advertisedUtc);
     const expectedLocalDate = formatLocalDate(slotStart);
     const expectedLocalTime = formatLocalTime(slotStart);
-
-    cy.intercept("GET", "**/api/available-slots/", {
-      statusCode: 200,
-      body: [
-        {
-          volunteer_id: 1,
-          slot_rule_id: 1,
-          name: "Test Volunteer",
-          img: "",
-          start_time: advertisedUtc,
-          end_time: new Date(
-            slotStart.getTime() + 60 * 60 * 1000
-          ).toISOString(),
-        },
-      ],
-    }).as("availableSlots");
-
-    cy.intercept("POST", "**/api/create-meeting/", {
-      statusCode: 200,
-      body: {},
-    }).as("createMeeting");
 
     mountAtRoute(`/trainee-booking/${expectedLocalDate}`);
     cy.wait("@availableSlots");

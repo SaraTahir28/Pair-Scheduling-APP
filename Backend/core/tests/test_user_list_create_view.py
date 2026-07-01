@@ -20,7 +20,7 @@ class TestUserListCreateView:
         user1 = User.objects.create(username="a", email="a@example.com")
         user2 = User.objects.create(username="b", email="b@example.com")
 
-        url = reverse("user-list-create")
+        url = reverse("user-list")
         response = client.get(url)
 
         assert response.status_code == 200
@@ -42,7 +42,7 @@ class TestUserListCreateView:
         )
         client.login(username="emiliano", password="securepass123")
 
-        url = reverse("user-list-create")
+        url = reverse("user-list")
         payload = {
             "username": "sara",
             "email": "sara@example.com",
@@ -65,7 +65,7 @@ class TestUserListCreateView:
         )
         client.login(username="emiliano", password="securepass123")
 
-        url = reverse("user-list-create")
+        url = reverse("user-list")
         payload = {
             "username": "",
             "email": "not-an-email",
