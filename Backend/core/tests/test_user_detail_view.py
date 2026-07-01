@@ -23,7 +23,7 @@ class TestUserDetailView:
         assert response.status_code == 200
         assert response.json()["email"] == "emiliano@example.com"
 
-    def test_retrieve_nonexistent_user_returns_404(self, client):
+    def test_retrieve_nonexistent_user_returns_logged_in_user(self, client):
         auth_user = User.objects.create_user(
             username="emiliano",
             email="emiliano@example.com",
