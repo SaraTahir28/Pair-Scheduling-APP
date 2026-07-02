@@ -2,7 +2,7 @@
 
 from django.conf import settings
 from django.contrib.auth import login
-from django.http import Http404
+from django.http import HttpResponseNotFound
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
@@ -14,13 +14,13 @@ from core.models import User
 
 
 @method_decorator(csrf_exempt, name="dispatch")
-class TestLoginView(APIView):
+class DevLoginView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
 
     def post(self, request):
-        if not settings.DEBUG:
-            raise Http404
+        if not getattr(settings, "ENABLE_TEST_LOGIN", False):
+            return HttpResponseNotFound()
 
         email = request.data.get("email")
         if not email:
