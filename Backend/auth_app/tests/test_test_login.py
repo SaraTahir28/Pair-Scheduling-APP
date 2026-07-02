@@ -41,3 +41,16 @@ class TestTestLoginEndpoint:
     def test_returns_200_when_enabled(self, api_client):
         response = api_client.post("/auth/test-login/", {"email": "sara@example.com"})
         assert response.status_code == 200
+
+    @override_settings(ENABLE_TEST_LOGIN=False)
+    def test_disabled_endpoint_does_not_create_user(
+        self, api_client, django_user_model
+    ):
+        api_client.post("/auth/test-login/", {"email": "evil@example.com"})
+        assert not django_user_model.objects.filter(email="evil@example.com").exists()
+
+    @override_settings(ENABLE_TEST_LOGIN=False)
+    def test_disabled_endpoint_does_not_create_session(self, api_client):
+        api_client.post("/auth/test-login/", {"email": "evil@example.com"})
+        who = api_client.get("/auth/user/")
+        assert who.status_code in (401, 403)
