@@ -51,27 +51,27 @@ describe("TraineeBookingFlow URL validation", () => {
   });
 
   it("hides the booking flow for an invalid time", () => {
-    mountAtRoute("/trainee-booking/2026-04-01/25:67");
+    mountAtRoute("/trainee-booking/2026-12-01/25:67");
     cy.get(".booking-form-container").should("not.exist");
   });
 
   it("renders normally for a valid date", () => {
-    mountAtRoute("/trainee-booking/2026-04-01");
+    mountAtRoute("/trainee-booking/2026-12-01");
     cy.get("[role='alert']").should("not.exist");
   });
 
   it("shows an error for a time that doesn't exist", () => {
-    mountAtRoute("/trainee-booking/2026-01-01/25:67");
+    mountAtRoute("/trainee-booking/2026-12-01/25:67");
     cy.get("[role='alert']").should("be.visible");
   });
 
   it("renders normally for a valid date and time", () => {
-    mountAtRoute("/trainee-booking/2026-04-01/09:00");
+    mountAtRoute("/trainee-booking/2026-12-01/09:00");
     cy.get("[role='alert']").should("not.exist");
   });
 
   it("shows slots in local time and submits the original UTC", () => {
-    const advertisedUtc = "2026-07-01T09:00:00Z";
+    const advertisedUtc = "2026-12-01T09:00:00Z";
     const slotStart = new Date(advertisedUtc);
     const expectedLocalDate = formatLocalDate(slotStart);
     const expectedLocalTime = formatLocalTime(slotStart);
@@ -98,6 +98,7 @@ describe("TraineeBookingFlow URL validation", () => {
     }).as("createMeeting");
 
     mountAtRoute(`/trainee-booking/${expectedLocalDate}`);
+
     cy.wait("@availableSlots");
 
     cy.contains(".btn-time-slot", expectedLocalTime)
