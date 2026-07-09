@@ -14,7 +14,6 @@ class TestUserListCreateView:
             password="securepass123",
             role="trainee",
             status="active",
-            is_staff=True,
         )
         client.login(username="emiliano", password="securepass123")
 
