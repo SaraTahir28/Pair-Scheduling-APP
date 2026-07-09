@@ -34,8 +34,8 @@ const mountAtRoute = (path) => {
 };
 
 describe("TraineeBookingFlow URL validation", () => {
-  const futureDate = new Date(Date.UTC(2026, 12, 1, 9, 0, 0));
-  const advertisedUtc = futureDate.toISOString();
+  const futureDate = new Date();
+  futureDate.setDate(futureDate.getDate() + 7);
 
   beforeEach(() => {
     cy.intercept("GET", "**/api/available-slots/", {
@@ -46,7 +46,7 @@ describe("TraineeBookingFlow URL validation", () => {
           slot_rule_id: 1,
           name: "Test Volunteer",
           img: "",
-          start_time: advertisedUtc,
+          start_time: futureDate,
         },
       ],
     }).as("availableSlots");
@@ -94,7 +94,7 @@ describe("TraineeBookingFlow URL validation", () => {
   });
 
   it("shows slots in local time and submits the original UTC", () => {
-    const slotStart = new Date(advertisedUtc);
+    const slotStart = new Date(futureDate);
     const expectedLocalDate = formatLocalDate(slotStart);
     const expectedLocalTime = formatLocalTime(slotStart);
 
