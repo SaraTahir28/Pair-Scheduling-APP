@@ -36,6 +36,7 @@ const mountAtRoute = (path) => {
 describe("TraineeBookingFlow URL validation", () => {
   const futureDate = new Date();
   futureDate.setDate(futureDate.getDate() + 7);
+  futureDate.setSeconds(0, 0);
 
   beforeEach(() => {
     cy.intercept("GET", "**/api/available-slots/", {
