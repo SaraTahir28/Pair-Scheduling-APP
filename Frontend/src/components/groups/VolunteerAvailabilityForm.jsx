@@ -101,6 +101,15 @@ const VolunteerAvailabilityForm = ({
           );
         }
 
+        if (oldSlot.regular && isRecurring) {
+          const oldRepeatUntil = new Date(oldSlot.repeat_until);
+          const newRepeatUntil = new Date(repeatUntil);
+          const rangesOverlap =
+            oldSlotDate <= newRepeatUntil && newSlotDate <= oldRepeatUntil;
+
+          return isSameWeekday && checkMinutesDifference < 60 && rangesOverlap;
+        }
+
         return slotIsTooClose;
       });
     if (checkForOverlapSlot) {
