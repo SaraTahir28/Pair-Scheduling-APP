@@ -10,6 +10,8 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
   const [slotRulesInBasket, setSlotRulesInBasket] = useState([]);
 
   useEffect(() => {
+    if (isEditing) return;
+
     const fetchSlots = () => {
       api
         .get("/api/slot-rules/")
@@ -23,7 +25,7 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
     const pollInterval = setInterval(fetchSlots, 30000);
 
     return () => clearInterval(pollInterval);
-  }, [volunteerId]);
+  }, [volunteerId, isEditing]);
 
   const startEditing = () => {
     setSlotRulesInBasket(originalSlotRulesFromApi);
