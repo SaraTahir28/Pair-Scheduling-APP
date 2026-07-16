@@ -13,25 +13,27 @@ class SlotRuleExceptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SlotRuleException
-        fields = ["id", "slot_rule_id", "date"]
+        fields = ["id", "slot_rule_id", "start_time"]
         read_only_fields = ["id"]
 
     def validate(self, data):
         user = self.context["request"].user
         rule = data["slot_rule"]
-        date = data["date"]
+        start_time = data["start_time"]
 
         if rule.volunteer_id != user.id:
             raise PermissionDenied("You do not own this slot rule.")
 
-        valid_dates = {dt.date() for dt in rule.occurrence_start_times()}
-        if date not in valid_dates:
-            raise ValidationError({"date": "This date is not part of the slot rule."})
+        valid_times = set(rule.occurrence_start_times())
+        if start_time not in valid_times:
+            raise ValidationError(
+                {"start_time": "This start_time is not part of the slot rule."}
+            )
 
         if Booking.objects.filter(
             volunteer=rule.volunteer,
-            start_time__date=date,
+            start_time=start_time,
         ).exists():
-            raise ValidationError({"date": "Cannot delete a booked slot."})
+            raise ValidationError({"start_time": "Cannot delete a booked slot."})
 
         return data
