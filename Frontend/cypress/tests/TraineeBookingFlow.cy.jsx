@@ -71,8 +71,10 @@ describe("TraineeBookingFlow URL validation", () => {
   });
 
   it("shows slots in local time and submits the original UTC", () => {
-    const advertisedUtc = "2026-07-01T09:00:00Z";
-    const slotStart = new Date(advertisedUtc);
+    const slotStart = new Date();
+    slotStart.setDate(slotStart.getDate() + 7);
+    slotStart.setSeconds(0, 0);
+    const advertisedUtc = slotStart.toISOString();
     const expectedLocalDate = formatLocalDate(slotStart);
     const expectedLocalTime = formatLocalTime(slotStart);
 
