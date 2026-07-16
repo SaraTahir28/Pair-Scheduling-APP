@@ -24,7 +24,11 @@ const AddingSlotsBasket = ({
 
       <div className="basket-list">
         {(!addedSlots || addedSlots.length === 0) && (
-          <p>Your basket is empty.</p>
+          <p>
+            {hasEverHadItems
+              ? "You have removed all slots from your calendar."
+              : "Your basket is empty."}
+          </p>
         )}
 
         {addedSlots &&
