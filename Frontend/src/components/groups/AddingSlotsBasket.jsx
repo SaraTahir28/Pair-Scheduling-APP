@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { ActionBtn } from "../elements/Button";
 import { X } from "lucide-react";
 import { formatLocalDate, formatLocalTime } from "../../utilities/dateTime";
@@ -12,16 +11,9 @@ const AddingSlotsBasket = ({
   addedSlots,
   removeSlot,
   saveAll,
+  hasEverHadItems = false,
   title = "Current selection to save",
 }) => {
-  const [hasEverHadItems, setHasEverHadItems] = useState(
-    addedSlots && addedSlots.length > 0
-  );
-
-  if (addedSlots && addedSlots.length > 0 && !hasEverHadItems) {
-    setHasEverHadItems(true);
-  }
-
   if ((!addedSlots || addedSlots.length === 0) && !hasEverHadItems) {
     return null;
   }

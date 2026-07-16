@@ -8,6 +8,7 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [originalSlotRulesFromApi, setOriginalSlotRulesFromApi] = useState([]);
   const [slotRulesInBasket, setSlotRulesInBasket] = useState([]);
+  const [hasEverHadItems, setHasEverHadItems] = useState(false);
 
   useEffect(() => {
     api
@@ -20,12 +21,14 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
 
   const startEditing = () => {
     setSlotRulesInBasket(originalSlotRulesFromApi);
+    setHasEverHadItems(originalSlotRulesFromApi.length > 0);
     setIsEditing(true);
   };
 
   const addSlotToBasket = (newSlot) => {
     const updatedBasket = [...slotRulesInBasket, newSlot];
     setSlotRulesInBasket(updatedBasket);
+    setHasEverHadItems(true);
   };
 
   const removeSlotFromBasket = (indexToRemove) => {
@@ -101,6 +104,7 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
               addedSlots={slotRulesInBasket}
               removeSlot={removeSlotFromBasket}
               saveAll={sendNewSlotRulesToDb}
+              asEverHadItems={hasEverHadItems}
             />
           </div>
         </>
