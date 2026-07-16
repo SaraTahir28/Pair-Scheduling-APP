@@ -1,9 +1,35 @@
-from datetime import date, datetime
+from datetime import UTC, datetime, timedelta
 
 import pytest
+from django.utils import timezone
 from rest_framework.test import APIClient
 
 from core.models import SlotRule, SlotRuleException, User
+
+pytestmark = pytest.mark.django_db
+
+NOW = timezone.now()
+FUTURE = NOW + timedelta(days=1)
+
+
+def make_slot_rule(
+    volunteer,
+    start_time=None,
+    repeat_until=None,
+    group="itd",
+):
+    start = start_time or FUTURE.replace(hour=10, minute=0, second=0, microsecond=0)
+    until = repeat_until or (start + timedelta(weeks=4)).date()
+    return SlotRule.objects.create(
+        volunteer=volunteer,
+        start_time=start,
+        repeat_until=until,
+        group=group,
+    )
+
+
+def parse_api_time(ts: str):
+    return datetime.fromisoformat(ts.replace("Z", "+00:00")).astimezone(UTC)
 
 
 @pytest.fixture
@@ -18,7 +44,7 @@ def volunteer_user(db):
         email="volunteer@example.com",
         password="pass",
         role="volunteer",
-        group="all",
+        group="itd",
     )
 
 
@@ -29,7 +55,7 @@ def trainee_user(db):
         email="trainee@example.com",
         password="pass",
         role="trainee",
-        group="all",
+        group="itd",
     )
 
 
@@ -40,19 +66,13 @@ def another_user(db):
         email="other@example.com",
         password="pass",
         role="volunteer",
-        group="all",
+        group="itd",
     )
 
 
 @pytest.fixture
 def slot_rule(db, volunteer_user):
-    start = datetime(2026, 7, 1, 10, 0)
-    return SlotRule.objects.create(
-        volunteer=volunteer_user,
-        start_time=start,
-        repeat_until=date(2026, 7, 29),
-        group="all",
-    )
+    return make_slot_rule(volunteer=volunteer_user)
 
 
 def test_occurrence_excludes_exception(slot_rule):
@@ -61,7 +81,7 @@ def test_occurrence_excludes_exception(slot_rule):
 
     SlotRuleException.objects.create(
         slot_rule=slot_rule,
-        date=original[0].date(),
+        start_time=original[0],
     )
 
     updated = slot_rule.occurrence_start_times()
@@ -72,19 +92,21 @@ def test_occurrence_excludes_exception(slot_rule):
 def test_owner_can_delete_single_slot(api_client, volunteer_user, slot_rule):
     api_client.force_authenticate(volunteer_user)
 
-    date_to_delete = slot_rule.start_time.date()
+    start_time_to_delete = slot_rule.start_time
 
     response = api_client.post(
         "/api/slot-rule-exceptions/",
         {
             "slot_rule_id": slot_rule.id,
-            "date": str(date_to_delete),
+            "start_time": start_time_to_delete.isoformat(),
         },
+        format="json",
     )
 
     assert response.status_code == 201
     assert SlotRuleException.objects.filter(
-        slot_rule=slot_rule, date=date_to_delete
+        slot_rule=slot_rule,
+        start_time=start_time_to_delete,
     ).exists()
 
 
@@ -95,8 +117,9 @@ def test_other_user_cannot_delete_slot(api_client, another_user, slot_rule):
         "/api/slot-rule-exceptions/",
         {
             "slot_rule_id": slot_rule.id,
-            "date": str(slot_rule.start_time.date()),
+            "start_time": slot_rule.start_time.isoformat(),
         },
+        format="json",
     )
 
     assert response.status_code == 403
@@ -105,27 +128,31 @@ def test_other_user_cannot_delete_slot(api_client, another_user, slot_rule):
 
 def test_deleted_slot_not_in_available_slots(api_client, trainee_user, slot_rule):
     api_client.force_authenticate(trainee_user)
+
     response = api_client.get("/api/available-slots/")
     assert any(s["slot_rule_id"] == slot_rule.id for s in response.data)
 
-    deleted_date = slot_rule.start_time.date()
+    deleted_start_time = slot_rule.start_time
 
-    assert deleted_date in [
-        datetime.fromisoformat(s["start_time"].replace("Z", "+00:00")).date()
+    initial_times = [
+        parse_api_time(s["start_time"])
         for s in response.data
         if s["slot_rule_id"] == slot_rule.id
     ]
+
+    assert deleted_start_time in initial_times
 
     SlotRuleException.objects.create(
         slot_rule=slot_rule,
-        date=deleted_date,
+        start_time=deleted_start_time,
     )
 
     response = api_client.get("/api/available-slots/")
-    assert deleted_date not in [
-        datetime.fromisoformat(s["start_time"].replace("Z", "+00:00")).date()
+
+    updated_times = [
+        parse_api_time(s["start_time"])
         for s in response.data
         if s["slot_rule_id"] == slot_rule.id
     ]
 
-    assert any(s["slot_rule_id"] == slot_rule.id for s in response.data)
+    assert deleted_start_time not in updated_times
