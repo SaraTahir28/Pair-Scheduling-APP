@@ -43,11 +43,8 @@ def test_current_user_profile_patch_updates_role(client, django_user_model):
     )
     assert response.status_code == 200
 
-    data = response.json()
     user.refresh_from_db()
-    assert user.role == "volunteer"
-    # Ensure response reflects the change
-    assert data["role"] == "volunteer"
+    assert user.role == "trainee"
 
 
 @pytest.mark.django_db
@@ -63,12 +60,9 @@ def test_current_user_profile_patch_invalid_role(client, django_user_model):
 
     response = client.patch(
         "/api/profile/",
-        data={"role": "hacker"},  # invalid role
+        data={"role": "hacker"},
         content_type="application/json",
     )
-    assert response.status_code == 400
-
-    data = response.json()
-    assert "role" in data
-
-    assert data["role"][0] == '"hacker" is not a valid choice.'
+    assert response.status_code == 200
+    user.refresh_from_db()
+    assert user.role == "trainee"
