@@ -7,6 +7,7 @@ from .views import (
     SlotRuleDeleteView,
     SlotRuleListCreateView,
     UserListCreateView,
+    VolunteerByDateTimeView,
 )
 
 # API routes for calendar-related actions
@@ -22,4 +23,7 @@ urlpatterns = [
         name="slot-rule-list-create",
     ),
     path("slot-rules/<int:pk>/", SlotRuleDeleteView.as_view(), name="slot-rule-delete"),
+    path(
+        "volunteers/filter/", VolunteerByDateTimeView.as_view(), name="volunteer-filter"
+    ),
 ]
