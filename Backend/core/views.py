@@ -16,9 +16,10 @@ from core.services.available_slots import build_available_slots, exclude_booked_
 from .google_calendar_service import create_google_meeting
 
 # Local Models & Services
-from .models import Booking, SlotRule, User
+from .models import Booking, SlotRule, SlotRuleException, User
 from .serializers.available_slot_serializer import AvailableSlotSerializer
 from .serializers.booking_serializer import BookingSerializer
+from .serializers.slot_rule_exception_serializer import SlotRuleExceptionSerializer
 from .serializers.slot_rule_serializer import SlotRuleSerializer
 
 # Local Serializers
@@ -84,8 +85,10 @@ class CurrentProfileView(generics.RetrieveUpdateAPIView):
 
 class AvailableSlotsView(APIView):
     def get(self, request):
-        rules = SlotRule.objects.select_related("volunteer").filter(
-            deleted_at__isnull=True
+        rules = (
+            SlotRule.objects.select_related("volunteer")
+            .prefetch_related("exceptions")
+            .filter(deleted_at__isnull=True)
         )
 
         user_group = request.user.group
@@ -148,3 +151,8 @@ class SlotRuleDeleteView(generics.DestroyAPIView):
 
         instance.deleted_at = timezone.now()
         instance.save(update_fields=["deleted_at"])
+
+
+class SlotRuleExceptionCreateView(generics.CreateAPIView):
+    queryset = SlotRuleException.objects.all()
+    serializer_class = SlotRuleExceptionSerializer
