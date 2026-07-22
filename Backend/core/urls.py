@@ -7,7 +7,6 @@ from .views import (
     SlotRuleDeleteView,
     SlotRuleExceptionCreateView,
     SlotRuleListCreateView,
-    UserDetailView,
     UserListCreateView,
 )
 
@@ -15,8 +14,7 @@ from .views import (
 urlpatterns = [
     path("create-meeting/", CreateMeetingView.as_view(), name="create_meeting"),
     # API routes for Users in database Endpoints
-    path("users/", UserListCreateView.as_view(), name="user-list-create"),
-    path("users/<int:pk>/", UserDetailView.as_view(), name="user-detail"),
+    path("users/", UserListCreateView.as_view(), name="user-list"),
     path("available-slots/", AvailableSlotsView.as_view(), name="available-slots"),
     path("profile/", CurrentProfileView.as_view(), name="current-profile"),
     path(
