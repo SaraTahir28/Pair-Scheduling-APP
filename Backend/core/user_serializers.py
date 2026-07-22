@@ -26,8 +26,12 @@ class UserSerializer(serializers.ModelSerializer):
 
         read_only_fields = [
             "id",
+            "role",
+            "group",
+            "status",
             "last_login",
             "date_joined",
+            "is_active",
             "is_staff",
             "is_superuser",
         ]
