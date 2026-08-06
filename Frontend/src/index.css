@@ -250,6 +250,14 @@
     @apply mt-2 inline-flex items-center gap-2 rounded-lg border border-border-color p-2 text-main transition-all;
     @apply hover:bg-black/5 hover:text-brand-blue;
   }
+  .tab-btn-with-icon {
+    @apply mt-2 inline-flex w-full items-center gap-3 border-t border-border-color px-2 py-4 text-main transition-all;
+    @apply cursor-pointer rounded-b-lg hover:bg-brand-blue/5 hover:text-brand-blue;
+  }
+  .tab-btn-with-icon-active {
+    @apply mt-2 inline-flex w-full items-center gap-3 border-t border-border-color px-2 py-4 text-main transition-all;
+    @apply pointer-events-none cursor-default bg-brand-blue/5;
+  }
   /* BOOKING FORM */
   .booking-form-container-tr {
     @apply flex w-full flex-col items-start;

@@ -139,15 +139,13 @@ const VolunteerDash = () => {
         <SessionDetailsVolunteer
           user={activeVolunteer}
           onManageAvailabilityClick={() => setShowManager(true)}
+          showManageButton={hasUserSetAvailability}
+          isManageAvailabilityTabActive={showManager}
         />
       </div>
       <div className="bookings-col">
         {!hasUserSetAvailability && (
           <div className="">
-            <p className="text-muted">
-              Let&apos;s start by selecting your availability for 1:1 sessions.
-            </p>
-
             <VolunteerAvailabilityForm
               volunteerId={activeVolunteer.id}
               mode="onboarding"

@@ -11,8 +11,13 @@ const AddingSlotsBasket = ({
   addedSlots,
   removeSlot,
   saveAll,
+  hasEverHadItems = false,
   title = "Current selection to save",
 }) => {
+  if ((!addedSlots || addedSlots.length === 0) && !hasEverHadItems) {
+    return null;
+  }
+
   return (
     <div className="basket-container">
       <h3 className="basket-title">{title}</h3>
@@ -75,7 +80,7 @@ const AddingSlotsBasket = ({
           })}
       </div>
 
-      {saveAll && addedSlots && addedSlots.length > 0 && (
+      {saveAll && (
         <ActionBtn additionalBtnClass="btn-primary mt-2" onClick={saveAll}>
           Save all
         </ActionBtn>
