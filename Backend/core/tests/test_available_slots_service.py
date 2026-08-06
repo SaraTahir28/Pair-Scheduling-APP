@@ -1,9 +1,12 @@
 from datetime import timedelta
 
+import pytest
 from django.utils import timezone
 
 from core.models import SlotRule, User
 from core.services.available_slots import build_available_slots, exclude_booked_slots
+
+pytestmark = pytest.mark.django_db
 
 NOW = timezone.now()
 FUTURE = timezone.now() + timedelta(days=1)
