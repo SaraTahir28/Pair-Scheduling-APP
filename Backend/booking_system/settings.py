@@ -44,7 +44,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 DEBUG = DJANGO_ENV != "production"
 
 ALLOWED_HOSTS = [
-    "pairscheduler-backend.hosting.codeyourfuture.io",
+    "pairscheduler-backend.grads.hosting.cyf.academy",
     "localhost",
     "127.0.0.1",
     "backend",
