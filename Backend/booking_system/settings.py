@@ -298,8 +298,8 @@ if DJANGO_ENV == "production":
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    CSRF_COOKIE_DOMAIN = "grads.hosting.codeyourfuture.io"
-    SESSION_COOKIE_DOMAIN = "grads.hosting.codeyourfuture.io"
+    CSRF_COOKIE_DOMAIN = ".grads.hosting.cyf.academy"
+    SESSION_COOKIE_DOMAIN = ".grads.hosting.cyf.academy"
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
