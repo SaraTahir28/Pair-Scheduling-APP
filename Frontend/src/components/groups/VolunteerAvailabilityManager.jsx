@@ -10,13 +10,22 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
   const [slotRulesInBasket, setSlotRulesInBasket] = useState([]);
 
   useEffect(() => {
-    api
-      .get("/api/slot-rules/")
-      .then((res) => {
-        setOriginalSlotRulesFromApi(res.data);
-      })
-      .catch((err) => console.log("Error fetching slots:", err));
-  }, [volunteerId]);
+    if (isEditing) return;
+
+    const fetchSlots = () => {
+      api
+        .get("/api/slot-rules/")
+        .then((res) => {
+          setOriginalSlotRulesFromApi(res.data);
+        })
+        .catch((err) => console.log("Error fetching slots:", err));
+    };
+
+    fetchSlots();
+    const pollInterval = setInterval(fetchSlots, 30000);
+
+    return () => clearInterval(pollInterval);
+  }, [volunteerId, isEditing]);
 
   const startEditing = () => {
     setSlotRulesInBasket(originalSlotRulesFromApi);
@@ -29,10 +38,9 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
   };
 
   const removeSlotFromBasket = (indexToRemove) => {
-    const updatedBasket = slotRulesInBasket.filter(
-      (_, i) => i !== indexToRemove
-    );
-    setSlotRulesInBasket(updatedBasket);
+    setSlotRulesInBasket((freshestBasketState) => {
+      return freshestBasketState.filter((_, i) => i !== indexToRemove);
+    });
   };
 
   const sendNewSlotRulesToDb = () => {
