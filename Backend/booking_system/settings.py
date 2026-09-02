@@ -25,8 +25,14 @@ env = environ.Env()
 # Always load secrets
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
-# Then overlay environment-specific URLs
+
 DJANGO_ENV = os.getenv("DJANGO_ENV", "development")
+
+# Only validate if someone tries to set it
+if DJANGO_ENV not in {"development", "production"}:
+    raise RuntimeError(
+        f"Invalid DJANGO_ENV={DJANGO_ENV!r}. Must be 'development' or 'production'."
+    )
 env_file = ".env.production" if DJANGO_ENV == "production" else ".env.development"
 env_file_path = os.path.join(BASE_DIR, env_file)
 if os.path.exists(env_file_path):
@@ -40,8 +46,10 @@ GOOGLE_OAUTH2_CLIENT_SECRET = env("GOOGLE_CLIENT_SECRET")
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = DJANGO_ENV != "production"
+
+DEBUG = DJANGO_ENV == "development"
+ENABLE_TEST_LOGIN = os.getenv("ENABLE_TEST_LOGIN") == "true"
+
 
 ALLOWED_HOSTS = [
     "pairscheduler-backend.hosting.codeyourfuture.io",
