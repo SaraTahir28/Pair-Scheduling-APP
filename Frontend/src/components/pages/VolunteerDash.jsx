@@ -31,8 +31,11 @@ const VolunteerDash = () => {
   const [temporaryAddedSlotsStorage, setTemporaryAddedSlotsStorage] = useState(
     []
   );
+  const [hasEverHadItems, setHasEverHadItems] = useState(false);
+
   const volunteerSubmitedFormWithSlots = (newSlotObj) => {
     setTemporaryAddedSlotsStorage([...temporaryAddedSlotsStorage, newSlotObj]);
+    setHasEverHadItems(true);
   };
   const [showManager, setShowManager] = useState(false);
 
@@ -139,15 +142,13 @@ const VolunteerDash = () => {
         <SessionDetailsVolunteer
           user={activeVolunteer}
           onManageAvailabilityClick={() => setShowManager(true)}
+          showManageButton={hasUserSetAvailability}
+          isManageAvailabilityTabActive={showManager}
         />
       </div>
       <div className="bookings-col">
         {!hasUserSetAvailability && (
           <div className="">
-            <p className="text-muted">
-              Let&apos;s start by selecting your availability for 1:1 sessions.
-            </p>
-
             <VolunteerAvailabilityForm
               volunteerId={activeVolunteer.id}
               mode="onboarding"
@@ -155,6 +156,7 @@ const VolunteerDash = () => {
               addedSlots={temporaryAddedSlotsStorage}
               removeSlot={removeSlotFromTemporaryStorage}
               saveAll={sendVolunteerSlotsToDb}
+              hasEverHadItems={hasEverHadItems}
             />
           </div>
         )}
