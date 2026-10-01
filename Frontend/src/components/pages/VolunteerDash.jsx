@@ -31,8 +31,11 @@ const VolunteerDash = () => {
   const [temporaryAddedSlotsStorage, setTemporaryAddedSlotsStorage] = useState(
     []
   );
+  const [hasEverHadItems, setHasEverHadItems] = useState(false);
+
   const volunteerSubmitedFormWithSlots = (newSlotObj) => {
     setTemporaryAddedSlotsStorage([...temporaryAddedSlotsStorage, newSlotObj]);
+    setHasEverHadItems(true);
   };
   const [showManager, setShowManager] = useState(false);
 
@@ -153,6 +156,7 @@ const VolunteerDash = () => {
               addedSlots={temporaryAddedSlotsStorage}
               removeSlot={removeSlotFromTemporaryStorage}
               saveAll={sendVolunteerSlotsToDb}
+              hasEverHadItems={hasEverHadItems}
             />
           </div>
         )}

@@ -104,7 +104,7 @@ const VolunteerAvailabilityManager = ({ volunteerId, onBackToDash }) => {
               addedSlots={slotRulesInBasket}
               removeSlot={removeSlotFromBasket}
               saveAll={sendNewSlotRulesToDb}
-              asEverHadItems={hasEverHadItems}
+              hasEverHadItems={hasEverHadItems}
             />
           </div>
         </>

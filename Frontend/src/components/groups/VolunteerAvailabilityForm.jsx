@@ -13,6 +13,7 @@ const VolunteerAvailabilityForm = ({
   addedSlots,
   removeSlot,
   saveAll,
+  hasEverHadItems,
 }) => {
   const [isRecurring, setIsRecurring] = useState(false);
   const [specificDate, setSpecificDate] = useState(formatLocalDate(new Date()));
@@ -103,6 +104,7 @@ const VolunteerAvailabilityForm = ({
           addedSlots={addedSlots}
           removeSlot={removeSlot}
           saveAll={saveAll}
+          hasEverHadItems={hasEverHadItems}
         />
       )}
 
@@ -214,6 +216,7 @@ const VolunteerAvailabilityForm = ({
           addedSlots={addedSlots}
           removeSlot={removeSlot}
           saveAll={saveAll}
+          hasEverHadItems={hasEverHadItems}
         />
       )}
     </>
