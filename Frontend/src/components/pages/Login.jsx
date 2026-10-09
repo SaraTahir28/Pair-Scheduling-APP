@@ -54,7 +54,7 @@ export default function Login() {
 
         {/* Info for users without Google account */}
         <p className="mt-2 text-center text-sm text-muted">
-          You need a Google account to use this app.If you dont have a Google
+          You need a Google account to use this app. If you dont have a Google
           Account{" "}
           <a
             href="https://accounts.google.com/signup"
